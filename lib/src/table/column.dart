@@ -1,17 +1,10 @@
 import 'package:athena_sql/query_string.dart';
-import 'package:athena_sql/src/utils/string.dart';
 
 import 'constraint.dart';
 import 'global.dart';
 
 class ColumnType {
   final String type;
-  // final CompressionMethod? compression;
-  // final String? collate;
-  // ColumnType._(this.type, {
-  //   this.compression,
-  //   this.collate
-  // });
   const ColumnType._(this.type);
 
   static const bigint = ColumnType._('BIGINT');
