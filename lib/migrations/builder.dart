@@ -1,5 +1,3 @@
-
-
 // create a postgresql quiery builder for migrations
 
 class CreateTableQuery {
@@ -100,7 +98,7 @@ class CreateTableBuilder {
   }
 
   CreateTableQuery build() {
-    return CreateTableQuery(tableName, columns.map((e) => e.build()).toList(),
-        constraints);
+    return CreateTableQuery(
+        tableName, columns.map((e) => e.build()).toList(), constraints);
   }
 }

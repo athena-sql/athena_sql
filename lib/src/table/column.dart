@@ -411,8 +411,8 @@ class TableColumnDefinition extends TablePosibleAddition {
           (q) => q.space().keyword('COLLATE').userInput(' $_collate'))
       .condition(
           _constraints.isNotEmpty,
-          (q) => q.space().join(_constraints
-              .map((e) => e.printable()),QueryString(value: ' ')));
+          (q) => q.space().join(
+              _constraints.map((e) => e.printable()), QueryString(value: ' ')));
 
   TableColumnDefinition _copyWith({
     String? name,

@@ -98,7 +98,6 @@ class QueryString extends QueryPrintable {
 
   QueryString._sections([this.sections = const <QueryStringSection>[]]);
 
-
   @override
   String printable() {
     return sections.map((e) => e.printable()).join();
@@ -142,7 +141,6 @@ class QueryString extends QueryPrintable {
   QueryString userFunction(String value) {
     return adding(QueryStringSection(value, color: TokensColor.green));
   }
-  
 
   QueryString column(String value) {
     if (value.containsUppercase) {
@@ -172,7 +170,7 @@ class QueryString extends QueryPrintable {
     Iterator<QueryPrintable> iterator = values.iterator;
     if (!iterator.moveNext()) return this;
     final sections = <QueryPrintable>[];
-    
+
     if (separator == null || separator.isEmpty) {
       do {
         sections.add(iterator.current);
@@ -186,10 +184,12 @@ class QueryString extends QueryPrintable {
     }
     return adding(QueryString._sections(sections));
   }
+
   QueryString comaSeparated(Iterable<QueryPrintable> values) {
     final separator = QueryString.special(",");
     return join(values, separator);
   }
+
   QueryString comaSpaceSeparated(Iterable<QueryPrintable> values) {
     final separator = QueryString.special(", ");
     return join(values, separator);
