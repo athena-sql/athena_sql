@@ -3,7 +3,7 @@ import 'package:athena_sql/query_string.dart';
 import 'column.dart';
 import 'global.dart';
 
-class CreateTable {
+class CreateTable extends QueryBuilder {
   final String tableName;
   final Locale? locale;
   final bool? temporary;
@@ -29,6 +29,14 @@ class CreateTable {
         ifNotExists: ifNotExists ?? this.ifNotExists,
         tablePosibleAdditions: tablePosibleAdditions ?? _tablePosibleAdditions);
   }
+
+  @override
+  QueryString build() => QueryString()
+      .keyword('CREATE TABLE ')
+      .condition(temporary == true, (q) => q.keyword('TEMPORARY '))
+      .condition(ifNotExists == true, (q) => q.keyword('IF NOT EXISTS '))
+      .userInput(tableName)
+      .parentesis((q) => q.comaSpaceSeparated(_tablePosibleAdditions));
 }
 
 class CreateTableBuilder {
@@ -45,15 +53,7 @@ class CreateTableBuilder {
     ]));
   }
 
-  QueryString printable() => QueryString()
-      .keyword('CREATE TABLE ')
-      .condition(_table.temporary == true, (q) => q.keyword('TEMPORARY '))
-      .condition(_table.ifNotExists == true, (q) => q.keyword('IF NOT EXISTS '))
-      .userInput(_table.tableName)
-      .parentesis((q) => q.comaSpaceSeparated(
-          _table._tablePosibleAdditions.map((e) => e.printable())));
-
   String build() {
-    return printable().toString();
+    return _table.build().plain();
   }
 }

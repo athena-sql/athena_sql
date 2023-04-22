@@ -14,24 +14,36 @@ enum TokensColor {
   const TokensColor(this.code);
 }
 
-abstract class QueryBuilder {
-  QueryPrintable printable();
+abstract class QueryBuilder extends QueryPrintable {
+  const QueryBuilder();
+  QueryPrintable build();
+
+  @override
+  String printable() {
+    return build().printable();
+  }
+
+  @override
+  String plain() {
+    return build().plain();
+  }
+
+  @override
+  bool get isEmpty => build().isEmpty;
 }
 
 abstract class QueryPrintable {
-  List<QueryPrintable> get sections;
+  const QueryPrintable();
   String printable();
+  String plain();
 
-  bool get isEmpty => sections.isEmpty;
+  bool get isEmpty;
 }
 
 class QueryStringSection extends QueryPrintable {
   String value;
   TokensColor? color;
   QueryStringSection(this.value, {this.color});
-
-  @override
-  List<QueryPrintable> get sections => [this];
 
   @override
   String printable() {
@@ -42,36 +54,25 @@ class QueryStringSection extends QueryPrintable {
   }
 
   @override
-  String toString() {
+  String plain() {
     return value;
   }
 
-  QueryString operator +(QueryStringSection value) {
+  QueryString operator +(QueryPrintable value) {
     return QueryString._sections([this, value]);
   }
+
+  @override
+  bool get isEmpty => value.isEmpty;
 }
 
 typedef FunctionQueryBuilder = QueryPrintable Function(QueryString);
 
 class QueryString extends QueryPrintable {
-  @override
   final List<QueryPrintable> sections;
-  QueryString({String? value, TokensColor? color})
-      : sections = value == null
-            ? <QueryStringSection>[]
-            : [QueryStringSection(value, color: color)];
+  QueryString() : sections = <QueryPrintable>[];
 
   QueryString.keyword(String value)
-      : sections = value.isEmpty
-            ? <QueryStringSection>[]
-            : [QueryStringSection(value, color: TokensColor.blue)];
-
-  QueryString.function(String value)
-      : sections = value.isEmpty
-            ? <QueryStringSection>[]
-            : [QueryStringSection(value, color: TokensColor.blue)];
-
-  QueryString.operator(String value)
       : sections = value.isEmpty
             ? <QueryStringSection>[]
             : [QueryStringSection(value, color: TokensColor.blue)];
@@ -82,16 +83,6 @@ class QueryString extends QueryPrintable {
             : [QueryStringSection(value, color: TokensColor.blue)];
 
   QueryString.special(String value)
-      : sections = value.isEmpty
-            ? <QueryStringSection>[]
-            : [QueryStringSection(value, color: TokensColor.blue)];
-
-  QueryString.quotation(String value)
-      : sections = value.isEmpty
-            ? <QueryStringSection>[]
-            : [QueryStringSection(value, color: TokensColor.blue)];
-
-  QueryString.userFunction(String value)
       : sections = value.isEmpty
             ? <QueryStringSection>[]
             : [QueryStringSection(value, color: TokensColor.blue)];
@@ -109,11 +100,11 @@ class QueryString extends QueryPrintable {
   }
 
   void add(QueryPrintable value) {
-    sections.addAll(value.sections);
+    sections.add(value);
   }
 
   QueryString adding(QueryPrintable value) {
-    return QueryString._sections([...sections, ...value.sections]);
+    return QueryString._sections([...sections, value]);
   }
 
   QueryString operator +(QueryStringSection value) {
@@ -121,8 +112,12 @@ class QueryString extends QueryPrintable {
     return this;
   }
 
+  QueryStringSection _new(String value, [TokensColor? color]) {
+    return QueryStringSection(value, color: color);
+  }
+
   QueryString keyword(String value) {
-    return adding(QueryStringSection(value, color: TokensColor.blue));
+    return adding(_new(value, TokensColor.blue));
   }
 
   QueryString condition(bool compare, FunctionQueryBuilder fn,
@@ -135,11 +130,11 @@ class QueryString extends QueryPrintable {
   }
 
   QueryString userInput(String value) {
-    return adding(QueryStringSection(value, color: TokensColor.white));
+    return adding(_new(value, TokensColor.white));
   }
 
   QueryString userFunction(String value) {
-    return adding(QueryStringSection(value, color: TokensColor.green));
+    return adding(_new(value, TokensColor.green));
   }
 
   QueryString column(String value) {
@@ -147,19 +142,19 @@ class QueryString extends QueryPrintable {
       if (value.length > 1 &&
           value[0] == '"' &&
           value[value.length - 1] == '"') {
-        return adding(QueryStringSection(value, color: TokensColor.white));
+        return adding(_new(value, TokensColor.white));
       }
-      return adding(QueryStringSection('"$value"', color: TokensColor.white));
+      return adding(_new('"$value"', TokensColor.white));
     }
-    return adding(QueryStringSection(value, color: TokensColor.white));
+    return adding(_new(value, TokensColor.white));
   }
 
   QueryString special(String value) {
-    return adding(QueryStringSection(value, color: TokensColor.yellow));
+    return adding(_new(value, TokensColor.yellow));
   }
 
   QueryString space() {
-    return adding(QueryStringSection(' '));
+    return adding(_new(' '));
   }
 
   QueryString parentesis(FunctionQueryBuilder fn) {
@@ -195,55 +190,17 @@ class QueryString extends QueryPrintable {
     return join(values, separator);
   }
 
-  void write(String value, {TokensColor? color}) {
-    value.isEmpty ? null : add(QueryString(value: value, color: color));
-  }
+  @override
+  bool get isEmpty => sections.isEmpty;
 
-  void addKeyword(String value) {
-    add(QueryString.keyword(value));
-  }
-
-  void addFunction(String value) {
-    add(QueryString.function(value));
-  }
-
-  void addOperator(String value) {
-    add(QueryString.operator(value));
-  }
-
-  void addQuotation(String value) {
-    add(QueryString.quotation(value));
-  }
-
-  void addSpecial(String value) {
-    add(QueryString.special(value));
-  }
-
-  void addUser(String value) {
-    add(QueryString.user(value));
-  }
-
-  void addUserFunction(String value) {
-    add(QueryString.userFunction(value));
+  @override
+  String plain() {
+    return sections.map((e) => e.plain()).join();
   }
 }
 
-extension QueryList on Iterable<QueryString> {
-  QueryString joinQuery(QueryString? separator) {
-    Iterator<QueryString> iterator = this.iterator;
-    if (!iterator.moveNext()) return QueryString();
-    QueryString buffer = QueryString();
-    if (separator == null || separator.isEmpty) {
-      do {
-        buffer.add(iterator.current);
-      } while (iterator.moveNext());
-    } else {
-      buffer.add(iterator.current);
-      while (iterator.moveNext()) {
-        buffer.add(separator);
-        buffer.add(iterator.current);
-      }
-    }
-    return buffer;
+extension Exten on List<QueryPrintable> {
+  QueryString build() {
+    return QueryString._sections(this);
   }
 }
