@@ -69,12 +69,6 @@ class ColumnType {
   static const txidSnapshot = ColumnType._('TXID_SNAPSHOT');
   static const uuid = ColumnType._('UUID');
   static const xml = ColumnType._('XML');
-
-  QueryString printable(List<String>? parameters) =>
-      QueryString().keyword(type).condition(
-          parameters != null && parameters.isNotEmpty,
-          (q) => q.parentesis((q) =>
-              q.comaSeparated(parameters!.map((e) => QueryString.user(e)))));
 }
 
 enum IntervalPhrases {
@@ -400,19 +394,21 @@ class TableColumnDefinition extends TablePosibleAddition {
     return _copyWith(compression: compression);
   }
 
+  QueryString typeParameters() => QueryString().keyword(_type.type).condition(
+      _parameters != null && _parameters!.isNotEmpty,
+      (q) => q.parentesis((q) =>
+          q.comaSeparated(_parameters!.map((e) => QueryString.user(e)))));
   @override
-  QueryString printable() => QueryString()
+  QueryString build() => QueryString()
       .column(_name)
       .space()
-      .adding(_type.printable(_parameters))
+      .adding(typeParameters())
       .condition(_compression != null,
           (q) => q.space().keyword('COMPRESSION').userInput(' $_compression'))
       .condition(_collate != null,
           (q) => q.space().keyword('COLLATE').userInput(' $_collate'))
-      .condition(
-          _constraints.isNotEmpty,
-          (q) => q.space().join(
-              _constraints.map((e) => e.printable()), QueryString(value: ' ')));
+      .condition(_constraints.isNotEmpty,
+          (q) => q.space().join(_constraints, QueryString().space()));
 
   TableColumnDefinition _copyWith({
     String? name,

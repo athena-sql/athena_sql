@@ -4,6 +4,4 @@ enum Locale { global, local }
 
 enum CompressionMethod { pglz, zstd }
 
-abstract class TablePosibleAddition {
-  QueryString printable();
-}
+abstract class TablePosibleAddition extends QueryBuilder {}

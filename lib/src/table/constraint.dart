@@ -1,10 +1,11 @@
 import 'package:athena_sql/query_string.dart';
 
-abstract class ColumnConstrains {
+abstract class ColumnConstrains extends QueryBuilder {
   final String? name;
   const ColumnConstrains({this.name});
   QueryString get _value;
-  QueryString printable() => QueryString()
+  @override
+  QueryString build() => QueryString()
       .condition(name != null,
           (q) => q.keyword('CONSTRAINT').space().userInput('$name').space())
       .adding(_value);
