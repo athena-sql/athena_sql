@@ -66,6 +66,7 @@ jobs:
 
       - name: Install dependencies
         run: dart pub get
+        working-directory: packages/athena_sql
 
       - name: Install coverage tools
         run: dart pub global activate coverage
