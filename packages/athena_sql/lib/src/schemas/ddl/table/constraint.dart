@@ -1,4 +1,4 @@
-import 'package:athena_sql/query_string.dart';
+import 'package:athena_sql/src/utils/query_string.dart';
 
 abstract class ColumnConstrains extends QueryBuilder {
   final String? name;
