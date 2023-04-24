@@ -1,0 +1,83 @@
+name: Dart CI
+
+on:
+  push:
+    branches:
+      - master
+  pull_request:
+    branches:
+      - master
+env:
+  DART_MIN_VERSION: 2.17.0
+  DART_COVERAGE_VERSION: 2.18.0
+
+jobs:
+    format:
+      name: Check formatting
+      runs-on: ubuntu-latest
+      steps:
+        - uses: actions/checkout@v3
+
+        - uses: dart-lang/setup-dart@v1
+          with:
+            sdk: ${{ env.DART_MIN_VERSION }}
+
+        - name: Verify code formatting
+          run: dart format --output none --set-exit-if-changed .
+    lint:
+      name: Check lints
+      runs-on: ubuntu-latest
+      steps:
+        - uses: actions/checkout@v3
+
+        - uses: dart-lang/setup-dart@v1
+          with:
+            sdk: ${{ env.DART_MIN_VERSION }}
+
+        - run: dart pub get
+          working-directory: packages/athena_sql
+
+        - name: Analyze
+          run: dart analyze
+    test:
+        runs-on: ${{ matrix.os }}
+        strategy:
+            matrix:
+                os: [ubuntu-latest, macos-latest, windows-latest]
+                sdk: [2.17.0, stable, beta, dev]
+            fail-fast: false
+        steps:
+        - uses: actions/checkout@v3
+        - uses: dart-lang/setup-dart@v1
+          with:
+            sdk: ${{ matrix.sdk }}
+        - name: Install dependencies
+          run: dart pub get
+          working-directory: packages/athena_sql
+        - name: Run tests
+          run: dart test
+          working-directory: packages/athena_sql
+    coverage:
+      runs-on: ubuntu-latest
+      steps:
+      - uses: actions/checkout@v3
+      - uses: dart-lang/setup-dart@v1
+        with:
+          sdk: ${{ env.DART_COVERAGE_VERSION }}
+
+      - name: Install dependencies
+        run: dart pub get
+        working-directory: packages/athena_sql
+
+      - name: Install coverage tools
+        run: dart pub global activate coverage
+        
+      - name: format coverage
+        run: dart pub global run coverage:test_with_coverage --branch-coverage --function-coverage
+        working-directory: packages/athena_sql
+        
+      - uses: codecov/codecov-action@v3
+        with:
+          files: packages/athena_sql/coverage/lcov.info
+          verbose: true # optional (default = false)
+

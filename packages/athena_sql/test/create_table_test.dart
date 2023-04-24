@@ -3,16 +3,19 @@
 import 'package:athena_sql/athena_sql.dart';
 import 'package:test/test.dart';
 
+import 'utils/driver.dart';
 
 void main() {
   group('CreateTableBuilder', () {
+    final athenaSql = AthenaSQL(TestDriver());
     setUp(() {
       // Additional setup goes here.
     });
 
     group('columns', () {
       test('data types', () {
-        final query = CreateTableBuilder('product')
+        final query = athenaSql
+            .createTable('product')
             .column((t) => t.uuid('id'))
             .column((t) => t.text('name'))
             .column((t) => t.bigint('amount'))
@@ -32,7 +35,8 @@ void main() {
         expect(built, expectedBuild);
       });
       test('contrains', () {
-        final built = CreateTableBuilder('users')
+        final built = athenaSql
+            .createTable('users')
             .column((t) => t
                 .uuid('id')
                 .primaryKey()
@@ -55,6 +59,5 @@ void main() {
         expect(built, expectedBuild);
       });
     });
-
   });
 }

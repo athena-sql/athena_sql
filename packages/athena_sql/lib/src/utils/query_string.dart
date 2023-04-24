@@ -1,4 +1,4 @@
-import 'package:athena_sql/src/utils/string.dart';
+import './string.dart';
 
 enum TokensColor {
   black("30"),
