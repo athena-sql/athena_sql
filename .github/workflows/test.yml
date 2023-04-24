@@ -43,35 +43,25 @@ jobs:
         strategy:
             matrix:
                 os: [ubuntu-latest, macos-latest, windows-latest]
-                sdk: [$DART_MIN_VERSION, stable, beta, dev]
+                sdk: [${{ env.DART_MIN_VERSION }}, stable, beta, dev]
             fail-fast: false
         steps:
         - uses: actions/checkout@v3
         - uses: dart-lang/setup-dart@v1
           with:
             sdk: ${{ matrix.sdk }}
-
         - name: Install dependencies
           run: dart pub get
-
-        - name: Install coverage tools
-          run: dart pub global activate coverage
-          
-        - name: format coverage
-          run: dart pub global run coverage:test_with_coverage --branch-coverage --function-coverage
           working-directory: packages/athena_sql
-          
-        - uses: codecov/codecov-action@v2
-          with:
-            files: packages/athena_sql/coverage/lcov.info
-            verbose: true # optional (default = false)
+        - name: Run tests
+          run: dart test
     coverage:
       runs-on: ubuntu-latest
       steps:
       - uses: actions/checkout@v3
       - uses: dart-lang/setup-dart@v1
         with:
-          sdk: $DART_MIN_VERSION
+          sdk: ${{ env.DART_MIN_VERSION }}
 
       - name: Install dependencies
         run: dart pub get
