@@ -73,10 +73,7 @@ class ColumnType {
 
 class CreateColumnSchema extends QueryBuilder {
   @override
-  QueryPrintable build() {
-    // TODO: implement build
-    throw UnimplementedError();
-  }
+  QueryPrintable build() => QueryString();
 }
 
 enum IntervalPhrases {

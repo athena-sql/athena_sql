@@ -8,7 +8,8 @@ on:
     branches:
       - master
 env:
-  DART_MIN_VERSION: 2.18.0
+  DART_MIN_VERSION: 2.17.0
+  DART_COVERAGE_VERSION: 2.18.0
 
 jobs:
     format:
@@ -43,7 +44,7 @@ jobs:
         strategy:
             matrix:
                 os: [ubuntu-latest, macos-latest, windows-latest]
-                sdk: [${{ env.DART_MIN_VERSION }}, stable, beta, dev]
+                sdk: [2.17.0, stable, beta, dev]
             fail-fast: false
         steps:
         - uses: actions/checkout@v3
@@ -61,7 +62,7 @@ jobs:
       - uses: actions/checkout@v3
       - uses: dart-lang/setup-dart@v1
         with:
-          sdk: ${{ env.DART_MIN_VERSION }}
+          sdk: ${{ env.DART_COVERAGE_VERSION }}
 
       - name: Install dependencies
         run: dart pub get
