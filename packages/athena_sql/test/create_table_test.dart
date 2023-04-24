@@ -14,7 +14,8 @@ void main() {
 
     group('columns', () {
       test('data types', () {
-        final query = athenaSql.createTable('product')
+        final query = athenaSql
+            .createTable('product')
             .column((t) => t.uuid('id'))
             .column((t) => t.text('name'))
             .column((t) => t.bigint('amount'))
@@ -34,7 +35,8 @@ void main() {
         expect(built, expectedBuild);
       });
       test('contrains', () {
-        final built = athenaSql.createTable('users')
+        final built = athenaSql
+            .createTable('users')
             .column((t) => t
                 .uuid('id')
                 .primaryKey()
@@ -57,6 +59,5 @@ void main() {
         expect(built, expectedBuild);
       });
     });
-
   });
 }

@@ -70,6 +70,7 @@ class ColumnType {
   static const uuid = ColumnType._('UUID');
   static const xml = ColumnType._('XML');
 }
+
 class CreateColumnSchema extends QueryBuilder {
   @override
   QueryPrintable build() {
@@ -77,6 +78,7 @@ class CreateColumnSchema extends QueryBuilder {
     throw UnimplementedError();
   }
 }
+
 enum IntervalPhrases {
   year('YEAR'),
   month('MONTH'),
@@ -95,7 +97,6 @@ enum IntervalPhrases {
   final String name;
   const IntervalPhrases(this.name);
 }
-
 
 class ColumnSchema extends CreateTableClause {
   final String _name;

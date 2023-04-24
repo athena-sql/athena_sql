@@ -1,9 +1,7 @@
 part of '../builders.dart';
 
-
 extension DropTableBuilder<D extends AthenaDriver>
     on AthenaQueryBuilder<D, DropTableSchema> {
-
   AthenaQueryBuilder<D, DropTableSchema> ifExists() =>
       _copyWith(schema: _schema.copyWith(ifExists: true));
   AthenaQueryBuilder<D, DropTableSchema> cascade() =>

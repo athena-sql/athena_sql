@@ -1,6 +1,7 @@
 abstract class AthenaDriver {
   const AthenaDriver();
 }
+
 abstract class AthenaDatabaseDriver extends AthenaDriver {
   const AthenaDatabaseDriver();
 
@@ -10,4 +11,3 @@ abstract class AthenaDatabaseDriver extends AthenaDriver {
 abstract class AthenaStringDriver extends AthenaDriver {
   const AthenaStringDriver();
 }
-

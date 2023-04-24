@@ -1,13 +1,14 @@
-
 part of '../builders.dart';
 
-typedef CSBuilder<D extends AthenaDriver> = AthenaQueryBuilder<D,ColumnSchema>;
+typedef CSBuilder<D extends AthenaDriver> = AthenaQueryBuilder<D, ColumnSchema>;
+
 extension ColumnOptionsBuilder<D extends AthenaDriver> on CSBuilder<D> {
   CSBuilder<D> _addingContrain(ColumnConstrains constraint) {
-    return _copyWith(schema: _schema.copyWith(constraints: [..._schema.constraints, constraint]));
+    return _copyWith(
+        schema: _schema
+            .copyWith(constraints: [..._schema.constraints, constraint]));
   }
 
-  
   CSBuilder<D> notNull({String? name}) {
     return _addingContrain(NotNullContraint(name: name));
   }
@@ -17,7 +18,8 @@ extension ColumnOptionsBuilder<D extends AthenaDriver> on CSBuilder<D> {
   }
 
   CSBuilder<D> unique({String? name, bool? nullsNotDistinct}) {
-    return _addingContrain(UniqueContraint(name: name, nullsNotDistinct: nullsNotDistinct));
+    return _addingContrain(
+        UniqueContraint(name: name, nullsNotDistinct: nullsNotDistinct));
   }
 
   CSBuilder<D> check(String expression, {String? name}) {
@@ -28,7 +30,8 @@ extension ColumnOptionsBuilder<D extends AthenaDriver> on CSBuilder<D> {
       {String? name,
       String? column,
       ReferencialAction Function(ReferencialActionRuleBuilder)? on}) {
-        return _addingContrain(ReferencesContraint(name: name, column: column, table: tableName, on: on));
+    return _addingContrain(ReferencesContraint(
+        name: name, column: column, table: tableName, on: on));
   }
 
   CSBuilder<D> defaultTo(String value) {
@@ -43,4 +46,3 @@ extension ColumnOptionsBuilder<D extends AthenaDriver> on CSBuilder<D> {
     return _copyWith(schema: _schema.copyWith(compression: compression));
   }
 }
-

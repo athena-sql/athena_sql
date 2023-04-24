@@ -12,8 +12,7 @@ class CreateTableSchema extends QueryBuilder {
       this.temporary,
       this.ifNotExists,
       List<CreateTableClause>? clauses})
-      :clauses =
-            clauses ?? const <CreateTableClause>[];
+      : clauses = clauses ?? const <CreateTableClause>[];
 
   CreateTableSchema copyWith(
       {String? tableName,

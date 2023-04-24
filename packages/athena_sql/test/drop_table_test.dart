@@ -22,18 +22,18 @@ void main() {
         expect(built, expectedBuild);
       });
       test('complex drop', () {
-        final built = athenaSql.drop.table('product')
-        .table('user')
-        .ifExists()
-        .restrict()
-        .cascade()
-        .build();
+        final built = athenaSql.drop
+            .table('product')
+            .table('user')
+            .ifExists()
+            .restrict()
+            .cascade()
+            .build();
 
         const expectedBuild = 'DROP TABLE IF EXISTS product,user CASCADE';
 
         expect(built, expectedBuild);
       });
     });
-
   });
 }
