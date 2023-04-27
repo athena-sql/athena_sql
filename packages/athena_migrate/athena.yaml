@@ -1,0 +1,27 @@
+# Athena Migrate Configuration
+
+version: 1
+
+database:
+  # The database connection string.
+  # The connection string is database specific.
+  # For more information see:
+  #
+driver: mysql
+connection: 'mysql://user:password@localhost:3306/dbname'
+migrations:
+  # The path to the migrations directory.
+  # The path is relative to the athena.yaml file.
+  # If not specified then the default is 'migrations'
+  path: migrations
+  # The path to a custom migration template
+  # stub: migrations/template.stub
+
+# development:
+#   driver: mysql
+#   connection:
+#     host: localhost
+#     username: user
+#     password: password
+#     port: 3306
+#     database: dbname
