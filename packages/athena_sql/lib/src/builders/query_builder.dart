@@ -28,10 +28,12 @@ class AthenaQueryBuilder<D extends AthenaDriver, B extends QueryBuilder> {
         schema,
       );
 }
+typedef QueryRows = List<Map<String, Map<String, dynamic>>>;
 
-extension AthenaDatabaseExtension<D extends AthenaDatabaseDriver,
-    B extends QueryBuilder> on AthenaQueryBuilder<D, B> {
-  exec() => _driver.execute(_schema.plain());
+extension AthenaDatabaseQueryExtension<D extends AthenaDatabaseDriver> on AthenaQueryBuilder<D, DdlSchema> {
+
+   Future<int> run() => _driver.execute(_schema.plain());
+
 }
 
 extension AthenaStringExtension<D extends AthenaStringDriver,

@@ -1,3 +1,5 @@
+part of 'builders.dart';
+
 abstract class AthenaDriver {
   const AthenaDriver();
 }
@@ -5,7 +7,9 @@ abstract class AthenaDriver {
 abstract class AthenaDatabaseDriver extends AthenaDriver {
   const AthenaDatabaseDriver();
 
-  T execute<T>(String query);
+  Future<int> execute(String query);
+
+  Future<void> open();
 }
 
 abstract class AthenaStringDriver extends AthenaDriver {

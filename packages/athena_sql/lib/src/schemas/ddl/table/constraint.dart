@@ -94,9 +94,9 @@ enum ReferencialActionRule {
   String get _value {
     switch (this) {
       case ReferencialActionRule.onUpdate:
-        return 'ON UPDATE';
+        return 'UPDATE';
       case ReferencialActionRule.onDelete:
-        return 'ON DELETE';
+        return 'DELETE';
     }
   }
 }
@@ -147,8 +147,8 @@ class ReferencesContraint extends ColumnConstrains {
   @override
   QueryString get _value => QueryString()
       .keyword('REFERENCES ')
-      .userInput('$_table ')
+      .userInput(_table)
       .condition(
-          _column != null, (q) => q.parentesis((q) => q.userInput(_column!)))
-      .condition(_action != null, (q) => q.space().adding(_action!._value));
+          _column != null, (q) => q.parentesis((q) => q.userInput(_column!)).space())
+      .condition(_action != null, (q) => q.adding(_action!._value));
 }

@@ -1,18 +1,24 @@
+import 'package:athena_sql/src/schemas/ddl/ddl_schema.dart';
+import 'package:athena_sql/src/schemas/ddl/table/constraint.dart';
+
 import '../../utils/query_string.dart';
 import 'shared.dart';
 
-class CreateTableSchema extends QueryBuilder {
+class CreateTableSchema extends DdlSchema {
   final String tableName;
   final Locale? locale;
   final bool? temporary;
   final bool? ifNotExists;
   final List<CreateTableClause> clauses;
+  final List<ColumnConstrains> constraints;
   CreateTableSchema(this.tableName,
       {this.locale,
       this.temporary,
       this.ifNotExists,
-      List<CreateTableClause>? clauses})
-      : clauses = clauses ?? const <CreateTableClause>[];
+      List<CreateTableClause>? clauses,
+      List<ColumnConstrains>? constraints,
+      })
+      : clauses = clauses ?? const <CreateTableClause>[], constraints = constraints ?? const <ColumnConstrains>[];
 
   CreateTableSchema copyWith(
       {String? tableName,
@@ -29,8 +35,9 @@ class CreateTableSchema extends QueryBuilder {
 
   @override
   QueryString build() => QueryString()
-      .keyword('CREATE TABLE ')
+      .keyword('CREATE ')
       .condition(temporary == true, (q) => q.keyword('TEMPORARY '))
+      .keyword('TABLE ')
       .condition(ifNotExists == true, (q) => q.keyword('IF NOT EXISTS '))
       .userInput(tableName)
       .parentesis((q) => q.comaSpaceSeparated(clauses));
