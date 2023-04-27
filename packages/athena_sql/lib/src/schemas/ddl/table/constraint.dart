@@ -148,7 +148,7 @@ class ReferencesContraint extends ColumnConstrains {
   QueryString get _value => QueryString()
       .keyword('REFERENCES ')
       .userInput(_table)
-      .condition(
-          _column != null, (q) => q.parentesis((q) => q.userInput(_column!)).space())
+      .condition(_column != null,
+          (q) => q.parentesis((q) => q.userInput(_column!)).space())
       .condition(_action != null, (q) => q.adding(_action!._value));
 }

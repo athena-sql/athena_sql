@@ -1,12 +1,7 @@
-
-
-
 import 'package:postgres/postgres.dart';
 
 class PostgresDatabaseConfig {
-
-
-PostgresDatabaseConfig(
+  PostgresDatabaseConfig(
     this.host,
     this.port,
     this.databaseName, {
@@ -19,9 +14,9 @@ PostgresDatabaseConfig(
     this.isUnixSocket = false,
     this.allowClearTextPassword = false,
     this.replicationMode = ReplicationMode.none,
-});
+  });
 
-/// Hostname of database this connection refers to.
+  /// Hostname of database this connection refers to.
   final String host;
 
   /// Port of database this connection refers to.
@@ -68,6 +63,4 @@ PostgresDatabaseConfig(
   ///
   /// [Streaming Replication Protocol]: https://www.postgresql.org/docs/current/protocol-replication.html
   final ReplicationMode replicationMode;
-
-
 }

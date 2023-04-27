@@ -1,5 +1,3 @@
 import '../../utils/query_string.dart';
 
-abstract class DdlSchema extends QueryBuilder {
-
-}
+abstract class DdlSchema extends QueryBuilder {}

@@ -3,12 +3,6 @@ import 'dart:io';
 import 'package:dcli/dcli.dart';
 import 'package:yaml/yaml.dart';
 
-import '../executable.dart';
-
-//1 create
-//2 validate
-//3
-
 const yamlTemplate = '''
 # Athena Migrate Configuration
 
@@ -46,13 +40,12 @@ class AthenaConfig {
   final String? migrationsStub;
   final String? migrationProgram;
 
-  AthenaConfig({
-    required this.driver,
-    required this.connection,
-    required this.migrationsPath,
-    this.migrationsStub,
-    this.migrationProgram = 'migrate'
-  });
+  AthenaConfig(
+      {required this.driver,
+      required this.connection,
+      required this.migrationsPath,
+      this.migrationsStub,
+      this.migrationProgram = 'migrate'});
 
   factory AthenaConfig.fromYaml(YamlMap yaml) {
     return AthenaConfig(
@@ -95,14 +88,14 @@ class ReadConfig {
       exit(1);
     }
   }
+
   AthenaConfig? run() {
     if (!_configFile.existsSync()) {
       print(red('athena.yaml not found'));
       if (createConfig() == null) return null;
     }
-    final configFile = _configFile.readAsStringSync();
     YamlMap? yamlContent = loadYamlContent();
-    if(yamlContent == null) return null;
+    if (yamlContent == null) return null;
     return AthenaConfig.fromYaml(yamlContent);
   }
 }

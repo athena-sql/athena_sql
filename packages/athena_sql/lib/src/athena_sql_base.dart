@@ -10,11 +10,15 @@ class AthenaSQL<D extends AthenaDriver> {
   DropBuilder<D> get drop => DropBuilder(driver);
 }
 
-
-extension AthenaDatabaseExtension on AthenaSQL<AthenaDatabaseDriver> {
+extension AthenaDatabaseExtension on AthenaSQL<AthenaDatabaseConnectionDriver> {
   Future<void> open() => driver.open();
-}
+  Future<T> transaction<T>(
+      Future<T> Function(AthenaSQL<AthenaDatabaseDriver> athenasql) trx) {
+    return driver.transaction((driver) => trx(AthenaSQL(driver)));
+  }
 
+  Future<bool> tableExists(String table) => driver.tableExists(table);
+}
 
 abstract class AthenaMigration {
   final String name;

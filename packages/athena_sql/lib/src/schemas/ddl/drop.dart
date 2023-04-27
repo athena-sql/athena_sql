@@ -2,8 +2,6 @@ import 'package:athena_sql/src/schemas/ddl/ddl_schema.dart';
 
 import '../../utils/query_string.dart';
 
-
-
 enum DropTableType {
   cascade('CASCADE'),
   restrict('RESTRICT');

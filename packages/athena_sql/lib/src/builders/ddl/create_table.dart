@@ -2,7 +2,6 @@ part of '../builders.dart';
 
 extension CreateTableBuilder<D extends AthenaDriver>
     on AthenaQueryBuilder<D, CreateTableSchema> {
-
   AthenaQueryBuilder<D, CreateTableSchema> column(
       AthenaQueryBuilder<D, ColumnSchema> Function(
               AthenaQueryBuilder<D, CreateColumnSchema> t)
@@ -14,14 +13,10 @@ extension CreateTableBuilder<D extends AthenaDriver>
   }
 
   AthenaQueryBuilder<D, CreateTableSchema> ifNotExists() {
-    return _copyWith(
-        schema:
-            _schema.copyWith(ifNotExists: true));
+    return _copyWith(schema: _schema.copyWith(ifNotExists: true));
   }
 
   AthenaQueryBuilder<D, CreateTableSchema> temporary() {
-    return _copyWith(
-        schema:
-            _schema.copyWith(temporary: true));
+    return _copyWith(schema: _schema.copyWith(temporary: true));
   }
 }

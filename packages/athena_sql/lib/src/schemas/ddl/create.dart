@@ -11,14 +11,15 @@ class CreateTableSchema extends DdlSchema {
   final bool? ifNotExists;
   final List<CreateTableClause> clauses;
   final List<ColumnConstrains> constraints;
-  CreateTableSchema(this.tableName,
-      {this.locale,
-      this.temporary,
-      this.ifNotExists,
-      List<CreateTableClause>? clauses,
-      List<ColumnConstrains>? constraints,
-      })
-      : clauses = clauses ?? const <CreateTableClause>[], constraints = constraints ?? const <ColumnConstrains>[];
+  CreateTableSchema(
+    this.tableName, {
+    this.locale,
+    this.temporary,
+    this.ifNotExists,
+    List<CreateTableClause>? clauses,
+    List<ColumnConstrains>? constraints,
+  })  : clauses = clauses ?? const <CreateTableClause>[],
+        constraints = constraints ?? const <ColumnConstrains>[];
 
   CreateTableSchema copyWith(
       {String? tableName,

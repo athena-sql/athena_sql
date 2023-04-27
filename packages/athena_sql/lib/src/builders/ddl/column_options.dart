@@ -1,6 +1,5 @@
 part of '../builders.dart';
 
-
 typedef CSBuilder<D extends AthenaDriver> = AthenaQueryBuilder<D, ColumnSchema>;
 
 extension ColumnOptionsBuilder<D extends AthenaDriver> on CSBuilder<D> {

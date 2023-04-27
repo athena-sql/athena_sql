@@ -22,7 +22,6 @@ void main() {
       });
 
       test('constrains', () {
-        // TODO: Add constrains
         final built = athenaSql.create.table('users');
 
         const expectedBuild = '''
