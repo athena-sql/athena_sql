@@ -38,7 +38,7 @@ jobs:
           working-directory: packages/athena_sql
 
         - name: Analyze
-          run: dart analyze
+          run: dart analyze .
     test:
         runs-on: ${{ matrix.os }}
         strategy:
