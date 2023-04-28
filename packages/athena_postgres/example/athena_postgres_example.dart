@@ -6,7 +6,7 @@ void main() async {
 
   await athena.open();
 
-  await athena.create.table('user').column((t) => t.text('name')).run();
+  await athena.create.table('user').column((t) => t.$customType('name', type: 'text')).run();
 
   await athena.drop.table('user').run();
 }

@@ -4,7 +4,7 @@ abstract class AthenaDriver {
   const AthenaDriver();
 }
 
-abstract class AthenaDatabaseTransactionDriver extends AthenaDriver {
+abstract class AthenaDatabaseTransactionDriver extends AthenaDatabaseDriver {
   const AthenaDatabaseTransactionDriver();
 }
 

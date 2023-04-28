@@ -3,10 +3,19 @@ part of '../builders.dart';
 typedef CSBuilder<D extends AthenaDriver> = AthenaQueryBuilder<D, ColumnSchema>;
 
 extension ColumnOptionsBuilder<D extends AthenaDriver> on CSBuilder<D> {
+
+  CSBuilder<D> $addingPreContrains(QueryPrintable printable) {
+    return _changeBuilder($schema.copyWith(
+        preconstraints: QueryString()
+            .condition($schema.preconstraints != null,
+                (q) => q.adding($schema.preconstraints!).space())
+            .adding(printable)));
+  }
+
   CSBuilder<D> _addingContrain(ColumnConstrains constraint) {
     return _copyWith(
-        schema: _schema
-            .copyWith(constraints: [..._schema.constraints, constraint]));
+        schema: $schema
+            .copyWith(constraints: [...$schema.constraints, constraint]));
   }
 
   CSBuilder<D> notNull({String? name}) {
@@ -38,11 +47,4 @@ extension ColumnOptionsBuilder<D extends AthenaDriver> on CSBuilder<D> {
     return _addingContrain(DefaultContraint(value));
   }
 
-  CSBuilder<D> collate(String collate) {
-    return _copyWith(schema: _schema.copyWith(collate: collate));
-  }
-
-  CSBuilder<D> compression(String compression) {
-    return _copyWith(schema: _schema.copyWith(compression: compression));
-  }
 }
