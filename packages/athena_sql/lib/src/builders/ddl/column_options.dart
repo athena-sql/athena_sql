@@ -3,7 +3,6 @@ part of '../builders.dart';
 typedef CSBuilder<D extends AthenaDriver> = AthenaQueryBuilder<D, ColumnSchema>;
 
 extension ColumnOptionsBuilder<D extends AthenaDriver> on CSBuilder<D> {
-
   CSBuilder<D> $addingPreContrains(QueryPrintable printable) {
     return _changeBuilder($schema.copyWith(
         preconstraints: QueryString()
@@ -46,5 +45,4 @@ extension ColumnOptionsBuilder<D extends AthenaDriver> on CSBuilder<D> {
   CSBuilder<D> defaultTo(String value) {
     return _addingContrain(DefaultContraint(value));
   }
-
 }

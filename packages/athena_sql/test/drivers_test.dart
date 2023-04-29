@@ -1,22 +1,20 @@
 // ignore_for_file: prefer_adjacent_string_concatenation, prefer_interpolation_to_compose_strings
 
 import 'package:athena_sql/athena_sql.dart';
-import 'package:athena_sql/query_printable.dart';
 import 'package:mockito/annotations.dart';
 import 'package:mockito/mockito.dart';
 import 'package:test/test.dart';
 
 import 'utils/driver.dart';
 
-
 @GenerateMocks([TestDatabaseDriver])
 import 'drivers_test.mocks.dart';
 
 abstract class OnDataReadComplete {
-    call();
+  call();
 }
-class MockOnDataReadComplete extends Mock implements OnDataReadComplete {}
 
+class MockOnDataReadComplete extends Mock implements OnDataReadComplete {}
 
 void main() {
   group('AthenaDatabaseConnectionDriver', () {
@@ -35,8 +33,9 @@ void main() {
       test('transaction', () async {
         //Creates the mock object
 
-        when(mockDriver.transaction(any)).thenAnswer( (_) async {
-          final String ans  = await _.positionalArguments[0](TestDatabaseTransactionDriver());
+        when(mockDriver.transaction(any)).thenAnswer((_) async {
+          final String ans =
+              await _.positionalArguments[0](TestDatabaseTransactionDriver());
           return ans;
         });
 
@@ -50,6 +49,5 @@ void main() {
         expect(result, equals('test'));
       });
     });
-
   });
 }

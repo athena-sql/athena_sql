@@ -39,7 +39,7 @@ class ColumnSchema extends CreateTableClause {
     this.preconstraints,
     this.constraints = const <ColumnConstrains>[],
     List<String>? parameters,
-  })  : _parameters = parameters;
+  }) : _parameters = parameters;
 
   QueryString typeParameters() => QueryString().keyword(_type).condition(
       _parameters != null && _parameters!.isNotEmpty,
@@ -50,8 +50,8 @@ class ColumnSchema extends CreateTableClause {
       .column(_name)
       .space()
       .adding(typeParameters())
-      .condition(preconstraints != null,
-          (q) => q.space().adding(preconstraints!))
+      .condition(
+          preconstraints != null, (q) => q.space().adding(preconstraints!))
       .condition(constraints.isNotEmpty,
           (q) => q.space().join(constraints, QueryString().space()));
 
