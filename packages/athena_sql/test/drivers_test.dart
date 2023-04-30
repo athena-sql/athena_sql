@@ -64,7 +64,9 @@ void main() {
       test('rawQuery', () async {
         // arrange
         final query = 'SELECT * FROM users';
-        final queryReponse = QueryResponse([]);
+        final queryReponse = QueryResponse([
+          QueryRow({'id': 1, 'name': 'test'})
+        ]);
         when(mockDriver.query(query))
             .thenAnswer((_) => Future.value(queryReponse));
         // act

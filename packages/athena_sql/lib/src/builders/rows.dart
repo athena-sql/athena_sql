@@ -2,9 +2,7 @@ part of 'builders.dart';
 
 abstract class AthenaRowResponse implements Map<String, dynamic> {}
 
-abstract class AthenaQueryResponse implements List<AthenaRowResponse> {
-  const AthenaQueryResponse();
-}
+abstract class AthenaQueryResponse implements List<AthenaRowResponse> {}
 
 class QueryRow extends UnmodifiableMapView<String, dynamic>
     implements AthenaRowResponse {
