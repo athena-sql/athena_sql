@@ -312,16 +312,26 @@ extension ColumnBuilder<D extends AthenaDriver>
       $customType(name, type: PostgresDataTypes.text);
 
   ///time of day (no time zone)
-  AthenaQueryBuilder<D, ColumnSchema> time(String name, {int? p, TimeOption? option}) =>
-      $customType(name, type: PostgresDataTypes.time, parameters: p != null ? ['$p'] : null, posParameters: option != null ? [option.value]: null);
+  AthenaQueryBuilder<D, ColumnSchema> time(String name,
+          {int? p, TimeOption? option}) =>
+      $customType(name,
+          type: PostgresDataTypes.time,
+          parameters: p != null ? ['$p'] : null,
+          posParameters: option != null ? [option.value] : null);
 
   ///time of day, including time zone
   AthenaQueryBuilder<D, ColumnSchema> timetz(String name, {int? p}) =>
-      $customType(name, type: PostgresDataTypes.timetz, parameters: p != null ? ['$p'] : null);
+      $customType(name,
+          type: PostgresDataTypes.timetz,
+          parameters: p != null ? ['$p'] : null);
 
   ///date and time
-  AthenaQueryBuilder<D, ColumnSchema> timestamp(String name, {int? p, TimeOption? option}) =>
-      $customType(name, type: PostgresDataTypes.timestamp, parameters: p != null ? ['$p'] : null, posParameters: option != null ? [option.value]: null);
+  AthenaQueryBuilder<D, ColumnSchema> timestamp(String name,
+          {int? p, TimeOption? option}) =>
+      $customType(name,
+          type: PostgresDataTypes.timestamp,
+          parameters: p != null ? ['$p'] : null,
+          posParameters: option != null ? [option.value] : null);
 
   ///date and time, including time zone
   AthenaQueryBuilder<D, ColumnSchema> timestamptz(String name) =>

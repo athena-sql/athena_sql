@@ -161,7 +161,8 @@ class QueryString extends QueryPrintable {
     return special("(").adding(fn(QueryString())).special(")");
   }
 
-  QueryString join(Iterable<QueryPrintable> values, [QueryPrintable? separator]) {
+  QueryString join(Iterable<QueryPrintable> values,
+      [QueryPrintable? separator]) {
     Iterator<QueryPrintable> iterator = values.iterator;
     if (!iterator.moveNext()) return this;
     final sections = <QueryPrintable>[];

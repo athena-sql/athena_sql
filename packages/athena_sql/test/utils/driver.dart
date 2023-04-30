@@ -49,7 +49,7 @@ class TestDatabaseDriver extends AthenaDatabaseConnectionDriver {
       {Map<String, dynamic>? mapValues}) {
     throw UnimplementedError();
   }
-  
+
   @override
   Future<void> close() {
     throw UnimplementedError();

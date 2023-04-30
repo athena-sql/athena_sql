@@ -8,7 +8,6 @@ class CreateColumnSchema extends QueryBuilder {
   QueryPrintable build() => QueryString();
 }
 
-
 class ColumnSchema extends CreateTableClause {
   final String _name;
   final String _type;
@@ -34,7 +33,8 @@ class ColumnSchema extends CreateTableClause {
               q.comaSeparated(_parameters!.map((e) => QueryString.user(e)))))
       .condition(
         _posParameters != null,
-        (q) => q.space().join(_posParameters!.map((e) => QueryString().keyword(e)),
+        (q) => q.space().join(
+            _posParameters!.map((e) => QueryString().keyword(e)),
             QueryString().space()),
       );
   @override
