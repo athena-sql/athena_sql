@@ -12,58 +12,69 @@ env:
   DART_COVERAGE_VERSION: 2.18.0
 
 jobs:
-    format:
-      name: Check formatting
-      runs-on: ubuntu-latest
-      steps:
-        - uses: actions/checkout@v3
+  format:
+    name: Check formatting
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
 
-        - uses: dart-lang/setup-dart@v1
-          with:
-            sdk: ${{ env.DART_MIN_VERSION }}
+      - uses: dart-lang/setup-dart@v1
+        with:
+          sdk: ${{ env.DART_MIN_VERSION }}
 
-        - name: Verify code formatting
-          run: dart format --output none --set-exit-if-changed .
-    lint:
-      name: Check lints
-      runs-on: ubuntu-latest
-      steps:
-        - uses: actions/checkout@v3
+      - name: Verify code formatting
+        run: dart format --output none --set-exit-if-changed .
+  lint:
+    name: Check lints
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
 
-        - uses: dart-lang/setup-dart@v1
-          with:
-            sdk: ${{ env.DART_MIN_VERSION }}
+      - uses: dart-lang/setup-dart@v1
+        with:
+          sdk: ${{ env.DART_MIN_VERSION }}
 
-        - run: dart pub get
-          working-directory: packages/athena_sql
-        - run: dart pub get
-          working-directory: packages/athena_postgres
-        - run: dart pub get
-          working-directory: packages/athena_migrate
+      - run: dart pub get
+        working-directory: packages/athena_sql
+      - run: dart pub get
+        working-directory: packages/athena_postgres
+      - run: dart pub get
+        working-directory: packages/athena_migrate
 
-        - name: Analyze
-          run: dart analyze .
-    test:
-        runs-on: ${{ matrix.os }}
-        strategy:
-            matrix:
-                os: [ubuntu-latest, macos-latest, windows-latest]
-                sdk: [2.18.0, stable, beta, dev]
-            fail-fast: false
-        steps:
-        - uses: actions/checkout@v3
-        - uses: dart-lang/setup-dart@v1
-          with:
-            sdk: ${{ matrix.sdk }}
-        - name: Install dependencies
-          run: dart pub get
-          working-directory: packages/athena_sql
-        - name: Run tests
-          run: dart test
-          working-directory: packages/athena_sql
-    coverage:
-      runs-on: ubuntu-latest
-      steps:
+      - name: Analyze
+        run: dart analyze .
+  test:
+    runs-on: ${{ matrix.os }}
+    strategy:
+      matrix:
+        os: [ubuntu-latest, macos-latest, windows-latest]
+        sdk: [2.18.0, stable, beta, dev]
+      fail-fast: false
+    steps:
+      - uses: actions/checkout@v3
+      - uses: dart-lang/setup-dart@v1
+        with:
+          sdk: ${{ matrix.sdk }}
+      - name: Install dependencies
+        run: dart pub get
+        working-directory: packages/athena_sql
+      - name: Run tests
+        run: dart test
+        working-directory: packages/athena_sql
+
+        # pre-pull the image so `usePostgresDocker` does not delay which may causes
+        # tests to timeout
+      - name: pull latest postgres image
+        run: docker pull postgres:latest
+      - name: Install dependencies
+        run: dart pub get
+        working-directory: packages/athena_postgres
+      - name: Run tests
+        run: dart test
+        working-directory: packages/athena_postgres
+  coverage:
+    runs-on: ubuntu-latest
+    steps:
       - uses: actions/checkout@v3
       - uses: dart-lang/setup-dart@v1
         with:
@@ -72,16 +83,30 @@ jobs:
       - name: Install dependencies
         run: dart pub get
         working-directory: packages/athena_sql
+        
 
       - name: Install coverage tools
         run: dart pub global activate coverage
-        
+
       - name: format coverage
         run: dart pub global run coverage:test_with_coverage --branch-coverage --function-coverage
         working-directory: packages/athena_sql
-        
+
+      - name: pull latest postgres image
+        run: docker pull postgres:latest
+      - name: Install dependencies
+        run: dart pub get
+        working-directory: packages/athena_postgres
+      - name: Coverage Test
+        run: dart pub global run coverage:test_with_coverage --branch-coverage --function-coverage
+        working-directory: packages/athena_postgres
+
       - uses: codecov/codecov-action@v3
         with:
           files: packages/athena_sql/coverage/lcov.info
+          verbose: true # optional (default = false)
+      - uses: codecov/codecov-action@v3
+        with:
+          files: packages/athena_postgres/coverage/lcov.info
           verbose: true # optional (default = false)
 
