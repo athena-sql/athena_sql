@@ -5,10 +5,10 @@
 // ignore_for_file: no_leading_underscores_for_library_prefixes
 import 'dart:async' as _i2;
 
-import 'package:athena_sql/src/builders/builders.dart' as _i4;
+import 'package:athena_sql/src/builders/builders.dart' as _i3;
 import 'package:mockito/mockito.dart' as _i1;
 
-import 'utils/driver.dart' as _i3;
+import 'utils/driver.dart' as _i4;
 
 // ignore_for_file: type=lint
 // ignore_for_file: avoid_redundant_argument_values
@@ -31,20 +31,41 @@ class _FakeFuture_0<T> extends _i1.SmartFake implements _i2.Future<T> {
         );
 }
 
+class _FakeAthenaQueryResponse_1 extends _i1.SmartFake
+    implements _i3.AthenaQueryResponse {
+  _FakeAthenaQueryResponse_1(
+    Object parent,
+    Invocation parentInvocation,
+  ) : super(
+          parent,
+          parentInvocation,
+        );
+}
+
 /// A class which mocks [TestDatabaseDriver].
 ///
 /// See the documentation for Mockito's code generation for more information.
 class MockTestDatabaseDriver extends _i1.Mock
-    implements _i3.TestDatabaseDriver {
+    implements _i4.TestDatabaseDriver {
   MockTestDatabaseDriver() {
     _i1.throwOnMissingStub(this);
   }
 
   @override
-  _i2.Future<int> execute(String? query) => (super.noSuchMethod(
+  dynamic Function(String) get executable => (super.noSuchMethod(
+        Invocation.getter(#executable),
+        returnValue: (String __p0) => null,
+      ) as dynamic Function(String));
+  @override
+  _i2.Future<int> execute(
+    String? query, {
+    Map<String, dynamic>? mapValues,
+  }) =>
+      (super.noSuchMethod(
         Invocation.method(
           #execute,
           [query],
+          {#mapValues: mapValues},
         ),
         returnValue: _i2.Future<int>.value(0),
       ) as _i2.Future<int>);
@@ -67,7 +88,7 @@ class MockTestDatabaseDriver extends _i1.Mock
       ) as _i2.Future<void>);
   @override
   _i2.Future<T> transaction<T>(
-          _i2.Future<T> Function(_i4.AthenaDatabaseDriver)? trx) =>
+          _i2.Future<T> Function(_i3.AthenaDatabaseDriver)? trx) =>
       (super.noSuchMethod(
         Invocation.method(
           #transaction,
@@ -81,4 +102,25 @@ class MockTestDatabaseDriver extends _i1.Mock
           ),
         ),
       ) as _i2.Future<T>);
+  @override
+  _i2.Future<_i3.AthenaQueryResponse> query(
+    String? queryString, {
+    Map<String, dynamic>? mapValues,
+  }) =>
+      (super.noSuchMethod(
+        Invocation.method(
+          #query,
+          [queryString],
+          {#mapValues: mapValues},
+        ),
+        returnValue: _i2.Future<_i3.AthenaQueryResponse>.value(
+            _FakeAthenaQueryResponse_1(
+          this,
+          Invocation.method(
+            #query,
+            [queryString],
+            {#mapValues: mapValues},
+          ),
+        )),
+      ) as _i2.Future<_i3.AthenaQueryResponse>);
 }

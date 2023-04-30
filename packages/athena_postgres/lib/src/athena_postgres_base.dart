@@ -8,8 +8,6 @@ class PostgreTransactionSQLDriver<T extends PostgreSQLExecutionContext>
     extends AthenaDatabaseDriver {
   T connection;
   PostgreTransactionSQLDriver._(this.connection);
-  @override
-  Future<int> execute(String query) => connection.execute(query);
 
   @override
   Future<bool> tableExists(String table, {String schema = 'public'}) async {
@@ -23,6 +21,33 @@ class PostgreTransactionSQLDriver<T extends PostgreSQLExecutionContext>
           );
       ''', substitutionValues: {'schema': schema, 'table': table});
     return result[0][0];
+  }
+
+  @override
+  Future<AthenaQueryResponse> query(
+    String queryString, {
+    Map<String, dynamic>? mapValues,
+    bool? allowReuse,
+    int? timeoutInSeconds,
+    bool? useSimpleQueryProtocol,
+  }) async {
+    final response = await connection.query(queryString,
+        substitutionValues: mapValues,
+        allowReuse: allowReuse,
+        timeoutInSeconds: timeoutInSeconds,
+        useSimpleQueryProtocol: useSimpleQueryProtocol);
+    final mapped = response.map((e) => QueryRow(e.toColumnMap()));
+    return QueryResponse(mapped);
+  }
+
+  @override
+  Future<int> execute(
+    String queryString, {
+    Map<String, dynamic>? mapValues,
+    int? timeoutInSeconds,
+  }) {
+    return connection.execute(queryString,
+        substitutionValues: mapValues, timeoutInSeconds: timeoutInSeconds);
   }
 }
 
@@ -39,9 +64,6 @@ class PostgreSQLDriver extends PostgreTransactionSQLDriver<PostgreSQLConnection>
             username: _config.username,
             password: _config.password,
             useSSL: _config.useSSL));
-
-  @override
-  Future<int> execute(String query) => connection.execute(query);
 
   @override
   Future<void> open() async {
