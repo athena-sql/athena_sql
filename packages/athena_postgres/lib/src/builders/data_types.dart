@@ -2,8 +2,6 @@ import 'package:athena_sql/athena_sql.dart';
 import 'package:athena_sql/schemas.dart';
 
 class PostgresDataTypes {
-  const PostgresDataTypes._();
-
   static const bigint = 'BIGINT';
   static const int8 = 'INT8';
   static const bigserial = 'BIGSERIAL';
@@ -53,18 +51,41 @@ class PostgresDataTypes {
   static const serial4 = 'SERIAL4';
   static const text = 'TEXT';
   static const time = 'TIME';
-  static const timeWithoutTimeZone = 'TIME WITHOUT TIME ZONE';
-  static const timeWithTimeZone = 'TIME WITH TIME ZONE';
   static const timetz = 'TIMETZ';
   static const timestamp = 'TIMESTAMP';
-  static const timestampWithoutTimeZone = 'TIMESTAMP WITHOUT TIME ZONE';
-  static const timestampWithTimeZone = 'TIMESTAMP WITH TIME ZONE';
   static const timestamptz = 'TIMESTAMPTZ';
   static const tsquery = 'TSQUERY';
   static const tsvector = 'TSVECTOR';
   static const txidSnapshot = 'TXID_SNAPSHOT';
   static const uuid = 'UUID';
   static const xml = 'XML';
+}
+
+enum IntervalPhrases {
+  year('YEAR'),
+  month('MONTH'),
+  day('DAY'),
+  hour('HOUR'),
+  minute('MINUTE'),
+  second('SECOND'),
+  yearToMonth('YEAR TO MONTH'),
+  dayToHour('DAY TO HOUR'),
+  dayToMinute('DAY TO MINUTE'),
+  dayToSecond('DAY TO SECOND'),
+  hourToMinute('HOUR TO MINUTE'),
+  hourToSecond('HOUR TO SECOND'),
+  minuteToSecond('MINUTE TO SECOND');
+
+  final String name;
+  const IntervalPhrases(this.name);
+}
+
+enum TimeOption {
+  withTimeZone('WITH TIME ZONE'),
+  withoutTimeZone('WITHOUT TIME ZONE');
+
+  final String value;
+  const TimeOption(this.value);
 }
 
 extension ColumnBuilder<D extends AthenaDriver>
@@ -181,10 +202,20 @@ extension ColumnBuilder<D extends AthenaDriver>
       $customType(name, type: PostgresDataTypes.int4);
 
   ///time span
-  AthenaQueryBuilder<D, ColumnSchema> interval(
-          String name, IntervalPhrases fields, int p) =>
-      $customType(name,
-          type: PostgresDataTypes.interval, parameters: ['$fields', '$p']);
+  AthenaQueryBuilder<D, ColumnSchema> interval(String name,
+      [IntervalPhrases? fields, int? p]) {
+    String? parameter;
+    if (fields != null) {
+      parameter = '${fields.name}${p != null ? '($p)' : ''}';
+    }
+    final posParameters = <String>[];
+    if (parameter != null) {
+      posParameters.add(parameter);
+    }
+
+    return $customType(name,
+        type: PostgresDataTypes.interval, posParameters: posParameters);
+  }
 
   ///JSON data
   AthenaQueryBuilder<D, ColumnSchema> json(String name) =>
@@ -281,38 +312,26 @@ extension ColumnBuilder<D extends AthenaDriver>
       $customType(name, type: PostgresDataTypes.text);
 
   ///time of day (no time zone)
-  AthenaQueryBuilder<D, ColumnSchema> time(String name, int p) =>
-      $customType(name, type: PostgresDataTypes.time, parameters: ['$p']);
-
-  ///time of day (no time zone)
-  AthenaQueryBuilder<D, ColumnSchema> timeWithoutTimeZone(String name, int p) =>
+  AthenaQueryBuilder<D, ColumnSchema> time(String name,
+          {int? p, TimeOption? option}) =>
       $customType(name,
-          type: PostgresDataTypes.timeWithoutTimeZone, parameters: ['$p']);
+          type: PostgresDataTypes.time,
+          parameters: p != null ? ['$p'] : null,
+          posParameters: option != null ? [option.value] : null);
 
   ///time of day, including time zone
-  AthenaQueryBuilder<D, ColumnSchema> timeWithTimeZone(String name, int p) =>
+  AthenaQueryBuilder<D, ColumnSchema> timetz(String name, {int? p}) =>
       $customType(name,
-          type: PostgresDataTypes.timeWithTimeZone, parameters: ['$p']);
+          type: PostgresDataTypes.timetz,
+          parameters: p != null ? ['$p'] : null);
 
-  ///time of day, including time zone
-  AthenaQueryBuilder<D, ColumnSchema> timetz(String name, int p) =>
-      $customType(name, type: PostgresDataTypes.timetz, parameters: ['$p']);
-
-  ///date and time (no time zone)
-  AthenaQueryBuilder<D, ColumnSchema> timestamp(String name, int p) =>
-      $customType(name, type: PostgresDataTypes.timestamp, parameters: ['$p']);
-
-  ///date and time (no time zone)
-  AthenaQueryBuilder<D, ColumnSchema> timestampWithoutTimeZone(
-          String name, int p) =>
+  ///date and time
+  AthenaQueryBuilder<D, ColumnSchema> timestamp(String name,
+          {int? p, TimeOption? option}) =>
       $customType(name,
-          type: PostgresDataTypes.timestampWithoutTimeZone, parameters: ['$p']);
-
-  ///date and time, including time zone
-  AthenaQueryBuilder<D, ColumnSchema> timestampWithTimeZone(
-          String name, int p) =>
-      $customType(name,
-          type: PostgresDataTypes.timestampWithTimeZone, parameters: ['$p']);
+          type: PostgresDataTypes.timestamp,
+          parameters: p != null ? ['$p'] : null,
+          posParameters: option != null ? [option.value] : null);
 
   ///date and time, including time zone
   AthenaQueryBuilder<D, ColumnSchema> timestamptz(String name) =>

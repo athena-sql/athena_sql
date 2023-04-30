@@ -15,6 +15,7 @@ void main() {
       await athena.open();
       // Additional setup goes here.
     });
+    tearDown(() async => await athena.close());
 
     test('execute query', () async {
       final completed = await athena.create

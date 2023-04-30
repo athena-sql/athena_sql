@@ -12,6 +12,7 @@ class AthenaSQL<D extends AthenaDriver> {
 
 extension AthenaDatabaseExtension on AthenaSQL<AthenaDatabaseConnectionDriver> {
   Future<void> open() => driver.open();
+  Future<void> close() => driver.close();
   Future<T> transaction<T>(
       Future<T> Function(AthenaSQL<AthenaDatabaseDriver> athenasql) trx) {
     return driver.transaction((driver) => trx(AthenaSQL(driver)));

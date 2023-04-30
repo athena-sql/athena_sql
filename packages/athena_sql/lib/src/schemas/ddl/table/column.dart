@@ -8,43 +8,35 @@ class CreateColumnSchema extends QueryBuilder {
   QueryPrintable build() => QueryString();
 }
 
-enum IntervalPhrases {
-  year('YEAR'),
-  month('MONTH'),
-  day('DAY'),
-  hour('HOUR'),
-  minute('MINUTE'),
-  second('SECOND'),
-  yearToMonth('YEAR TO MONTH'),
-  dayToHour('DAY TO HOUR'),
-  dayToMinute('DAY TO MINUTE'),
-  dayToSecond('DAY TO SECOND'),
-  hourToMinute('HOUR TO MINUTE'),
-  hourToSecond('HOUR TO SECOND'),
-  minuteToSecond('MINUTE TO SECOND');
-
-  final String name;
-  const IntervalPhrases(this.name);
-}
-
 class ColumnSchema extends CreateTableClause {
   final String _name;
   final String _type;
   final QueryPrintable? preconstraints;
   final List<ColumnConstrains> constraints;
   final List<String>? _parameters;
+  final List<String>? _posParameters;
   ColumnSchema(
     this._name,
     this._type, {
     this.preconstraints,
     this.constraints = const <ColumnConstrains>[],
     List<String>? parameters,
-  }) : _parameters = parameters;
+    List<String>? posParameters,
+  })  : _parameters = parameters,
+        _posParameters = posParameters;
 
-  QueryString typeParameters() => QueryString().keyword(_type).condition(
-      _parameters != null && _parameters!.isNotEmpty,
-      (q) => q.parentesis((q) =>
-          q.comaSeparated(_parameters!.map((e) => QueryString.user(e)))));
+  QueryString typeParameters() => QueryString()
+      .keyword(_type)
+      .condition(
+          _parameters != null && _parameters!.isNotEmpty,
+          (q) => q.parentesis((q) =>
+              q.comaSeparated(_parameters!.map((e) => QueryString.user(e)))))
+      .condition(
+        _posParameters != null,
+        (q) => q.space().join(
+            _posParameters!.map((e) => QueryString().keyword(e)),
+            QueryString().space()),
+      );
   @override
   QueryString build() => QueryString()
       .column(_name)
