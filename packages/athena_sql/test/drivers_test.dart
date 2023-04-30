@@ -49,5 +49,28 @@ void main() {
         expect(result, equals('test'));
       });
     });
+    group('query', () {
+      test('rawQuery', () async {
+        // arrange
+        final tableName = 'users';
+        when(mockDriver.tableExists(tableName)).thenAnswer((_) =>Future.value(true));
+        // act
+        final response = await athenaSql.tableExists(tableName);
+        // assert
+        verify(mockDriver.tableExists(tableName)).called(1);
+        expect(response, equals(true));
+      });
+      test('rawQuery', () async {
+        // arrange
+        final query = 'SELECT * FROM users';
+        final queryReponse = QueryResponse([]);
+        when(mockDriver.query(query)).thenAnswer((_) =>Future.value(queryReponse));
+        // act
+        final response = await athenaSql.rawQuery(query);
+        // assert
+        verify(mockDriver.query(query)).called(1);
+        expect(response, equals(queryReponse));
+      });
+    });
   });
 }
