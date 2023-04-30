@@ -8,7 +8,6 @@ abstract class AthenaDatabaseTransactionDriver extends AthenaDatabaseDriver {
   const AthenaDatabaseTransactionDriver();
 }
 
-
 abstract class AthenaDatabaseDriver extends AthenaDriver {
   const AthenaDatabaseDriver();
 
