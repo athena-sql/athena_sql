@@ -24,6 +24,7 @@ abstract class AthenaDatabaseDriver extends AthenaDriver {
 
 abstract class AthenaDatabaseConnectionDriver extends AthenaDatabaseDriver {
   Future<void> open();
+  Future<void> close();
 
   Future<T> transaction<T>(Future<T> Function(AthenaDatabaseDriver driver) trx);
 }

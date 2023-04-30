@@ -80,6 +80,13 @@ class PostgreSQLDriver extends PostgreTransactionSQLDriver<PostgreSQLConnection>
   }
 
   @override
+  Future<void> close() async {
+    if (!_isOpen) return;
+    await connection.close();
+    _isOpen = false;
+  }
+
+  @override
   Future<T> transaction<T>(
       Future<T> Function(AthenaDatabaseDriver driver) trx) {
     return connection.transaction((connection) {
