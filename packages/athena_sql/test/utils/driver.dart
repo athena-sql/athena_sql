@@ -4,7 +4,7 @@ class TestDriver extends AthenaStringDriver {}
 
 class TestDatabaseTransactionDriver extends AthenaDatabaseTransactionDriver {
   @override
-  Future<int> execute(String query) {
+  Future<int> execute(String query, {Map<String, dynamic>? mapValues}) {
     return Future.value(0);
   }
 
@@ -12,13 +12,19 @@ class TestDatabaseTransactionDriver extends AthenaDatabaseTransactionDriver {
   Future<bool> tableExists(String table) {
     return Future.value(false);
   }
+
+  @override
+  Future<AthenaQueryResponse> query(String queryString,
+      {Map<String, dynamic>? mapValues}) {
+    throw UnimplementedError();
+  }
 }
 
 class TestDatabaseDriver extends AthenaDatabaseConnectionDriver {
   final Function(String) executable;
   TestDatabaseDriver(this.executable);
   @override
-  Future<int> execute(String query) {
+  Future<int> execute(String query, {Map<String, dynamic>? mapValues}) {
     return Future.value(0);
   }
 
@@ -36,6 +42,12 @@ class TestDatabaseDriver extends AthenaDatabaseConnectionDriver {
   Future<T> transaction<T>(
       Future<T> Function(AthenaDatabaseDriver driver) trx) {
     return trx(TestDatabaseTransactionDriver());
+  }
+
+  @override
+  Future<AthenaQueryResponse> query(String queryString,
+      {Map<String, dynamic>? mapValues}) {
+    throw UnimplementedError();
   }
 }
 

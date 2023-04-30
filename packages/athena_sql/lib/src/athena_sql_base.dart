@@ -18,6 +18,11 @@ extension AthenaDatabaseExtension on AthenaSQL<AthenaDatabaseConnectionDriver> {
   }
 
   Future<bool> tableExists(String table) => driver.tableExists(table);
+  Future<AthenaQueryResponse> rawQuery(
+    String queryString, {
+    Map<String, dynamic>? mapValues,
+  }) =>
+      driver.query(queryString, mapValues: mapValues);
 }
 
 abstract class AthenaMigration {
