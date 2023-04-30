@@ -1,9 +1,9 @@
 part of 'builders.dart';
 
 class AthenaQueryBuilder<D extends AthenaDriver, B extends QueryBuilder> {
-  final B _schema;
+  final B $schema;
   final D _driver;
-  const AthenaQueryBuilder(this._driver, this._schema);
+  const AthenaQueryBuilder(this._driver, this.$schema);
 
   AthenaQueryBuilder<D, B> _copyWith({
     B? schema,
@@ -11,14 +11,14 @@ class AthenaQueryBuilder<D extends AthenaDriver, B extends QueryBuilder> {
   }) =>
       AthenaQueryBuilder(
         driver ?? this._driver,
-        schema ?? this._schema,
+        schema ?? this.$schema,
       );
   AthenaQueryBuilder<ND, B> changeDriver<ND extends AthenaDriver>(
     ND driver,
   ) =>
       AthenaQueryBuilder(
         driver,
-        this._schema,
+        this.$schema,
       );
   AthenaQueryBuilder<D, NB> _changeBuilder<NB extends QueryBuilder>(
     NB schema,
@@ -29,12 +29,14 @@ class AthenaQueryBuilder<D extends AthenaDriver, B extends QueryBuilder> {
       );
 }
 
-extension AthenaDatabaseExtension<D extends AthenaDatabaseDriver,
-    B extends QueryBuilder> on AthenaQueryBuilder<D, B> {
-  exec() => _driver.execute(_schema.plain());
+typedef QueryRows = List<Map<String, Map<String, dynamic>>>;
+
+extension AthenaDatabaseQueryExtension<D extends AthenaDatabaseDriver>
+    on AthenaQueryBuilder<D, DdlSchema> {
+  Future<int> run() => _driver.execute($schema.plain());
 }
 
 extension AthenaStringExtension<D extends AthenaStringDriver,
     B extends QueryBuilder> on AthenaQueryBuilder<D, B> {
-  String build() => _schema.plain();
+  String build() => $schema.plain();
 }

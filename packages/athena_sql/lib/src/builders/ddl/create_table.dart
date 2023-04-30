@@ -9,6 +9,14 @@ extension CreateTableBuilder<D extends AthenaDriver>
     final clauses = table(_changeBuilder(CreateColumnSchema()));
     return _copyWith(
         schema:
-            _schema.copyWith(clauses: [..._schema.clauses, clauses._schema]));
+            $schema.copyWith(clauses: [...$schema.clauses, clauses.$schema]));
+  }
+
+  AthenaQueryBuilder<D, CreateTableSchema> ifNotExists() {
+    return _copyWith(schema: $schema.copyWith(ifNotExists: true));
+  }
+
+  AthenaQueryBuilder<D, CreateTableSchema> temporary() {
+    return _copyWith(schema: $schema.copyWith(temporary: true));
   }
 }

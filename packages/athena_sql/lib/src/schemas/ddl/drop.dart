@@ -1,14 +1,6 @@
-import '../../../athena_sql.dart';
-import '../../driver.dart';
+import 'package:athena_sql/src/schemas/ddl/ddl_schema.dart';
+
 import '../../utils/query_string.dart';
-
-class DropBuilder<D extends AthenaDriver> {
-  final D driver;
-  const DropBuilder(this.driver);
-
-  AthenaQueryBuilder<D, DropTableSchema> table(String name) =>
-      AthenaQueryBuilder(driver, DropTableSchema(names: [name]));
-}
 
 enum DropTableType {
   cascade('CASCADE'),
@@ -18,7 +10,7 @@ enum DropTableType {
   const DropTableType(this.value);
 }
 
-class DropTableSchema extends QueryBuilder {
+class DropTableSchema extends DdlSchema {
   final List<String> names;
   final bool? ifExists;
   final DropTableType? type;

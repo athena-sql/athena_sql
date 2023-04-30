@@ -1,269 +1,340 @@
-part of '../builders.dart';
+import 'package:athena_sql/athena_sql.dart';
+import 'package:athena_sql/schemas.dart';
+
+class PostgresDataTypes {
+  const PostgresDataTypes._();
+
+  static const bigint = 'BIGINT';
+  static const int8 = 'INT8';
+  static const bigserial = 'BIGSERIAL';
+  static const serial8 = 'SERIAL8';
+  static const bit = 'BIT';
+  static const bitVarying = 'BIT VARYING';
+  static const varbit = 'VARBIT';
+  static const boolean = 'BOOLEAN';
+  static const bool = 'BOOL';
+  static const box = 'BOX';
+  static const bytea = 'BYTEA';
+  static const character = 'CHARACTER';
+  static const char = 'CHAR';
+  static const characterVarying = 'CHARACTER VARYING';
+  static const varchar = 'VARCHAR';
+  static const cidr = 'CIDR';
+  static const circle = 'CIRCLE';
+  static const date = 'DATE';
+  static const doublePrecision = 'DOUBLE PRECISION';
+  static const float8 = 'FLOAT8';
+  static const inet = 'INET';
+  static const integer = 'INTEGER';
+  static const int = 'INT';
+  static const int4 = 'INT4';
+  static const interval = 'INTERVAL';
+  static const json = 'JSON';
+  static const jsonb = 'JSONB';
+  static const line = 'LINE';
+  static const lseg = 'LSEG';
+  static const macaddr = 'MACADDR';
+  static const macaddr8 = 'MACADDR8';
+  static const money = 'MONEY';
+  static const numeric = 'NUMERIC';
+  static const decimal = 'DECIMAL';
+  static const path = 'PATH';
+  static const pgLsn = 'PG_LSN';
+  static const pgSnapshot = 'PG_SNAPSHOT';
+  static const point = 'POINT';
+  static const polygon = 'POLYGON';
+  static const real = 'REAL';
+  static const float4 = 'FLOAT4';
+  static const smallint = 'SMALLINT';
+  static const int2 = 'INT2';
+  static const smallserial = 'SMALLSERIAL';
+  static const serial2 = 'SERIAL2';
+  static const serial = 'SERIAL';
+  static const serial4 = 'SERIAL4';
+  static const text = 'TEXT';
+  static const time = 'TIME';
+  static const timeWithoutTimeZone = 'TIME WITHOUT TIME ZONE';
+  static const timeWithTimeZone = 'TIME WITH TIME ZONE';
+  static const timetz = 'TIMETZ';
+  static const timestamp = 'TIMESTAMP';
+  static const timestampWithoutTimeZone = 'TIMESTAMP WITHOUT TIME ZONE';
+  static const timestampWithTimeZone = 'TIMESTAMP WITH TIME ZONE';
+  static const timestamptz = 'TIMESTAMPTZ';
+  static const tsquery = 'TSQUERY';
+  static const tsvector = 'TSVECTOR';
+  static const txidSnapshot = 'TXID_SNAPSHOT';
+  static const uuid = 'UUID';
+  static const xml = 'XML';
+}
 
 extension ColumnBuilder<D extends AthenaDriver>
     on AthenaQueryBuilder<D, CreateColumnSchema> {
-  AthenaQueryBuilder<D, ColumnSchema> _build(String name, ColumnType type,
-          {List<String>? parameters}) =>
-      _changeBuilder(ColumnSchema(name, type, parameters: parameters));
-
   /// signed eight-byte integer
   ///
   /// *(alias: `int8`)*
   AthenaQueryBuilder<D, ColumnSchema> bigint(String name) =>
-      _build(name, ColumnType.bigint);
+      $customType(name, type: PostgresDataTypes.bigint);
 
   /// signed eight-byte integer
   AthenaQueryBuilder<D, ColumnSchema> int8(String name) =>
-      _build(name, ColumnType.int8);
+      $customType(name, type: PostgresDataTypes.int8);
 
   /// autoincrementing eight-byte integer
   ///
   /// *(alias: `serial8`)*
   AthenaQueryBuilder<D, ColumnSchema> bigserial(String name) =>
-      _build(name, ColumnType.bigserial);
+      $customType(name, type: PostgresDataTypes.bigserial);
 
   /// autoincrementing eight-byte integer
   AthenaQueryBuilder<D, ColumnSchema> serial8(String name) =>
-      _build(name, ColumnType.serial8);
+      $customType(name, type: PostgresDataTypes.serial8);
 
   /// fixed-length bit string
   AthenaQueryBuilder<D, ColumnSchema> bit(String name, int n) =>
-      _build(name, ColumnType.bit, parameters: ['$n']);
+      $customType(name, type: PostgresDataTypes.bit, parameters: ['$n']);
 
   /// variable-length bit string
   AthenaQueryBuilder<D, ColumnSchema> bitVarying(String name, int n) =>
-      _build(name, ColumnType.bitVarying, parameters: ['$n']);
+      $customType(name, type: PostgresDataTypes.bitVarying, parameters: ['$n']);
 
   /// variable-length bit string
   AthenaQueryBuilder<D, ColumnSchema> varbit(String name, int n) =>
-      _build(name, ColumnType.varbit, parameters: ['$n']);
+      $customType(name, type: PostgresDataTypes.varbit, parameters: ['$n']);
 
   /// logical Boolean (true/false)
   ///
   /// *(alias: `bool`)*
   AthenaQueryBuilder<D, ColumnSchema> boolean(String name) =>
-      _build(name, ColumnType.boolean);
+      $customType(name, type: PostgresDataTypes.boolean);
 
   /// logical Boolean (true/false)
   AthenaQueryBuilder<D, ColumnSchema> bool(String name) =>
-      _build(name, ColumnType.bool);
+      $customType(name, type: PostgresDataTypes.bool);
 
   /// rectangular box on a plane
   AthenaQueryBuilder<D, ColumnSchema> box(String name) =>
-      _build(name, ColumnType.box);
+      $customType(name, type: PostgresDataTypes.box);
 
   /// binary data (“byte array”)
   AthenaQueryBuilder<D, ColumnSchema> bytea(String name) =>
-      _build(name, ColumnType.bytea);
+      $customType(name, type: PostgresDataTypes.bytea);
 
   /// **fixed-length character string**
   ///
   /// *(alias: char [ `(n)` ])*
   AthenaQueryBuilder<D, ColumnSchema> character(String name, int n) =>
-      _build(name, ColumnType.character, parameters: ['$n']);
+      $customType(name, type: PostgresDataTypes.character, parameters: ['$n']);
 
   /// fixed-length character string
   AthenaQueryBuilder<D, ColumnSchema> char(String name, int n) =>
-      _build(name, ColumnType.char, parameters: ['$n']);
+      $customType(name, type: PostgresDataTypes.char, parameters: ['$n']);
 
   /// variable-length character string
   ///
   /// *(alias: `varchar [ (n) ]`)*
   AthenaQueryBuilder<D, ColumnSchema> characterVarying(String name, int n) =>
-      _build(name, ColumnType.characterVarying, parameters: ['$n']);
+      $customType(name,
+          type: PostgresDataTypes.characterVarying, parameters: ['$n']);
 
   /// variable-length character string
   AthenaQueryBuilder<D, ColumnSchema> varchar(String name, int n) =>
-      _build(name, ColumnType.varchar, parameters: ['$n']);
+      $customType(name, type: PostgresDataTypes.varchar, parameters: ['$n']);
 
   ///IPv4 or IPv6 network address
   AthenaQueryBuilder<D, ColumnSchema> cidr(String name) =>
-      _build(name, ColumnType.cidr);
+      $customType(name, type: PostgresDataTypes.cidr);
 
   ///circle on a plane
   AthenaQueryBuilder<D, ColumnSchema> circle(String name) =>
-      _build(name, ColumnType.circle);
+      $customType(name, type: PostgresDataTypes.circle);
 
   ///calendar date (year, month, day)
   AthenaQueryBuilder<D, ColumnSchema> date(String name) =>
-      _build(name, ColumnType.date);
+      $customType(name, type: PostgresDataTypes.date);
 
   ///double precision floating-point number (8 bytes)
   ///
   ///*(alias: `float8`)*
   AthenaQueryBuilder<D, ColumnSchema> doublePrecision(String name) =>
-      _build(name, ColumnType.doublePrecision);
+      $customType(name, type: PostgresDataTypes.doublePrecision);
 
   ///double precision floating-point number (8 bytes)
   AthenaQueryBuilder<D, ColumnSchema> float8(String name) =>
-      _build(name, ColumnType.float8);
+      $customType(name, type: PostgresDataTypes.float8);
 
   ///IPv4 or IPv6 host address
   AthenaQueryBuilder<D, ColumnSchema> inet(String name) =>
-      _build(name, ColumnType.inet);
+      $customType(name, type: PostgresDataTypes.inet);
 
   ///signed four-byte integer
   ///
   ///*(alias: `int`, `int4`)*
   AthenaQueryBuilder<D, ColumnSchema> integer(String name) =>
-      _build(name, ColumnType.integer);
+      $customType(name, type: PostgresDataTypes.integer);
 
   ///signed four-byte integer
   AthenaQueryBuilder<D, ColumnSchema> int_(String name) =>
-      _build(name, ColumnType.int);
+      $customType(name, type: PostgresDataTypes.int);
 
   ///signed four-byte integer
   AthenaQueryBuilder<D, ColumnSchema> int4(String name) =>
-      _build(name, ColumnType.int4);
+      $customType(name, type: PostgresDataTypes.int4);
 
   ///time span
   AthenaQueryBuilder<D, ColumnSchema> interval(
           String name, IntervalPhrases fields, int p) =>
-      _build(name, ColumnType.interval, parameters: ['$fields', '$p']);
+      $customType(name,
+          type: PostgresDataTypes.interval, parameters: ['$fields', '$p']);
 
   ///JSON data
   AthenaQueryBuilder<D, ColumnSchema> json(String name) =>
-      _build(name, ColumnType.json);
+      $customType(name, type: PostgresDataTypes.json);
 
   ///binary JSON data, decomposed
   AthenaQueryBuilder<D, ColumnSchema> jsonb(String name) =>
-      _build(name, ColumnType.jsonb);
+      $customType(name, type: PostgresDataTypes.jsonb);
 
   ///infinite line on a plane
   AthenaQueryBuilder<D, ColumnSchema> line(String name) =>
-      _build(name, ColumnType.line);
+      $customType(name, type: PostgresDataTypes.line);
 
   ///line segment on a plane
   AthenaQueryBuilder<D, ColumnSchema> lseg(String name) =>
-      _build(name, ColumnType.lseg);
+      $customType(name, type: PostgresDataTypes.lseg);
 
   ///MAC (Media Access Control) address
   AthenaQueryBuilder<D, ColumnSchema> macaddr(String name) =>
-      _build(name, ColumnType.macaddr);
+      $customType(name, type: PostgresDataTypes.macaddr);
 
   ///MAC (Media Access Control) address (EUI-64 format)
   AthenaQueryBuilder<D, ColumnSchema> macaddr8(String name) =>
-      _build(name, ColumnType.macaddr8);
+      $customType(name, type: PostgresDataTypes.macaddr8);
 
   ///currency amount
   AthenaQueryBuilder<D, ColumnSchema> money(String name) =>
-      _build(name, ColumnType.money);
+      $customType(name, type: PostgresDataTypes.money);
 
   ///exact numeric of selectable precision
   AthenaQueryBuilder<D, ColumnSchema> numeric(String name, int p, int s) =>
-      _build(name, ColumnType.numeric, parameters: ['$p', '$s']);
+      $customType(name,
+          type: PostgresDataTypes.numeric, parameters: ['$p', '$s']);
 
   ///exact numeric of selectable precision
   AthenaQueryBuilder<D, ColumnSchema> decimal(String name, int p, int s) =>
-      _build(name, ColumnType.decimal, parameters: ['$p', '$s']);
+      $customType(name,
+          type: PostgresDataTypes.decimal, parameters: ['$p', '$s']);
 
   ///geometric path on a plane
   AthenaQueryBuilder<D, ColumnSchema> path(String name) =>
-      _build(name, ColumnType.path);
+      $customType(name, type: PostgresDataTypes.path);
 
   ///PostgreSQL Log Sequence Number
   AthenaQueryBuilder<D, ColumnSchema> pgLsn(String name) =>
-      _build(name, ColumnType.pgLsn);
+      $customType(name, type: PostgresDataTypes.pgLsn);
 
   ///user-level transaction ID snapshot
   AthenaQueryBuilder<D, ColumnSchema> pgSnapshot(String name) =>
-      _build(name, ColumnType.pgSnapshot);
+      $customType(name, type: PostgresDataTypes.pgSnapshot);
 
   ///geometric point on a plane
   AthenaQueryBuilder<D, ColumnSchema> point(String name) =>
-      _build(name, ColumnType.point);
+      $customType(name, type: PostgresDataTypes.point);
 
   ///geometric polygon on a plane
   AthenaQueryBuilder<D, ColumnSchema> polygon(String name) =>
-      _build(name, ColumnType.polygon);
+      $customType(name, type: PostgresDataTypes.polygon);
 
   ///single precision floating-point number (4 bytes)
   AthenaQueryBuilder<D, ColumnSchema> real(String name) =>
-      _build(name, ColumnType.real);
+      $customType(name, type: PostgresDataTypes.real);
 
   ///single precision floating-point number (4 bytes)
   AthenaQueryBuilder<D, ColumnSchema> float4(String name) =>
-      _build(name, ColumnType.float4);
+      $customType(name, type: PostgresDataTypes.float4);
 
   ///signed two-byte integer
   AthenaQueryBuilder<D, ColumnSchema> smallint(String name) =>
-      _build(name, ColumnType.smallint);
+      $customType(name, type: PostgresDataTypes.smallint);
 
   ///signed two-byte integer
   AthenaQueryBuilder<D, ColumnSchema> int2(String name) =>
-      _build(name, ColumnType.int2);
+      $customType(name, type: PostgresDataTypes.int2);
 
   ///autoincrementing two-byte integer
   AthenaQueryBuilder<D, ColumnSchema> smallserial(String name) =>
-      _build(name, ColumnType.smallserial);
+      $customType(name, type: PostgresDataTypes.smallserial);
 
   ///autoincrementing two-byte integer
   AthenaQueryBuilder<D, ColumnSchema> serial2(String name) =>
-      _build(name, ColumnType.serial2);
+      $customType(name, type: PostgresDataTypes.serial2);
 
   ///autoincrementing four-byte integer
   AthenaQueryBuilder<D, ColumnSchema> serial(String name) =>
-      _build(name, ColumnType.serial);
+      $customType(name, type: PostgresDataTypes.serial);
 
   ///autoincrementing four-byte integer
   AthenaQueryBuilder<D, ColumnSchema> serial4(String name) =>
-      _build(name, ColumnType.serial4);
+      $customType(name, type: PostgresDataTypes.serial4);
 
   ///variable-length character string
   AthenaQueryBuilder<D, ColumnSchema> text(String name) =>
-      _build(name, ColumnType.text);
+      $customType(name, type: PostgresDataTypes.text);
 
   ///time of day (no time zone)
   AthenaQueryBuilder<D, ColumnSchema> time(String name, int p) =>
-      _build(name, ColumnType.time, parameters: ['$p']);
+      $customType(name, type: PostgresDataTypes.time, parameters: ['$p']);
 
   ///time of day (no time zone)
   AthenaQueryBuilder<D, ColumnSchema> timeWithoutTimeZone(String name, int p) =>
-      _build(name, ColumnType.timeWithoutTimeZone, parameters: ['$p']);
+      $customType(name,
+          type: PostgresDataTypes.timeWithoutTimeZone, parameters: ['$p']);
 
   ///time of day, including time zone
   AthenaQueryBuilder<D, ColumnSchema> timeWithTimeZone(String name, int p) =>
-      _build(name, ColumnType.timeWithTimeZone, parameters: ['$p']);
+      $customType(name,
+          type: PostgresDataTypes.timeWithTimeZone, parameters: ['$p']);
 
   ///time of day, including time zone
   AthenaQueryBuilder<D, ColumnSchema> timetz(String name, int p) =>
-      _build(name, ColumnType.timetz, parameters: ['$p']);
+      $customType(name, type: PostgresDataTypes.timetz, parameters: ['$p']);
 
   ///date and time (no time zone)
   AthenaQueryBuilder<D, ColumnSchema> timestamp(String name, int p) =>
-      _build(name, ColumnType.timestamp, parameters: ['$p']);
+      $customType(name, type: PostgresDataTypes.timestamp, parameters: ['$p']);
 
   ///date and time (no time zone)
   AthenaQueryBuilder<D, ColumnSchema> timestampWithoutTimeZone(
           String name, int p) =>
-      _build(name, ColumnType.timestampWithoutTimeZone, parameters: ['$p']);
+      $customType(name,
+          type: PostgresDataTypes.timestampWithoutTimeZone, parameters: ['$p']);
 
   ///date and time, including time zone
   AthenaQueryBuilder<D, ColumnSchema> timestampWithTimeZone(
           String name, int p) =>
-      _build(name, ColumnType.timestampWithTimeZone, parameters: ['$p']);
+      $customType(name,
+          type: PostgresDataTypes.timestampWithTimeZone, parameters: ['$p']);
 
   ///date and time, including time zone
   AthenaQueryBuilder<D, ColumnSchema> timestamptz(String name) =>
-      _build(name, ColumnType.timestamptz);
+      $customType(name, type: PostgresDataTypes.timestamptz);
 
   ///text search query
   AthenaQueryBuilder<D, ColumnSchema> tsquery(String name) =>
-      _build(name, ColumnType.tsquery);
+      $customType(name, type: PostgresDataTypes.tsquery);
 
   ///text search document
   AthenaQueryBuilder<D, ColumnSchema> tsvector(String name) =>
-      _build(name, ColumnType.tsvector);
+      $customType(name, type: PostgresDataTypes.tsvector);
 
   ///user-level transaction ID snapshot (deprecated; see pg_snapshot)
   AthenaQueryBuilder<D, ColumnSchema> txidSnapshot(String name) =>
-      _build(name, ColumnType.txidSnapshot);
+      $customType(name, type: PostgresDataTypes.txidSnapshot);
 
   ///universally unique identifier
   AthenaQueryBuilder<D, ColumnSchema> uuid(String name) =>
-      _build(name, ColumnType.uuid);
+      $customType(name, type: PostgresDataTypes.uuid);
 
   ///XML data
   AthenaQueryBuilder<D, ColumnSchema> xml(String name) =>
-      _build(name, ColumnType.xml);
+      $customType(name, type: PostgresDataTypes.xml);
 }
