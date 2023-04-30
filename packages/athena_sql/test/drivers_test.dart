@@ -53,7 +53,8 @@ void main() {
       test('rawQuery', () async {
         // arrange
         final tableName = 'users';
-        when(mockDriver.tableExists(tableName)).thenAnswer((_) =>Future.value(true));
+        when(mockDriver.tableExists(tableName))
+            .thenAnswer((_) => Future.value(true));
         // act
         final response = await athenaSql.tableExists(tableName);
         // assert
@@ -64,7 +65,8 @@ void main() {
         // arrange
         final query = 'SELECT * FROM users';
         final queryReponse = QueryResponse([]);
-        when(mockDriver.query(query)).thenAnswer((_) =>Future.value(queryReponse));
+        when(mockDriver.query(query))
+            .thenAnswer((_) => Future.value(queryReponse));
         // act
         final response = await athenaSql.rawQuery(query);
         // assert
