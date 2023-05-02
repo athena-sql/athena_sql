@@ -47,6 +47,7 @@ jobs:
     runs-on: ubuntu-latest
     strategy:
       matrix:
+        package: [athena_sql, athena_postgres, athena_mysql]
         sdk: [2.18.0, stable, beta, dev]
       fail-fast: false
     steps:
@@ -71,6 +72,20 @@ jobs:
       - name: Run tests
         run: dart test
         working-directory: packages/athena_postgres
+      - name: Install dependencies
+        run: dart pub get
+        working-directory: packages/athena_mysql
+      - name: Run tests
+        run: dart test
+        working-directory: packages/athena_mysql
+    services:
+      mysql:
+        image: mysql:8
+        env:
+          MYSQL_ALLOW_EMPTY_PASSWORD: yes
+        ports:
+          - 3306:3306
+        options: --health-cmd="mysqladmin ping" --health-interval=10s --health-timeout=5s --health-retries=3
   coverage:
     runs-on: ubuntu-latest
     steps:
