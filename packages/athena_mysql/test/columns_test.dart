@@ -14,7 +14,7 @@ void main() {
       final completed = await conn.create
           .table('products')
           .column((t) => t.bit('t_bit', 1))
-          .column((t) => t.doublePrecision('t_doublePrecision'))
+          .column((t) => t.doublePrecision('t_double_precision'))
           .column((t) => t.int_('t_int'))
           .column((t) => t.smallint('t_smallint'))
           .run();
