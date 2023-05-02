@@ -5,10 +5,10 @@ class _TokenConent {
   var content = StringBuffer();
 
   _TokenConent(this.type);
-  _TokenConent.variable(int char):type = _TokeType.variable {
+  _TokenConent.variable(int char) : type = _TokeType.variable {
     addChar(char);
   }
-  _TokenConent.text(int char):type = _TokeType.text {
+  _TokenConent.text(int char) : type = _TokeType.text {
     addChar(char);
   }
 
@@ -43,11 +43,10 @@ class QueryMapper {
   final bool _numered;
   final String _prefixQuery;
 
-  QueryMapper({
-    String? signCode,
-    bool numered = false,
-    String? prefixQuery
-  }): _prefixCode =( signCode ?? '@').codeUnitAt(0), _numered = numered, _prefixQuery = prefixQuery ?? '\$';
+  QueryMapper({String? signCode, bool numered = false, String? prefixQuery})
+      : _prefixCode = (signCode ?? '@').codeUnitAt(0),
+        _numered = numered,
+        _prefixQuery = prefixQuery ?? '\$';
 
   static bool _isIdentifier(int charCode) {
     return (charCode >= _lowercaseACodeUnit &&
@@ -68,8 +67,7 @@ class QueryMapper {
   static final int _colonCodeUnit = ':'.codeUnitAt(0);
 
   List<_TokenConent> _getTokenized(String query) {
-    final iter =
-        RuneIterator(query);
+    final iter = RuneIterator(query);
 
     final items = <_TokenConent>[];
     _TokenConent? currentPtr;
@@ -112,8 +110,8 @@ class QueryMapper {
     return items;
   }
 
-  static _TokenIdentifier _getIdentifier (String t) {
-     String name;
+  static _TokenIdentifier _getIdentifier(String t) {
+    String name;
     String? typeCast;
 
     final components = t.split('::');
@@ -138,7 +136,7 @@ class QueryMapper {
 
   _QueryNameArguments _generateBuilder(List<_TokenConent> items) {
     final args = <String>[];
-    final content =  items.map((t) {
+    final content = items.map((t) {
       if (t.type == _TokeType.text) {
         return t.content;
       } else if (t.content.length == 1 && t.content.toString() == '@') {
@@ -146,7 +144,6 @@ class QueryMapper {
       } else {
         final identifier = _getIdentifier(t.content.toString());
 
-        
         var val = '$_prefixQuery${_numered ? args.length : ''}';
         final indexOfContent = args.indexOf(identifier.name);
         if (indexOfContent == -1 || !_numered) {
@@ -154,7 +151,7 @@ class QueryMapper {
         } else {
           val = '$_prefixQuery$indexOfContent';
         }
-        if(identifier.typeCast != null) {
+        if (identifier.typeCast != null) {
           return '$val::${identifier.typeCast}';
         }
         return val;

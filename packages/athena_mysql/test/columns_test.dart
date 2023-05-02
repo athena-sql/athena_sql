@@ -4,11 +4,9 @@ import 'package:test/test.dart';
 
 import 'connection.dart';
 
-
 void main() {
   useConnection();
   group('Columns', () {
-
     test('execute query', () async {
       print('testing');
       final completed = await conn.create

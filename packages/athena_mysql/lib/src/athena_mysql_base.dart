@@ -36,7 +36,8 @@ class MySqlTransactionSQLDriver extends AthenaDatabaseDriver {
     var querySchema = schema;
     if (querySchema == null) {
       final result = await connection!.execute('SELECT DATABASE();');
-      final newChema = result.rows.first.typedColAt<String>(0);//rows.first.typedColAt<String>(0);
+      final newChema = result.rows.first
+          .typedColAt<String>(0); //rows.first.typedColAt<String>(0);
       if (newChema != null) querySchema = newChema;
     }
 
