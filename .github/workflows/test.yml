@@ -47,7 +47,6 @@ jobs:
     runs-on: ubuntu-latest
     strategy:
       matrix:
-        package: [athena_sql, athena_postgres, athena_mysql]
         sdk: [2.18.0, stable, beta, dev]
       fail-fast: false
     steps:
@@ -61,6 +60,17 @@ jobs:
       - name: Run tests
         run: dart test
         working-directory: packages/athena_sql
+  test_postgres:
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        sdk: [2.18.0, stable, beta, dev]
+      fail-fast: false
+    steps:
+      - uses: actions/checkout@v3
+      - uses: dart-lang/setup-dart@v1
+        with:
+          sdk: ${{ matrix.sdk }}
 
         # pre-pull the image so `usePostgresDocker` does not delay which may causes
         # tests to timeout
@@ -72,6 +82,17 @@ jobs:
       - name: Run tests
         run: dart test
         working-directory: packages/athena_postgres
+  test_mysql:
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        sdk: [2.18.0, stable, beta, dev]
+      fail-fast: false
+    steps:
+      - uses: actions/checkout@v3
+      - uses: dart-lang/setup-dart@v1
+        with:
+          sdk: ${{ matrix.sdk }}
       - name: Install dependencies
         run: dart pub get
         working-directory: packages/athena_mysql
