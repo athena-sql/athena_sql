@@ -21,7 +21,7 @@ class TestDatabaseTransactionDriver extends AthenaDatabaseTransactionDriver {
       {Map<String, dynamic>? mapValues}) {
     throw UnimplementedError();
   }
-  
+
   @override
   AthenaColumnsDriver get columns => throw UnimplementedError();
 }
@@ -60,7 +60,7 @@ class TestDatabaseDriver extends AthenaDatabaseConnectionDriver {
   Future<void> close() {
     throw UnimplementedError();
   }
-  
+
   @override
   AthenaColumnsDriver get columns => throw UnimplementedError();
 }
