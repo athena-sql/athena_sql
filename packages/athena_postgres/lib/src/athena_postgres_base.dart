@@ -49,6 +49,20 @@ class PostgreTransactionSQLDriver<T extends PostgreSQLExecutionContext>
     return connection.execute(queryString,
         substitutionValues: mapValues, timeoutInSeconds: timeoutInSeconds);
   }
+  
+  @override
+  AthenaColumnsDriver get columns => PostgresColumnsDriver();
+}
+class PostgresColumnsDriver extends AthenaColumnsDriver {
+  @override
+  ColumnDef boolean() => ColumnDef('BOOLEAN');
+
+  @override
+  ColumnDef integer() => ColumnDef('INTEGER');
+
+  @override
+  ColumnDef string() => ColumnDef('VARCHAR');
+
 }
 
 class PostgreSQLDriver extends PostgreTransactionSQLDriver<PostgreSQLConnection>

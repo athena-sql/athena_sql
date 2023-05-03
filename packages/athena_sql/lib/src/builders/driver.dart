@@ -2,12 +2,23 @@ part of 'builders.dart';
 
 abstract class AthenaDriver {
   const AthenaDriver();
+  AthenaColumnsDriver get columns;
 }
 
 abstract class AthenaDatabaseTransactionDriver extends AthenaDatabaseDriver {
   const AthenaDatabaseTransactionDriver();
 }
-
+class ColumnDef {
+  final String type;
+  final List<String> parameters;
+  final List<String> posParameters;
+  const ColumnDef(this.type, {this.parameters = const [], this.posParameters = const []});
+}
+abstract class AthenaColumnsDriver {
+  ColumnDef string();
+  ColumnDef boolean();
+  ColumnDef integer();
+}
 abstract class AthenaDatabaseDriver extends AthenaDriver {
   const AthenaDatabaseDriver();
 
@@ -20,6 +31,7 @@ abstract class AthenaDatabaseDriver extends AthenaDriver {
     String queryString, {
     Map<String, dynamic>? mapValues,
   });
+
 }
 
 abstract class AthenaDatabaseConnectionDriver extends AthenaDatabaseDriver {
