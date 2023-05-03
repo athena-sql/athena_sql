@@ -40,6 +40,8 @@ jobs:
         working-directory: packages/athena_postgres
       - run: dart pub get
         working-directory: packages/athena_migrate
+      - run: dart pub get
+        working-directory: packages/athena_mysql
 
       - name: Analyze
         run: dart analyze .
@@ -60,6 +62,17 @@ jobs:
       - name: Run tests
         run: dart test
         working-directory: packages/athena_sql
+  test_postgres:
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        sdk: [2.18.0, stable, beta, dev]
+      fail-fast: false
+    steps:
+      - uses: actions/checkout@v3
+      - uses: dart-lang/setup-dart@v1
+        with:
+          sdk: ${{ matrix.sdk }}
 
         # pre-pull the image so `usePostgresDocker` does not delay which may causes
         # tests to timeout
@@ -71,6 +84,31 @@ jobs:
       - name: Run tests
         run: dart test
         working-directory: packages/athena_postgres
+  test_mysql:
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        sdk: [2.18.0, stable, beta, dev]
+      fail-fast: false
+    steps:
+      - uses: actions/checkout@v3
+      - uses: dart-lang/setup-dart@v1
+        with:
+          sdk: ${{ matrix.sdk }}
+      - name: Install dependencies
+        run: dart pub get
+        working-directory: packages/athena_mysql
+      - name: Run tests
+        run: dart test
+        working-directory: packages/athena_mysql
+    services:
+      mysql:
+        image: mysql:8
+        env:
+          MYSQL_ALLOW_EMPTY_PASSWORD: yes
+        ports:
+          - 3306:3306
+        options: --health-cmd="mysqladmin ping" --health-interval=10s --health-timeout=5s --health-retries=3
   coverage:
     runs-on: ubuntu-latest
     steps:
@@ -83,7 +121,6 @@ jobs:
         run: dart pub get
         working-directory: packages/athena_sql
         
-
       - name: Install coverage tools
         run: dart pub global activate coverage
 
@@ -100,6 +137,15 @@ jobs:
         run: dart pub global run coverage:test_with_coverage -b -f -- -j 1
         working-directory: packages/athena_postgres
 
+      - name: pull latest postgres image
+        run: docker pull postgres:latest
+      - name: Install dependencies
+        run: dart pub get
+        working-directory: packages/athena_mysql
+      - name: Coverage Test
+        run: dart pub global run coverage:test_with_coverage -b -f -- -j 1
+        working-directory: packages/athena_mysql
+
       - uses: codecov/codecov-action@v3
         with:
           files: packages/athena_sql/coverage/lcov.info
@@ -108,4 +154,16 @@ jobs:
         with:
           files: packages/athena_postgres/coverage/lcov.info
           verbose: true # optional (default = false)
+      - uses: codecov/codecov-action@v3
+        with:
+          files: packages/athena_mysql/coverage/lcov.info
+          verbose: true # optional (default = false)
+    services:
+      mysql:
+        image: mysql:8
+        env:
+          MYSQL_ALLOW_EMPTY_PASSWORD: yes
+        ports:
+          - 3306:3306
+        options: --health-cmd="mysqladmin ping" --health-interval=10s --health-timeout=5s --health-retries=3
 
