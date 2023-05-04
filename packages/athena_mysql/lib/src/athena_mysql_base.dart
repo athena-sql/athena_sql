@@ -103,10 +103,11 @@ class MySqlTransactionSQLDriver extends AthenaDatabaseDriver {
 
     return result.affectedRows.toInt();
   }
-  
+
   @override
   AthenaColumnsDriver get columns => MySqlColumnsDriver();
 }
+
 class MySqlColumnsDriver extends AthenaColumnsDriver {
   @override
   ColumnDef boolean() => ColumnDef('BOOLEAN');
@@ -116,7 +117,6 @@ class MySqlColumnsDriver extends AthenaColumnsDriver {
 
   @override
   ColumnDef string() => ColumnDef('VARCHAR');
-  
 }
 
 class MySqlDriver extends MySqlTransactionSQLDriver
