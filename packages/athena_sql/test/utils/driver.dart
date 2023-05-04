@@ -1,6 +1,9 @@
 import 'package:athena_sql/src/builders/builders.dart';
 
-class TestDriver extends AthenaStringDriver {}
+class TestDriver extends AthenaStringDriver {
+  @override
+  AthenaColumnsDriver get columns => throw UnimplementedError();
+}
 
 class TestDatabaseTransactionDriver extends AthenaDatabaseTransactionDriver {
   @override
@@ -18,6 +21,9 @@ class TestDatabaseTransactionDriver extends AthenaDatabaseTransactionDriver {
       {Map<String, dynamic>? mapValues}) {
     throw UnimplementedError();
   }
+
+  @override
+  AthenaColumnsDriver get columns => throw UnimplementedError();
 }
 
 class TestDatabaseDriver extends AthenaDatabaseConnectionDriver {
@@ -54,6 +60,9 @@ class TestDatabaseDriver extends AthenaDatabaseConnectionDriver {
   Future<void> close() {
     throw UnimplementedError();
   }
+
+  @override
+  AthenaColumnsDriver get columns => throw UnimplementedError();
 }
 
 String normalizeSql(String sql) {
