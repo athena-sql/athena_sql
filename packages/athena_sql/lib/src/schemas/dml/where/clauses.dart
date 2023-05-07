@@ -4,7 +4,7 @@ abstract class WhereClause extends QueryBuilder {
   const WhereClause();
 
   WhereJoins and(WhereClause value) {
-    return WhereJoins(this, Operators.and , value);
+    return WhereJoins(this, Operators.and, value);
   }
 
   WhereJoins operator &(WhereClause value) {
@@ -40,11 +40,14 @@ class WhereCondition extends WhereClause {
   final Condition condition;
   final WhereItem value;
   const WhereCondition(this.item, this.condition, this.value);
-  
-  @override
-  QueryPrintable build() => QueryString().adding(item).space().keyword(condition.value).space().adding(value);
-  
 
+  @override
+  QueryPrintable build() => QueryString()
+      .adding(item)
+      .space()
+      .keyword(condition.value)
+      .space()
+      .adding(value);
 }
 
 enum ConditionUnary {
@@ -63,8 +66,8 @@ class WhereUnary extends WhereClause {
   const WhereUnary(this.item, this.condition);
 
   @override
-  QueryPrintable build() => QueryString().keyword(condition.value).space().adding(item);
-  
+  QueryPrintable build() =>
+      QueryString().keyword(condition.value).space().adding(item);
 }
 
 enum Operators {
@@ -80,8 +83,12 @@ class WhereJoins extends WhereClause {
   final WhereClause leftCondition;
   final WhereClause rightCondition;
 
-  const WhereJoins(this.leftCondition, this.operator, this.rightCondition);@override
-  QueryPrintable build() => QueryString().adding(leftCondition).space().keyword(operator.value).space().adding(rightCondition);
-  
+  const WhereJoins(this.leftCondition, this.operator, this.rightCondition);
+  @override
+  QueryPrintable build() => QueryString()
+      .adding(leftCondition)
+      .space()
+      .keyword(operator.value)
+      .space()
+      .adding(rightCondition);
 }
-

@@ -1,6 +1,5 @@
 part of 'where.dart';
 
-
 class WhereCreatorSchema extends QueryBuilder {
   const WhereCreatorSchema();
 

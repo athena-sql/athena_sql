@@ -1,9 +1,7 @@
 import 'package:athena_sql/schemas.dart';
 
 import '../schemas/ddl/table/constraint.dart';
-import '../schemas/dml/select.dart';
 import '../utils/query_string.dart';
-import '../schemas/ddl/ddl.dart';
 
 import 'package:collection/collection.dart';
 

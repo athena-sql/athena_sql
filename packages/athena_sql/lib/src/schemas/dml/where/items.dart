@@ -55,7 +55,7 @@ abstract class WhereItem extends QueryBuilder {
 class WhereItemValue extends WhereItem {
   final String value;
   const WhereItemValue(this.value);
-  
+
   @override
   QueryPrintable build() => QueryString().userInput(value);
 }
