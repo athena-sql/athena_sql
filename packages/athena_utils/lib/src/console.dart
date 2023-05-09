@@ -12,15 +12,22 @@ enum TokensColor {
 
   final String code;
   const TokensColor(this.code);
+
+  String printable(String value) {
+    return '\x1B[${code}m$value\x1B[0m';
+  }
 }
 
 class Print {
+  static void _print(Object? object, TokensColor color) {
+    print(color.printable('$object'));
+  }
   static void red(Object? object) {
-    print('\x1B[${TokensColor.red}m$object\x1B[0m');
+    _print(object, TokensColor.red);
   }
 
   static void yellow(Object? object) {
-    print('\x1B[${TokensColor.yellow}m$object\x1B[0m');
+    _print(object, TokensColor.yellow);
   }
 }
 
