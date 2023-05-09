@@ -22,6 +22,7 @@ class Print {
   static void _print(Object? object, TokensColor color) {
     print(color.printable('$object'));
   }
+
   static void red(Object? object) {
     _print(object, TokensColor.red);
   }
