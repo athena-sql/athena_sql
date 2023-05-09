@@ -3,7 +3,6 @@ library mysql1.test.test_infrastructure;
 // import 'package:options_file/options_file.dart';
 // import 'package:mysql1/mysql1.dart';
 import 'package:athena_mysql/athena_mysql.dart';
-import 'package:athena_sql/athena_sql.dart';
 import 'package:test/test.dart';
 
 AthenaMySQL get conn => _conn!;

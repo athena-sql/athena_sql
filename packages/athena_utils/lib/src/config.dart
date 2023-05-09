@@ -33,7 +33,7 @@ migrations:
 
 class AthenaConfig {
   final AthenaOptionsDriver driver;
-  final Map<String,dynamic> connection;
+  final Map<String, dynamic> connection;
   final String migrationsPath;
   final String? migrationsStub;
   final String? migrationProgram;
@@ -48,14 +48,16 @@ class AthenaConfig {
   factory AthenaConfig.fromYaml(YamlMap yaml) {
     AthenaOptionsDriver driver;
     try {
-      driver = AthenaOptionsDriver.values.firstWhere((e) => e.name == yaml['driver']);
+      driver = AthenaOptionsDriver.values
+          .firstWhere((e) => e.name == yaml['driver']);
     } catch (e) {
-      print(red('Invalid driver, posible drivers are: ${AthenaOptionsDriver.values.join(', ')}'));
+      print(red(
+          'Invalid driver, posible drivers are: ${AthenaOptionsDriver.values.join(', ')}'));
       exit(1);
     }
     Map<String, dynamic> connection;
     try {
-     connection = (yaml['connection'] as YamlMap).cast<String, dynamic>();
+      connection = (yaml['connection'] as YamlMap).cast<String, dynamic>();
     } catch (e) {
       print(red('Invalid connection, please check the connection format'));
       exit(1);
@@ -110,7 +112,8 @@ class ReadAthenaConfig {
     if (yamlContent == null) return null;
     return AthenaConfig.fromYaml(yamlContent);
   }
-    AthenaConfig getConfig() {
+
+  AthenaConfig getConfig() {
     if (!_configFile.existsSync()) {
       print(red('athena.yaml not found'));
       if (createConfig() == null) throw Exception('athena.yaml is needed');

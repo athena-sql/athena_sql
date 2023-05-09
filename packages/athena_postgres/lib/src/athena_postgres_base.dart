@@ -136,7 +136,8 @@ class AthenaPostgresql extends AthenaSQL<PostgreSQLDriver> {
         useSimpleQueryProtocol: useSimpleQueryProtocol);
   }
 
-  static Future<AthenaPostgresql> fromMapConnection(Map<String, dynamic> config) async {
+  static Future<AthenaPostgresql> fromMapConnection(
+      Map<String, dynamic> config) async {
     final athena = AthenaPostgresql(PostgresDatabaseConfig(
       config['host'],
       config['port'],

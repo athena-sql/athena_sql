@@ -2,7 +2,6 @@ import 'dart:io';
 
 import 'package:athena_utils/athena_utils.dart';
 import 'package:dcli/dcli.dart';
-import 'package:dcli/windows.dart';
 import 'package:path/path.dart' as path;
 import 'package:collection/collection.dart';
 
