@@ -13,10 +13,7 @@ class AthenaSQL<D extends AthenaDriver> {
 
   DropBuilder<D> get drop => DropBuilder(driver);
 
-
   DropBuilder<D> get insert => DropBuilder(driver);
-
-
 }
 
 extension AthenaDatabaseExtension on AthenaSQL<AthenaDatabaseDriver> {
@@ -44,15 +41,21 @@ extension AthenaDatabaseConnectionExtension
         .run();
   }
 }
-extension AthenaDatabaseConnectionExtension on AthenaSQL<AthenaDatabaseConnectionDriver> {
+
+extension AthenaDatabaseConnectionExtension
+    on AthenaSQL<AthenaDatabaseConnectionDriver> {
   Future<void> open() => driver.open();
   Future<void> close() => driver.close();
   Future<T> transaction<T>(
       Future<T> Function(AthenaSQL<AthenaDatabaseDriver> athenasql) trx) {
     return driver.transaction((driver) => trx(AthenaSQL(driver)));
   }
-  Future<void> migrate(List<AthenaMigration> migrations, List<String> args) async {
-    await MigrationCommands(migrations.sorted((a, b) => a.date.compareTo(b.date)), args, this).run();
+
+  Future<void> migrate(
+      List<AthenaMigration> migrations, List<String> args) async {
+    await MigrationCommands(
+            migrations.sorted((a, b) => a.date.compareTo(b.date)), args, this)
+        .run();
   }
 }
 

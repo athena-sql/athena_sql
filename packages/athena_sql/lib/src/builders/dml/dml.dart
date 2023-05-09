@@ -12,11 +12,12 @@ class SelectOptions<D extends AthenaDriver> {
 class InsertOptions<D extends AthenaDriver> {
   final D _driver;
   InsertOptions(this._driver);
-  
+
   into(String name) {
     return InsertTableOptions(_driver, name);
   }
 }
+
 class InsertTableOptions<D extends AthenaDriver> {
   final D _driver;
   final String _name;
