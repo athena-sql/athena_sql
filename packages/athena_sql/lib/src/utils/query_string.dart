@@ -157,7 +157,7 @@ class QueryString extends QueryPrintable {
     return adding(_new(' '));
   }
 
-  QueryString parentesis(FunctionQueryBuilder fn) {
+  QueryString parentheses(FunctionQueryBuilder fn) {
     return special("(").adding(fn(QueryString())).special(")");
   }
 
@@ -181,7 +181,7 @@ class QueryString extends QueryPrintable {
     return adding(QueryString._sections(sections));
   }
 
-  QueryString comaSeparated(Iterable<QueryPrintable> values) {
+  QueryString commaSeparated(Iterable<QueryPrintable> values) {
     final separator = QueryString.special(",");
     return join(values, separator);
   }

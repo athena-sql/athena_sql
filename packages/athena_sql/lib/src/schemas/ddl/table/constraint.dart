@@ -39,7 +39,7 @@ class CheckContraint extends ColumnConstrains {
   QueryString get _value => QueryString()
       .keyword('CHECK')
       .space()
-      .parentesis((q) => q.userInput(_expression));
+      .parentheses((q) => q.userInput(_expression));
 }
 
 class UniqueContraint extends ColumnConstrains {
@@ -83,8 +83,8 @@ class ReferencialActionAction {
       : _action = 'SET DEFAULT';
   QueryString get _value => QueryString().keyword(_action).condition(
       _columns.isNotEmpty,
-      (q) => q.parentesis(
-          (q) => q.comaSeparated(_columns.map((e) => QueryString.user(e)))));
+      (q) => q.parentheses(
+          (q) => q.commaSeparated(_columns.map((e) => QueryString.user(e)))));
 }
 
 enum ReferencialActionRule {
@@ -149,6 +149,6 @@ class ReferencesContraint extends ColumnConstrains {
       .keyword('REFERENCES ')
       .userInput(_table)
       .condition(_column != null,
-          (q) => q.parentesis((q) => q.userInput(_column!)).space())
+          (q) => q.parentheses((q) => q.userInput(_column!)).space())
       .condition(_action != null, (q) => q.adding(_action!._value));
 }

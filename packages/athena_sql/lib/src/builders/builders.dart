@@ -15,3 +15,4 @@ part 'dml/dml.dart';
 part 'dml/select_table.dart';
 part 'driver.dart';
 part 'rows.dart';
+part 'dml/insert.dart';
