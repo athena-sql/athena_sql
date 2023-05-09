@@ -135,4 +135,18 @@ class AthenaPostgresql extends AthenaSQL<PostgreSQLDriver> {
         timeoutInSeconds: timeoutInSeconds,
         useSimpleQueryProtocol: useSimpleQueryProtocol);
   }
+
+  static Future<AthenaPostgresql> fromMapConnection(
+      Map<String, dynamic> config) async {
+    final athena = AthenaPostgresql(PostgresDatabaseConfig(
+      config['host'],
+      config['port'],
+      config['databaseName'],
+      username: config['username'],
+      password: config['password'],
+      useSSL: config['useSSL'],
+    ));
+    await athena.open();
+    return athena;
+  }
 }

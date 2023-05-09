@@ -1,22 +1,32 @@
 import 'dart:io';
 
-import 'package:athena_migrate/src/utils/config.dart';
-import 'package:dcli/dcli.dart';
+import 'package:args/args.dart';
+import 'package:athena_utils/athena_utils.dart';
 import 'package:path/path.dart' as path;
 import 'package:collection/collection.dart';
 
 import '../executable.dart';
 
 const migrateCommand = '''
-import 'package:athena_sql/athena_sql.dart';
+import 'dart:io';
+
+import 'package:{{athenaDriver}}/{{athenaDriver}}.dart';
+
 {{imports}}
 
 final migrations = [
 {{migrations}}
 ];
 
-void main(List<String> args) {
-  print('Running migrations...');
+void main(List<String> args) async {
+  final config = ReadAthenaConfig().getConfig();
+  if (config.connection.isEmpty) {
+    print('Please add a connection in the config file');
+    exit(1);
+    return;
+  }
+  final athenaSql = await {{athenaInstance}};
+  await athenaSql.migrate(migrations, args);
 }
 ''';
 
@@ -40,7 +50,7 @@ class LocalMigrationCommand extends ExecutableComand {
   File get migrationFile => File(path.join(migratePath, 'migrate.dart'));
 
   List<MigrationClasses> getMigrations() {
-    final fiels = find(r'*.dart',
+    final fiels = Console.find(r'*.dart',
         types: [Find.file], workingDirectory: config.migrationsPath);
 
     final migrations = fiels
@@ -56,7 +66,7 @@ class LocalMigrationCommand extends ExecutableComand {
             return MigrationClasses(e, className!);
           } else {
             final pathNoFound = path.relative(e, from: migratePath);
-            print(yellow('No migration found for $pathNoFound'));
+            Print.yellow('No migration found for $pathNoFound');
             return null;
           }
         })
@@ -74,9 +84,12 @@ class LocalMigrationCommand extends ExecutableComand {
     final migrationClasses =
         migrations.map((e) => '  ${e.classFound}()').join(',\n');
 
+    final configDriver = config.driver.getConfig();
     final finalContent = migrateCommand
         .replaceAll('{{imports}}', imports)
-        .replaceAll('{{migrations}}', migrationClasses);
+        .replaceAll('{{migrations}}', migrationClasses)
+        .replaceAll('{{athenaDriver}}', configDriver.importPackage)
+        .replaceAll('{{athenaInstance}}', configDriver.getConstructor());
     migrationFile
       ..createSync(recursive: true)
       ..writeAsStringSync(finalContent);
@@ -93,7 +106,9 @@ class LocalMigrationCommand extends ExecutableComand {
     final path = migrationFile.path;
     final List<String> comands =
         [args.name, ...args.rest].whereNotNull().toList();
-    'dart run $path $comands'.run;
-    return 0;
+
+    final proccess = Process.runSync('dart run $path ${comands.join(' ')}', [],
+        runInShell: true);
+    return proccess.exitCode;
   }
 }

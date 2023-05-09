@@ -1,11 +1,11 @@
 import 'dart:io';
 
 // import 'package:clock/clock.dart';
+import 'package:args/args.dart';
 import 'package:intl/intl.dart';
-import '../utils/config.dart';
 import 'package:athena_migrate/src/executable.dart';
-import 'package:dcli/dcli.dart';
 import 'package:path/path.dart' as path;
+import 'package:athena_utils/athena_utils.dart';
 
 abstract class ConsoleConfig {
   static const migrationDestination = 'database/migrations';
@@ -13,7 +13,7 @@ abstract class ConsoleConfig {
 }
 
 const migrationFile = '''
-import 'package:athena_sql/athena_sql.dart';
+import 'package:{{athenaDriver}}/{{athenaDriver}}.dart';
 
 class {{className}} extends AthenaMigration {
   {{className}}() : super("{{name}}","{{date}}");
@@ -28,35 +28,21 @@ class {{className}} extends AthenaMigration {
 }
 ''';
 
-var defaultListContents = '''
-import 'package:athena_sql/athena_sql.dart';
-
-import 'index.dart';
-
-final List<AthenaMigration> migrations = [
-];
-
-''';
-
-const drivers = <String, String>{
-  'postgresql': 'MySQL',
-};
-
 class MigrationNew {
   final String name;
   final String date;
-  final String driver;
+  final AthenaDriverConfig configDriver;
 
   String get contents => migrationFile
       .replaceAll('{{date}}', date)
-      .replaceAll('{{driver}}', driver)
       .replaceAll('{{name}}', name)
-      .replaceAll('{{className}}', className);
+      .replaceAll('{{className}}', className)
+      .replaceAll('{{athenaDriver}}', configDriver.importPackage);
 
   String get fileName => '${[date, name].join(' ').snakeCase}.dart';
   String get className => 'Migration $name $date'.pascalCase;
 
-  MigrationNew(this.name, this.date, this.driver);
+  MigrationNew(this.name, this.date, this.configDriver);
 
   File generate(String destinationFile) => File(destinationFile)
     ..createSync(recursive: true)
@@ -87,8 +73,8 @@ class CreateMigrationCommand extends ExecutableComand {
 
   MigrationNew _loadTemplate(String migrationName) {
     final date = getDateNewMigration();
-
-    return MigrationNew(migrationName, date, config.driver);
+    final configDriver = config.driver.getConfig();
+    return MigrationNew(migrationName, date, configDriver);
   }
 
   @override
@@ -96,9 +82,9 @@ class CreateMigrationCommand extends ExecutableComand {
     // var logging = silent ? null : progress('Creating migration');
     var migrationName = args?.arguments.join(' ');
     if (migrationName == null || migrationName.isEmpty) {
-      print(yellow('Migration name is required'));
-      var name = ask('name:',
-          required: true, validator: Ask.regExp(r'^[\w\d\-_\s]+$'));
+      Print.yellow('Migration name is required');
+      var name = Console.ask('name:',
+          required: true, validator: RegExp(r'^[\w\d\-_\s]+$'));
       migrationName = name;
     }
     print('Creating migration');

@@ -22,6 +22,25 @@ class MySqlDatabaseConfig {
   final String collation;
   final int timeoutMs;
 
+  factory MySqlDatabaseConfig.fromMap(Map<String, dynamic> map) {
+    final host = map['host'] ?? 'localhost';
+    final port = map['port'] ?? 3306;
+    final user = map['user'] ?? 'root';
+    final pass = map['password'] ?? '';
+    final maxConnections = map['maxConnections'] ?? 5;
+    return MySqlDatabaseConfig(
+      host,
+      port,
+      userName: user,
+      password: pass,
+      maxConnections: maxConnections,
+      databaseName: map['database'] as String?,
+      secure: map['secure'] as bool? ?? true,
+      collation: map['collation'] as String? ?? 'utf8mb4_general_ci',
+      timeoutMs: map['timeoutMs'] as int? ?? 10000,
+    );
+  }
+
   Future<MySQLConnection> getConnection() {
     return MySQLConnection.createConnection(
       host: host,
