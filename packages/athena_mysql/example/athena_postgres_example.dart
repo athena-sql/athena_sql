@@ -1,5 +1,4 @@
 import 'package:athena_mysql/athena_mysql.dart';
-import 'package:athena_sql/athena_sql.dart';
 
 void main() async {
   final athena = AthenaMySQL(MySqlDatabaseConfig('host', 1,

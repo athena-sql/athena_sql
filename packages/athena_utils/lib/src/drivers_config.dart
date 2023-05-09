@@ -1,8 +1,6 @@
-
-
-
-enum AthenaOptionsDriver { 
-  mysql('mysql'), postgresql('postgresql');
+enum AthenaOptionsDriver {
+  mysql('mysql'),
+  postgresql('postgresql');
 
   const AthenaOptionsDriver(this.name);
   final String name;
@@ -33,7 +31,7 @@ class AthenaDriverConfig {
     }
   }
 
-  String getConstructor()  {
+  String getConstructor() {
     return '$initClass.fromMapConnection(config.connection)';
   }
 }

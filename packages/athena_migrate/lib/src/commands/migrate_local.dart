@@ -1,8 +1,7 @@
 import 'dart:io';
 
+import 'package:args/args.dart';
 import 'package:athena_utils/athena_utils.dart';
-import 'package:dcli/dcli.dart';
-import 'package:dcli/windows.dart';
 import 'package:path/path.dart' as path;
 import 'package:collection/collection.dart';
 
@@ -51,7 +50,7 @@ class LocalMigrationCommand extends ExecutableComand {
   File get migrationFile => File(path.join(migratePath, 'migrate.dart'));
 
   List<MigrationClasses> getMigrations() {
-    final fiels = find(r'*.dart',
+    final fiels = Console.find(r'*.dart',
         types: [Find.file], workingDirectory: config.migrationsPath);
 
     final migrations = fiels
@@ -67,7 +66,7 @@ class LocalMigrationCommand extends ExecutableComand {
             return MigrationClasses(e, className!);
           } else {
             final pathNoFound = path.relative(e, from: migratePath);
-            print(yellow('No migration found for $pathNoFound'));
+            Print.yellow('No migration found for $pathNoFound');
             return null;
           }
         })
@@ -108,11 +107,8 @@ class LocalMigrationCommand extends ExecutableComand {
     final List<String> comands =
         [args.name, ...args.rest].whereNotNull().toList();
 
-    final proccess = 'dart run $path ${comands.join(' ')}'.start(
-      runInShell: true,
-      progress: Progress(print, stderr: printerr),
-      nothrow: true,
-    );
-    return proccess.exitCode ?? 0;
+    final proccess = Process.runSync('dart run $path ${comands.join(' ')}', [],
+        runInShell: true);
+    return proccess.exitCode;
   }
 }

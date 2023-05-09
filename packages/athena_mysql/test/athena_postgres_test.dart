@@ -1,5 +1,4 @@
 import 'package:athena_mysql/athena_mysql.dart';
-import 'package:athena_sql/athena_sql.dart';
 import 'package:test/test.dart';
 
 import 'connection.dart';
