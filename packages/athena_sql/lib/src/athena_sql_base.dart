@@ -14,6 +14,9 @@ class AthenaSQL<D extends AthenaDriver> {
   DropBuilder<D> get drop => DropBuilder(driver);
 
 
+  DropBuilder<D> get insert => DropBuilder(driver);
+
+
 }
 
 extension AthenaDatabaseExtension on AthenaSQL<AthenaDatabaseDriver> {
