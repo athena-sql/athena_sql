@@ -42,7 +42,8 @@ jobs:
         working-directory: packages/athena_migrate
       - run: dart pub get
         working-directory: packages/athena_mysql
-
+      - run: dart pub get
+        working-directory: packages/athena_utils
       - name: Analyze
         run: dart analyze .
   test:
