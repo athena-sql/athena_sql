@@ -1,4 +1,4 @@
-import 'package:dcli/dcli.dart';
+import 'package:args/args.dart';
 
 abstract class Executable {
   Future<int> run(ArgResults? args);

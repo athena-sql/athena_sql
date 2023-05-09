@@ -1,9 +1,9 @@
 import 'dart:io';
 
 // import 'package:clock/clock.dart';
+import 'package:args/args.dart';
 import 'package:intl/intl.dart';
 import 'package:athena_migrate/src/executable.dart';
-import 'package:dcli/dcli.dart';
 import 'package:path/path.dart' as path;
 import 'package:athena_utils/athena_utils.dart';
 
@@ -82,9 +82,9 @@ class CreateMigrationCommand extends ExecutableComand {
     // var logging = silent ? null : progress('Creating migration');
     var migrationName = args?.arguments.join(' ');
     if (migrationName == null || migrationName.isEmpty) {
-      print(yellow('Migration name is required'));
-      var name = ask('name:',
-          required: true, validator: Ask.regExp(r'^[\w\d\-_\s]+$'));
+      Print.yellow('Migration name is required');
+      var name = Console.ask('name:',
+          required: true, validator: RegExp(r'^[\w\d\-_\s]+$'));
       migrationName = name;
     }
     print('Creating migration');

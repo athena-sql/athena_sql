@@ -1,4 +1,3 @@
-
 import 'package:collection/collection.dart';
 
 import '../../athena_sql.dart';

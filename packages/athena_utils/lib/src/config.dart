@@ -1,6 +1,6 @@
 import 'dart:io';
 
-import 'package:dcli/dcli.dart';
+import 'package:athena_utils/src/console.dart';
 import 'package:yaml/yaml.dart';
 
 import 'drivers_config.dart';
@@ -51,15 +51,15 @@ class AthenaConfig {
       driver = AthenaOptionsDriver.values
           .firstWhere((e) => e.name == yaml['driver']);
     } catch (e) {
-      print(red(
-          'Invalid driver, posible drivers are: ${AthenaOptionsDriver.values.join(', ')}'));
+      Print.red(
+          'Invalid driver, posible drivers are: ${AthenaOptionsDriver.values.join(', ')}');
       exit(1);
     }
     Map<String, dynamic> connection;
     try {
       connection = (yaml['connection'] as YamlMap).cast<String, dynamic>();
     } catch (e) {
-      print(red('Invalid connection, please check the connection format'));
+      Print.red('Invalid connection, please check the connection format');
       exit(1);
     }
     return AthenaConfig(
@@ -74,14 +74,15 @@ class AthenaConfig {
 class ReadAthenaConfig {
   static final _configFile = File('athena.yaml');
   File? createConfig() {
-    final create = confirm('Would you like to create one?', defaultValue: true);
+    final create =
+        Console.confirm('Would you like to create one?', defaultValue: true);
     if (!create) return null;
 
-    print(yellow('Creating athena.yaml'));
+    Print.yellow('Creating athena.yaml');
     final file = _configFile
       ..createSync()
       ..writeAsStringSync(yamlTemplate);
-    print(yellow('athena.yaml created'));
+    Print.yellow('athena.yaml created');
     return file;
   }
 
@@ -91,21 +92,21 @@ class ReadAthenaConfig {
     try {
       yamlContent = loadYaml(configFile);
       if (yamlContent == null) {
-        print(red('athena.yaml is empty'));
+        Print.red('athena.yaml is empty');
         if (createConfig() == null) return null;
         loadYamlContent();
       }
       return yamlContent;
     } on YamlException catch (e) {
-      print(red('athena.yaml is invalid'));
-      print(red(e.message));
+      Print.red('athena.yaml is invalid');
+      Print.red(e.message);
       exit(1);
     }
   }
 
   AthenaConfig? run() {
     if (!_configFile.existsSync()) {
-      print(red('athena.yaml not found'));
+      Print.red('athena.yaml not found');
       if (createConfig() == null) return null;
     }
     YamlMap? yamlContent = loadYamlContent();
@@ -115,7 +116,7 @@ class ReadAthenaConfig {
 
   AthenaConfig getConfig() {
     if (!_configFile.existsSync()) {
-      print(red('athena.yaml not found'));
+      Print.red('athena.yaml not found');
       if (createConfig() == null) throw Exception('athena.yaml is needed');
     }
     YamlMap? yamlContent = loadYamlContent();

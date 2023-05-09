@@ -4,7 +4,7 @@ import 'package:athena_migrate/src/commands/create_migration.dart';
 import 'package:athena_migrate/src/commands/migrate_local.dart';
 import 'package:athena_migrate/src/executable.dart';
 import 'package:athena_utils/athena_utils.dart';
-import 'package:dcli/dcli.dart';
+import 'package:args/args.dart';
 import 'package:collection/collection.dart';
 
 class AthenaMigrateComands {
@@ -36,7 +36,7 @@ class AthenaMigrateComands {
       final executable =
           executables.firstWhereOrNull((element) => element.command == key);
       if (executable == null) {
-        print(red('Unknown command: $key'));
+        Print.red('Unknown command: $key');
         print('Available commands are:');
         for (var ex in execs) {
           print('  $ex.name - $ex.description');
@@ -45,7 +45,7 @@ class AthenaMigrateComands {
       }
       await executable.run(parsed.command);
     } else {
-      final selected = menu(
+      final selected = Console.menu(
           prompt: 'select an option',
           options: executables,
           format: (ex) => '${ex.command} - ${ex.description}');
