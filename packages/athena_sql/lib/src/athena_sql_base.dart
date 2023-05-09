@@ -9,6 +9,7 @@ class AthenaSQL<D extends AthenaDriver> {
   AthenaSQL(this.driver);
 
   CreateBuilder<D> get create => CreateBuilder(driver);
+  SelectOptions<D> get select => SelectOptions(driver);
 
   DropBuilder<D> get drop => DropBuilder(driver);
 
