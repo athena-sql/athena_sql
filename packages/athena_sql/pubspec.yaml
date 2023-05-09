@@ -1,6 +1,7 @@
 name: athena_sql
 description: A starting point for Dart libraries or applications.
 version: 1.0.0
+publish_to: none
 # repository: https://github.com/my_org/my_repo
 
 environment:
@@ -8,6 +9,8 @@ environment:
 
 dependencies:
   collection: ^1.17.1
+  athena_utils:
+    path: ../athena_utils
 
 dev_dependencies:
   lints: ^2.0.0

@@ -116,7 +116,7 @@ class MySqlColumnsDriver extends AthenaColumnsDriver {
   ColumnDef integer() => ColumnDef('INTEGER');
 
   @override
-  ColumnDef string() => ColumnDef('VARCHAR');
+  ColumnDef string() => ColumnDef('VARCHAR', parameters: ['255']);
 }
 
 class MySqlDriver extends MySqlTransactionSQLDriver
@@ -151,15 +151,13 @@ class MySqlDriver extends MySqlTransactionSQLDriver
   }
 }
 
-class AthenaMySql extends AthenaSQL<MySqlDriver> {
-  AthenaMySql(MySqlDatabaseConfig config) : super(MySqlDriver(config));
+class AthenaMySQL extends AthenaSQL<MySqlDriver> {
+  AthenaMySQL(MySqlDatabaseConfig config) : super(MySqlDriver(config));
+  static Future<AthenaMySQL> fromMapConnection(
+      Map<String, dynamic> connection) async {
+    final config = MySqlDatabaseConfig.fromMap(connection);
+    final athena = AthenaMySQL(config);
+    await athena.open();
+    return athena;
+  }
 }
-
-final pool = MySQLConnectionPool(
-  host: '127.0.0.1',
-  port: 3306,
-  userName: 'your_user',
-  password: 'your_password',
-  maxConnections: 10,
-  databaseName: 'your_database_name', // optional,
-);

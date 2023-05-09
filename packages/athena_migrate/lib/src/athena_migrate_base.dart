@@ -3,15 +3,14 @@ import 'dart:io';
 import 'package:athena_migrate/src/commands/create_migration.dart';
 import 'package:athena_migrate/src/commands/migrate_local.dart';
 import 'package:athena_migrate/src/executable.dart';
+import 'package:athena_utils/athena_utils.dart';
 import 'package:dcli/dcli.dart';
 import 'package:collection/collection.dart';
-
-import 'utils/config.dart';
 
 class AthenaMigrateComands {
   final List<ExecutableComand> execs = [];
   Future<void> run(List<String> args) async {
-    final config = ReadConfig().run();
+    final config = ReadAthenaConfig().run();
     if (config == null) exit(1);
 
     final List<ExecutableComand> executables = [

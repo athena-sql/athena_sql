@@ -3,6 +3,8 @@ import 'dart:io';
 import 'package:dcli/dcli.dart';
 import 'package:yaml/yaml.dart';
 
+import 'drivers_config.dart';
+
 const yamlTemplate = '''
 # Athena Migrate Configuration
 
@@ -13,8 +15,13 @@ database:
   # The connection string is database specific.
   # For more information see:
   #
-driver: mysql
-connection: 'mysql://user:password@localhost:3306/dbname'
+driver: postgresql
+connection:
+  host: localhost
+  username: user
+  password: password
+  port: 3306
+  database: dbname
 migrations:
   # The path to the migrations directory.
   # The path is relative to the athena.yaml file.
@@ -22,20 +29,11 @@ migrations:
   path: migrations
   # The path to a custom migration template
   # stub: migrations/template.stub
-
-# development:
-#   driver: mysql
-#   connection:
-#     host: localhost
-#     username: user
-#     password: password
-#     port: 3306
-#     database: dbname
 ''';
 
 class AthenaConfig {
-  final String driver;
-  final String connection;
+  final AthenaOptionsDriver driver;
+  final Map<String,dynamic> connection;
   final String migrationsPath;
   final String? migrationsStub;
   final String? migrationProgram;
@@ -48,16 +46,30 @@ class AthenaConfig {
       this.migrationProgram = 'migrate'});
 
   factory AthenaConfig.fromYaml(YamlMap yaml) {
+    AthenaOptionsDriver driver;
+    try {
+      driver = AthenaOptionsDriver.values.firstWhere((e) => e.name == yaml['driver']);
+    } catch (e) {
+      print(red('Invalid driver, posible drivers are: ${AthenaOptionsDriver.values.join(', ')}'));
+      exit(1);
+    }
+    Map<String, dynamic> connection;
+    try {
+     connection = (yaml['connection'] as YamlMap).cast<String, dynamic>();
+    } catch (e) {
+      print(red('Invalid connection, please check the connection format'));
+      exit(1);
+    }
     return AthenaConfig(
-      driver: yaml['driver'],
-      connection: yaml['connection'],
+      driver: driver,
+      connection: connection,
       migrationsPath: yaml['migrations']['path'] ?? 'migrations',
       migrationsStub: yaml['migrations']['stub'],
     );
   }
 }
 
-class ReadConfig {
+class ReadAthenaConfig {
   static final _configFile = File('athena.yaml');
   File? createConfig() {
     final create = confirm('Would you like to create one?', defaultValue: true);
@@ -96,6 +108,15 @@ class ReadConfig {
     }
     YamlMap? yamlContent = loadYamlContent();
     if (yamlContent == null) return null;
+    return AthenaConfig.fromYaml(yamlContent);
+  }
+    AthenaConfig getConfig() {
+    if (!_configFile.existsSync()) {
+      print(red('athena.yaml not found'));
+      if (createConfig() == null) throw Exception('athena.yaml is needed');
+    }
+    YamlMap? yamlContent = loadYamlContent();
+    if (yamlContent == null) throw Exception('athena.yaml wrong format');
     return AthenaConfig.fromYaml(yamlContent);
   }
 }
