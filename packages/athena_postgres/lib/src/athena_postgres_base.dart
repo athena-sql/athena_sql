@@ -37,7 +37,7 @@ class PostgreTransactionSQLDriver<T extends PostgreSQLExecutionContext>
         timeoutInSeconds: timeoutInSeconds,
         useSimpleQueryProtocol: useSimpleQueryProtocol);
     final mapped = response.map((e) => QueryRow(e.toColumnMap()));
-    return QueryResponse(mapped);
+    return QueryResponse(mapped, affectedRows: response.affectedRowCount);
   }
 
   @override
@@ -120,20 +120,6 @@ class AthenaPostgresql extends AthenaSQL<PostgreSQLDriver> {
       }
       return false;
     }).map((event) => (event as NotificationResponseMessage).payload);
-  }
-
-  Future<PostgreSQLResult> rawQuery(
-    String query, {
-    Map<String, dynamic>? substitutionValues,
-    bool? allowReuse,
-    int? timeoutInSeconds,
-    bool? useSimpleQueryProtocol,
-  }) {
-    return driver.connection.query(query,
-        substitutionValues: substitutionValues,
-        allowReuse: allowReuse,
-        timeoutInSeconds: timeoutInSeconds,
-        useSimpleQueryProtocol: useSimpleQueryProtocol);
   }
 
   static Future<AthenaPostgresql> fromMapConnection(

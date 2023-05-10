@@ -31,9 +31,22 @@ class AthenaQueryBuilder<D extends AthenaDriver, B extends QueryBuilder> {
 
 typedef QueryRows = List<Map<String, Map<String, dynamic>>>;
 
-extension AthenaDatabaseQueryExtension<D extends AthenaDatabaseDriver>
+extension AthenaDDLQueryExtension<D extends AthenaDatabaseDriver>
     on AthenaQueryBuilder<D, DdlSchema> {
   Future<int> run() => _driver.execute($schema.plain());
+}
+
+extension AthenaInsertTableQueryExtension<D extends AthenaDatabaseDriver>
+    on AthenaQueryBuilder<D, InsertTableSchema> {
+  Future<int> run() => _driver
+      .query($schema.plain(), mapValues: $mappedValues())
+      .then((value) => value.affectedRows);
+}
+
+extension AthenaInseretTableQueryExtension<D extends AthenaDatabaseDriver>
+    on AthenaQueryBuilder<D, SelectTableSchema> {
+  Future<AthenaQueryResponse> run({Map<String, dynamic>? mapValues}) =>
+      _driver.query($schema.plain(), mapValues: mapValues);
 }
 
 extension AthenaStringExtension<D extends AthenaStringDriver,

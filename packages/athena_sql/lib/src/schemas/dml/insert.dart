@@ -1,41 +1,61 @@
 import 'package:athena_sql/src/utils/query_string.dart';
+import 'package:collection/collection.dart';
 
 import 'dml_schema.dart';
 
 class InsertTableSchema extends DMLSchema {
   final String name;
-  final List<Map<String, dynamic>> values;
-  InsertTableSchema({required this.name, required this.values});
+  final List<Map<String, dynamic>> listValues;
+  InsertTableSchema({required this.name, required this.listValues});
   @override
   QueryPrintable build() {
     // all values keys
-    final keys = values.map((e) => e.keys).expand((element) => element).toSet();
-    final valuesString =
-        values.map((e) => keys.map((key) => e[key]).toList()).toList();
+    final keys =
+        listValues.map((e) => e.keys).expand((element) => element).toSet();
+
+    final valuesToInsert = listValues
+        .mapIndexed((index, values) => keys
+            .map((key) => values.containsKey(key) ? '@${key}_$index' : 'NULL')
+            .toList())
+        .toList();
 
     return QueryString()
-        .keyword('INSERT')
-        .keyword('INTO')
+        .keyword('INSERT ')
+        .keyword('INTO ')
         .userInput(name)
+        .space()
         .parentheses((q) =>
-            q.commaSeparated(keys.map((e) => QueryString().userInput(e))))
-        .keyword('VALUES')
-        .parentheses((q) => q.commaSeparated(valuesString
-            .map((e) => QueryString().parentheses((q) => q.commaSeparated(
-                e.map((e) => QueryString().userInput(e)).toList())))
-            .toList()));
+            q.comaSpaceSeparated(keys.map((e) => QueryString().userInput(e))))
+        .keyword(' VALUES ')
+        .comaSpaceSeparated(valuesToInsert
+            .map((e) => QueryString().parentheses((q) =>
+                q.comaSpaceSeparated(e.map((e) => QueryString().userInput(e)))))
+            .toList());
   }
 
-  copyWith({String? name, List<Map<String, dynamic>>? values}) {
+  Map<String, dynamic> mapValues() {
+    return listValues.reduceIndexed((index, previous, element) => {
+          ...previous.map((key, value) {
+            if (index > 1) {
+              return MapEntry(key, value);
+            }
+            return MapEntry('${key}_${index - 1}', value);
+          }),
+          ...element.map((key, value) => MapEntry('${key}_$index', value))
+        });
+  }
+
+  InsertTableSchema copyWith(
+      {String? name, List<Map<String, dynamic>>? listValues}) {
     return InsertTableSchema(
       name: name ?? this.name,
-      values: values ?? this.values,
+      listValues: listValues ?? this.listValues,
     );
   }
 
-  copyWithAddValues(Map<String, dynamic> values) {
-    copyWith(values: [
-      ...this.values,
+  InsertTableSchema copyWithAddValues(Map<String, dynamic> values) {
+    return copyWith(listValues: [
+      ...listValues,
       values,
     ]);
   }
