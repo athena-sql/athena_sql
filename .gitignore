@@ -9,3 +9,5 @@ pubspec.lock
 # Ignore test-related files
 **/coverage.data
 **/coverage/
+
+packages/test

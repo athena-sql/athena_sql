@@ -12,6 +12,8 @@ class AthenaSQL<D extends AthenaDriver> {
   SelectOptions<D> get select => SelectOptions(driver);
 
   DropBuilder<D> get drop => DropBuilder(driver);
+
+  InsertOptions<D> get insert => InsertOptions(driver);
 }
 
 extension AthenaDatabaseExtension on AthenaSQL<AthenaDatabaseDriver> {

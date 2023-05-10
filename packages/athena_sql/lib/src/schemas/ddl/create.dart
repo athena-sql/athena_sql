@@ -41,5 +41,5 @@ class CreateTableSchema extends DdlSchema {
       .keyword('TABLE ')
       .condition(ifNotExists == true, (q) => q.keyword('IF NOT EXISTS '))
       .userInput(tableName)
-      .parentesis((q) => q.comaSpaceSeparated(clauses));
+      .parentheses((q) => q.comaSpaceSeparated(clauses));
 }

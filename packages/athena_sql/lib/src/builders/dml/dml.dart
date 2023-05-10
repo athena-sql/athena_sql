@@ -9,6 +9,26 @@ class SelectOptions<D extends AthenaDriver> {
   }
 }
 
+class InsertOptions<D extends AthenaDriver> {
+  final D _driver;
+  InsertOptions(this._driver);
+
+  InsertTableOptions<D> into(String name) {
+    return InsertTableOptions(_driver, name);
+  }
+}
+
+class InsertTableOptions<D extends AthenaDriver> {
+  final D _driver;
+  final String _name;
+  const InsertTableOptions(this._driver, this._name);
+
+  AthenaQueryBuilder<D, InsertTableSchema> values(Map<String, dynamic> values) {
+    return AthenaQueryBuilder<D, InsertTableSchema>(
+        _driver, InsertTableSchema(name: _name, listValues: [values]));
+  }
+}
+
 class SelectTableOptions<D extends AthenaDriver> {
   final D _driver;
   final List<String> _columns;
