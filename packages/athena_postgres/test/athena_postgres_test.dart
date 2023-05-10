@@ -6,7 +6,7 @@ import 'docker.dart';
 
 void main() {
   usePostgresDocker();
-  group('A group of tests', () {
+  group('Basic test', () {
     final athena = AthenaPostgresql(PostgresDatabaseConfig(
         'localhost', 5432, 'dart_test',
         username: 'dart', password: 'dart'));
@@ -18,22 +18,15 @@ void main() {
     tearDown(() async => await athena.close());
 
     test('execute query', () async {
+      final tableName = 'create_table_test';
       final completed = await athena.create
-          .table('users')
+          .table(tableName)
           .column((t) => t.int_('id').primaryKey())
           .column((t) => t.text('name'))
           .run();
       expect(completed, equals(0));
-      final result = await athena.rawQuery('''
-      SELECT EXISTS (
-          SELECT FROM 
-              pg_tables
-          WHERE 
-              schemaname = 'public' AND 
-              tablename  = 'users'
-          );
-      ''');
-      expect(result[0][0], equals(true));
+      final exists = await athena.tableExists(tableName);
+      expect(exists, equals(true));
     });
   });
 }
