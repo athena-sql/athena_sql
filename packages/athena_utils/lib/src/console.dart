@@ -1,41 +1,76 @@
 import 'dart:io';
 
+/// Console transform Colors
 enum TokensColor {
-  black("30"),
-  red("31"),
-  green("32"),
-  yellow("33"),
-  blue("34"),
-  magenta("35"),
-  cyan("36"),
-  white("37");
+  /// balck color
+  black('30'),
 
-  final String code;
+  /// red color
+  red('31'),
+
+  /// green color
+  green('32'),
+
+  /// yellow color
+  yellow('33'),
+
+  /// blue color
+  blue('34'),
+
+  /// magenta color
+  magenta('35'),
+
+  /// cyan color
+  cyan('36'),
+
+  /// white color
+  white('37');
+
   const TokensColor(this.code);
 
+  /// color code representation
+  final String code;
+
+  /// Transform a string to a printable string
   String printable(String value) {
     return '\x1B[${code}m$value\x1B[0m';
   }
 }
 
+/// Print messages in the console
 class Print {
   static void _print(Object? object, TokensColor color) {
     print(color.printable('$object'));
   }
 
+  /// Print a red message in the console
   static void red(Object? object) {
     _print(object, TokensColor.red);
   }
 
+  /// Print a yellow message in the console
   static void yellow(Object? object) {
     _print(object, TokensColor.yellow);
   }
 }
 
-enum Find { file, directory, link }
+/// Find types
+enum Find {
+  /// find files
+  file,
 
+  /// find directories
+  directory,
+
+  /// find links
+  link
+}
+
+/// Console utils
 class Console {
   Console._();
+
+  /// Confirm question on command line
   static bool confirm(String question, {bool defaultValue = false}) {
     stdout.write('$question (y/n): ');
     final response = stdin.readLineSync();
@@ -43,8 +78,9 @@ class Console {
     return response == 'y' || response == 'Y';
   }
 
+  /// Ask question on command line
   static String ask(String question,
-      {String? defaultValue, bool? required, validator}) {
+      {String? defaultValue, bool? required, dynamic validator}) {
     stdout
         .write('$question${defaultValue == null ? '' : ' ($defaultValue)'}: ');
     final response = stdin.readLineSync();
@@ -69,6 +105,7 @@ class Console {
     return response;
   }
 
+  /// show a selectable menu on command line
   static T menu<T>(
       {required String prompt,
       required List<T> options,
@@ -93,6 +130,7 @@ class Console {
     return options[index - 1];
   }
 
+  /// Find files or directories
   static List<String> find(String pattern,
       {List<Find> types = const [Find.file],
       bool recursive = true,
