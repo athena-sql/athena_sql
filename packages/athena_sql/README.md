@@ -109,7 +109,7 @@ final query = AthenaSQL.createTable("users")
 
 ## Documentation
 
-For more information on using AthenaSQL, check out the [official documentation](https://athena-sql.gitbook.io/).
+For more information on using AthenaSQL, check out the [official documentation](https://docs.athena-sql.dev/).
 
 ## Contributing
 

@@ -84,7 +84,7 @@ class LocalMigrationCommand extends ExecutableComand {
     final migrationClasses =
         migrations.map((e) => '  ${e.classFound}()').join(',\n');
 
-    final configDriver = config.driver.getConfig();
+    final configDriver = config.driver.toDriverConfig();
     final finalContent = migrateCommand
         .replaceAll('{{imports}}', imports)
         .replaceAll('{{migrations}}', migrationClasses)

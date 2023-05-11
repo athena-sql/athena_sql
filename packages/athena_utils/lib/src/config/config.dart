@@ -1,11 +1,12 @@
 import 'dart:io';
 
-import 'package:athena_utils/src/console.dart';
 import 'package:yaml/yaml.dart';
 
-import 'drivers_config.dart';
+import '../console.dart';
 
-const yamlTemplate = '''
+part 'drivers_config.dart';
+
+const _yamlTemplate = '''
 # Athena Migrate Configuration
 
 version: 1
@@ -31,28 +32,24 @@ migrations:
   # stub: migrations/template.stub
 ''';
 
+/// Create and manage the athena.yaml file
 class AthenaConfig {
-  final AthenaOptionsDriver driver;
-  final Map<String, dynamic> connection;
-  final String migrationsPath;
-  final String? migrationsStub;
-  final String? migrationProgram;
-
-  AthenaConfig(
+  AthenaConfig._(
       {required this.driver,
       required this.connection,
-      required this.migrationsPath,
-      this.migrationsStub,
-      this.migrationProgram = 'migrate'});
+      required this.migrationsPath});
 
-  factory AthenaConfig.fromYaml(YamlMap yaml) {
-    AthenaOptionsDriver driver;
+  factory AthenaConfig._fromYaml(YamlMap yaml) {
+    _AthenaOptionsDriver driver;
     try {
-      driver = AthenaOptionsDriver.values
+      driver = _AthenaOptionsDriver.values
           .firstWhere((e) => e.name == yaml['driver']);
     } catch (e) {
+      final drivers = _AthenaOptionsDriver.values
+          .map((e) => e.name)
+          .join(', ');
       Print.red(
-          'Invalid driver, posible drivers are: ${AthenaOptionsDriver.values.join(', ')}');
+          'Invalid driver, posible drivers are: $drivers');
       exit(1);
     }
     Map<String, dynamic> connection;
@@ -62,18 +59,24 @@ class AthenaConfig {
       Print.red('Invalid connection, please check the connection format');
       exit(1);
     }
-    return AthenaConfig(
+    return AthenaConfig._(
       driver: driver,
       connection: connection,
       migrationsPath: yaml['migrations']['path'] ?? 'migrations',
-      migrationsStub: yaml['migrations']['stub'],
     );
   }
+  /// selected sql driver
+  final _AthenaOptionsDriver driver;
+  /// connection information for a driver
+  final Map<String, dynamic> connection;
+  /// path to migrations directory
+  final String migrationsPath;
 }
 
+/// Read the athena.yaml file
 class ReadAthenaConfig {
   static final _configFile = File('athena.yaml');
-  File? createConfig() {
+  File? _createConfig() {
     final create =
         Console.confirm('Would you like to create one?', defaultValue: true);
     if (!create) return null;
@@ -81,20 +84,20 @@ class ReadAthenaConfig {
     Print.yellow('Creating athena.yaml');
     final file = _configFile
       ..createSync()
-      ..writeAsStringSync(yamlTemplate);
+      ..writeAsStringSync(_yamlTemplate);
     Print.yellow('athena.yaml created');
     return file;
   }
 
-  YamlMap? loadYamlContent() {
+  YamlMap? _loadYamlContent() {
     final configFile = _configFile.readAsStringSync();
     YamlMap? yamlContent;
     try {
       yamlContent = loadYaml(configFile);
       if (yamlContent == null) {
         Print.red('athena.yaml is empty');
-        if (createConfig() == null) return null;
-        loadYamlContent();
+        if (_createConfig() == null) return null;
+        return _loadYamlContent();
       }
       return yamlContent;
     } on YamlException catch (e) {
@@ -103,24 +106,24 @@ class ReadAthenaConfig {
       exit(1);
     }
   }
-
+  /// Check if the athena.yaml file exists
   AthenaConfig? run() {
     if (!_configFile.existsSync()) {
       Print.red('athena.yaml not found');
-      if (createConfig() == null) return null;
+      if (_createConfig() == null) return null;
     }
-    YamlMap? yamlContent = loadYamlContent();
+    final yamlContent = _loadYamlContent();
     if (yamlContent == null) return null;
-    return AthenaConfig.fromYaml(yamlContent);
+    return AthenaConfig._fromYaml(yamlContent);
   }
-
+  /// Get the athena.yaml file
   AthenaConfig getConfig() {
     if (!_configFile.existsSync()) {
       Print.red('athena.yaml not found');
-      if (createConfig() == null) throw Exception('athena.yaml is needed');
+      if (_createConfig() == null) throw Exception('athena.yaml is needed');
     }
-    YamlMap? yamlContent = loadYamlContent();
+    final yamlContent = _loadYamlContent();
     if (yamlContent == null) throw Exception('athena.yaml wrong format');
-    return AthenaConfig.fromYaml(yamlContent);
+    return AthenaConfig._fromYaml(yamlContent);
   }
 }

@@ -4,7 +4,7 @@
 
 This package provides a MySQL database for Athena.
 
-for documentation on how to use Athena, see the [Athena documentation](https://athena-sql.gitbook.io/)
+for documentation on how to use Athena, see the [Athena documentation](https://docs.athena-sql.dev/)
 or the [Athena repository](https://github.com/athena-sql/athena_sql)
 
 ## Usage

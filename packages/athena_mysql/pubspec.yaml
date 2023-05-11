@@ -1,9 +1,9 @@
 name: athena_mysql
 description: >-
   Dart MySQL query builder, expressive and user-friendly API to build and manage SQL queries in your Dart projects.
-version: 1.0.0
+version: 1.0.1
 
-homepage: https://athena-sql.gitbook.io/mysql/
+homepage: https://docs.athena-sql.dev/mysql/
 repository: https://github.com/athena-sql/athena_sql/tree/master/packages/athena_mysql/
 
 topics:

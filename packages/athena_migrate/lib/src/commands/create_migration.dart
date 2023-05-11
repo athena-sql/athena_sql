@@ -73,7 +73,7 @@ class CreateMigrationCommand extends ExecutableComand {
 
   MigrationNew _loadTemplate(String migrationName) {
     final date = getDateNewMigration();
-    final configDriver = config.driver.getConfig();
+    final configDriver = config.driver.toDriverConfig();
     return MigrationNew(migrationName, date, configDriver);
   }
 
