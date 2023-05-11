@@ -6,6 +6,9 @@
 # https://dart.dev/guides/libraries/private-files#pubspeclock.
 pubspec.lock
 
+pubspec_overrides.yaml
+
+
 # Ignore test-related files
 **/coverage.data
 **/coverage/
