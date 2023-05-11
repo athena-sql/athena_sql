@@ -1,5 +1,6 @@
 name: athena_utils
-description: A starting point for Dart libraries or applications.
+description: >-
+  Util common package for Athena SQL and its CLI
 version: 1.0.0
 homepage: https://athena-sql.gitbook.io/utils/
 repository: https://github.com/athena-sql/athena_sql/tree/master/packages/athena_utils
