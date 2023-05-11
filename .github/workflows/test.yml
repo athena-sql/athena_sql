@@ -36,7 +36,7 @@ jobs:
 
       - uses: dart-lang/setup-dart@v1
         with:
-          sdk: ${{ env.DART_MIN_VERSION }}
+          sdk: ${{ env.DART_VERSION }}
       - run: dart pub get
         working-directory: packages/athena_sql
       - run: dart pub get
