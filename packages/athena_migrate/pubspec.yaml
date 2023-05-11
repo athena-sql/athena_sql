@@ -1,14 +1,11 @@
 name: athena_migrate
-description: A starting point for Dart libraries or applications.
+description: Athena SQL migration tool
 version: 1.0.0
-# repository: https://github.com/my_org/my_repo
-publish_to: none
+homepage: https://athena-sql.gitbook.io/
+repository: https://github.com/athena-sql/migration/
 
 environment:
   sdk: '>=2.19.0 <4.0.0'
-
-# dependencies:
-#   path: ^1.8.0
 
 dev_dependencies:
   lints: ^2.0.0
@@ -18,8 +15,5 @@ dependencies:
   intl: ^0.18.0
   path: ^1.8.3
   yaml: ^3.1.1
-  athena_utils:
-    path: ../athena_utils
+  athena_utils: ^1.0.0
   collection: ^1.17.1
-executables:
-  athena_migrate:
