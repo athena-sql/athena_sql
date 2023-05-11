@@ -1,39 +1,42 @@
-<!-- 
-This README describes the package. If you publish this package to pub.dev,
-this README's contents appear on the landing page for your package.
 
-For information about how to write a good package README, see the guide for
-[writing package pages](https://dart.dev/guides/libraries/writing-package-pages). 
 
-For general information about developing packages, see the Dart guide for
-[creating packages](https://dart.dev/guides/libraries/create-library-packages)
-and the Flutter guide for
-[developing packages and plugins](https://flutter.dev/developing-packages). 
--->
+# Athena Postgres
 
-TODO: Put a short description of the package here that helps potential users
-know whether this package might be useful for them.
+This package provides a Postgres database for Athena.
 
-## Features
-
-TODO: List what your package can do. Maybe include images, gifs, or videos.
-
-## Getting started
-
-TODO: List prerequisites and provide or point to information on how to
-start using the package.
+for documentation on how to use Athena, see the [Athena documentation](https://athena-sql.gitbook.io/)
+or the [Athena repository](https://github.com/athena-sql/athena_sql)
 
 ## Usage
-
-TODO: Include short and useful examples for package users. Add longer examples
-to `/example` folder. 
-
-```dart
-const like = 'sample';
+install the package
+```bash
+$ dart pub add athena_postgres
 ```
 
-## Additional information
+Create a database connection
+```dart
+import 'package:athena_postgres/athena_postgres.dart';
 
-TODO: Tell users more about the package: where to find more information, how to 
-contribute to the package, how to file issues, what response they can expect 
-from the package authors, and more.
+final athenaSql = AthenaPostgresql(
+    PostgresDatabaseConfig(
+        'localhost',
+        5432,
+        'database',
+        username: 'user', // optional
+        password: 'password', // optional
+        database: 'database', // optional
+        timeoutInSeconds: 30, // optional
+        queryTimeoutInSeconds: 30, // optional
+        timeZone: 'UTC', // optional
+        useSSL: false, // optional
+        isUnixSocket: false, // optional
+        allowClearTextPassword: false, // optional
+        replicationMode: ReplicationMode.none, // optional
+    ),
+);
+```
+
+to open a connection
+```dart
+await athenaSql.open();
+```

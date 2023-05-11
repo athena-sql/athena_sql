@@ -14,11 +14,24 @@ A powerful and elegant Dart SQL query builder inspired by the wisdom and strateg
 
 ## Installation
 
-To use AthenaSQL in your Dart project, add it as a dependency in your `pubspec.yaml` file:
+To use Posrgresql or MySql with AthenaSQL, install the following packages:
 
-```yaml
-dependencies:
-  athena_sql: ^0.1.0
+for posrgresql:
+```bash
+dart pub add athena_postgres
+```
+
+for mysql
+```bash
+dart pub add athena_mysql
+```
+
+they come with athena_sql as a dependency.
+
+If you want the sql builder without any database specific features, you can install athena_sql directly:
+
+```bash
+dart pub add athena_sql
 ```
 
 Then, import the library in your Dart code:
@@ -34,25 +47,25 @@ AthenaSQL provides an intuitive and chainable API to build SQL queries for vario
 ### SELECT
 
 ```dart
-final query = AthenaSQL.select()
+final query = await athenaSQL.select(["id", "name", "email"])
   .from("users")
-  .columns(["id", "name", "email"])
-  .where((c) => c
-    .eq("active", true)
-    .and(c.gte("age", 18))
-    .or(c.eq("role", "admin")))
-  .build();
+  .where((c) => 
+    (c["active"] == c.value(true))) &&
+    ((c["age"] >= c.value(18)) ||
+    (c["role"] == c.value("admin")))
+  .run();
 ```
 
 ### INSERT
 
 ```dart
-final query = AthenaSQL.insert()
+final insertedAmount = await athenaSQL.insert
   .into("users")
-  .columns(["name", "email", "password"])
-  .values(["John Doe", "john.doe@example.com", "hashed_password"])
-  .returning("*")
-  .build();
+  .values({
+    "name": "John Doe",
+    "email": "john.doe@example.com"
+  })
+  .run();
 ```
 
 ### UPDATE
@@ -65,7 +78,7 @@ final query = AthenaSQL.update()
     "email": "jane.doe@example.com",
   })
   .where("id = 1")
-  .build();
+  .run();
 ```
 
 ### DELETE
@@ -74,26 +87,29 @@ final query = AthenaSQL.update()
 final query = AthenaSQL.delete()
   .from("users")
   .where("id = 1")
-  .build();
+  .run();
 ```
 
 ### CREATE TABLE
 
 ```dart
 final query = AthenaSQL.createTable("users")
-  .addColumn((column) => column
-    .serial("id")
-    .primaryKey())
-  .addColumn((column) => column
-    .varchar("name", 50)
-    .notNull())
-  // ... add the remaining columns and constraints ...
-  .build();
+  .column((c) => c.serial("id").primaryKey())
+  .column((c) => c.varchar("name", 50).notNull())
+  .run();
 ```
+
+## TODO
+- [ ] update builder
+- [ ] delete builder
+- [ ] constrains for create table
+- [ ] joins
+- [ ] subqueries
+
 
 ## Documentation
 
-For more information on using AthenaSQL, check out the [official documentation](https://github.com/yourusername/athena_sql/wiki).
+For more information on using AthenaSQL, check out the [official documentation](https://athena-sql.gitbook.io/).
 
 ## Contributing
 
@@ -101,4 +117,4 @@ We welcome contributions to AthenaSQL! If you're interested in contributing, ple
 
 ## License
 
-AthenaSQL is released under the [MIT License](LICENSE).
+AthenaSQL is released under the [BSD 3-Clause License](LICENSE).

@@ -1,18 +1,21 @@
 name: athena_postgres
-description: A starting point for Dart libraries or applications.
+description: >-
+  Dart PostgreSQL query builder, expressive and user-friendly API to build and manage SQL queries in your Dart projects.
 version: 1.0.0
-# repository: https://github.com/my_org/my_repo
-publish_to: none
+homepage: https://athena-sql.gitbook.io/postgres/
+repository: https://github.com/athena-sql/athena_sql/tree/master/packages/athena_postgres/
+
+topics:
+  - sql
+  - postgres
 
 environment:
-  sdk: '>=2.19.0 <3.0.0'
+  sdk: '>=2.19.0 <4.0.0'
 
 dependencies: 
   path: ^1.8.3
   postgres: ^2.6.1
-  athena_sql:
-    path: ../athena_sql
-#   path: ^1.8.0
+  athena_sql: ^1.0.0
 
 dev_dependencies:
   lints: ^2.0.0

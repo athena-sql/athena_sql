@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="ProjectModuleManager">
+    <modules>
+      <module fileurl="file://$PROJECT_DIR$/packages/athena_migrate/melos_athena_migrate.iml" filepath="$PROJECT_DIR$/packages/athena_migrate/melos_athena_migrate.iml" />
+      <module fileurl="file://$PROJECT_DIR$/packages/athena_mysql/melos_athena_mysql.iml" filepath="$PROJECT_DIR$/packages/athena_mysql/melos_athena_mysql.iml" />
+      <module fileurl="file://$PROJECT_DIR$/packages/athena_postgres/melos_athena_postgres.iml" filepath="$PROJECT_DIR$/packages/athena_postgres/melos_athena_postgres.iml" />
+      <module fileurl="file://$PROJECT_DIR$/packages/athena_sql/melos_athena_sql.iml" filepath="$PROJECT_DIR$/packages/athena_sql/melos_athena_sql.iml" />
+      <module fileurl="file://$PROJECT_DIR$/packages/athena_utils/melos_athena_utils.iml" filepath="$PROJECT_DIR$/packages/athena_utils/melos_athena_utils.iml" />
+      <module fileurl="file://$PROJECT_DIR$/melos_athena_sql.iml" filepath="$PROJECT_DIR$/melos_athena_sql.iml" />
+    </modules>
+  </component>
+</project>
