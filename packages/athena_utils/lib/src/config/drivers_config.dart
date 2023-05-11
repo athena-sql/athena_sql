@@ -1,4 +1,3 @@
-
 part of 'config.dart';
 
 enum _AthenaOptionsDriver {
@@ -7,7 +6,7 @@ enum _AthenaOptionsDriver {
 
   const _AthenaOptionsDriver(this.name);
   final String name;
-  
+
   /// Get the driver config
   AthenaDriverConfig toDriverConfig() => AthenaDriverConfig._fromDriver(this);
 }
@@ -33,8 +32,10 @@ class AthenaDriverConfig {
         );
     }
   }
+
   /// The package to import
   String importPackage;
+
   /// The class to initialize
   String initClass;
 

@@ -45,11 +45,8 @@ class AthenaConfig {
       driver = _AthenaOptionsDriver.values
           .firstWhere((e) => e.name == yaml['driver']);
     } catch (e) {
-      final drivers = _AthenaOptionsDriver.values
-          .map((e) => e.name)
-          .join(', ');
-      Print.red(
-          'Invalid driver, posible drivers are: $drivers');
+      final drivers = _AthenaOptionsDriver.values.map((e) => e.name).join(', ');
+      Print.red('Invalid driver, posible drivers are: $drivers');
       exit(1);
     }
     Map<String, dynamic> connection;
@@ -65,10 +62,13 @@ class AthenaConfig {
       migrationsPath: yaml['migrations']['path'] ?? 'migrations',
     );
   }
+
   /// selected sql driver
   final _AthenaOptionsDriver driver;
+
   /// connection information for a driver
   final Map<String, dynamic> connection;
+
   /// path to migrations directory
   final String migrationsPath;
 }
@@ -106,6 +106,7 @@ class ReadAthenaConfig {
       exit(1);
     }
   }
+
   /// Check if the athena.yaml file exists
   AthenaConfig? run() {
     if (!_configFile.existsSync()) {
@@ -116,6 +117,7 @@ class ReadAthenaConfig {
     if (yamlContent == null) return null;
     return AthenaConfig._fromYaml(yamlContent);
   }
+
   /// Get the athena.yaml file
   AthenaConfig getConfig() {
     if (!_configFile.existsSync()) {

@@ -4,22 +4,30 @@ import 'dart:io';
 enum TokensColor {
   /// balck color
   black('30'),
+
   /// red color
   red('31'),
+
   /// green color
   green('32'),
+
   /// yellow color
   yellow('33'),
+
   /// blue color
   blue('34'),
+
   /// magenta color
   magenta('35'),
+
   /// cyan color
   cyan('36'),
+
   /// white color
   white('37');
 
   const TokensColor(this.code);
+
   /// color code representation
   final String code;
 
@@ -34,10 +42,12 @@ class Print {
   static void _print(Object? object, TokensColor color) {
     print(color.printable('$object'));
   }
+
   /// Print a red message in the console
   static void red(Object? object) {
     _print(object, TokensColor.red);
   }
+
   /// Print a yellow message in the console
   static void yellow(Object? object) {
     _print(object, TokensColor.yellow);
@@ -45,11 +55,13 @@ class Print {
 }
 
 /// Find types
-enum Find { 
+enum Find {
   /// find files
   file,
+
   /// find directories
   directory,
+
   /// find links
   link
 }
@@ -57,6 +69,7 @@ enum Find {
 /// Console utils
 class Console {
   Console._();
+
   /// Confirm question on command line
   static bool confirm(String question, {bool defaultValue = false}) {
     stdout.write('$question (y/n): ');
@@ -64,6 +77,7 @@ class Console {
     if (response == null || response.isEmpty) return defaultValue;
     return response == 'y' || response == 'Y';
   }
+
   /// Ask question on command line
   static String ask(String question,
       {String? defaultValue, bool? required, dynamic validator}) {
@@ -115,6 +129,7 @@ class Console {
     }
     return options[index - 1];
   }
+
   /// Find files or directories
   static List<String> find(String pattern,
       {List<Find> types = const [Find.file],
