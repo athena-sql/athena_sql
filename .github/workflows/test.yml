@@ -16,19 +16,7 @@ concurrency:
   cancel-in-progress: true
 
 jobs:
-  format:
-    name: Check formatting
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v3
-
-      - uses: dart-lang/setup-dart@v1
-        with:
-          sdk: ${{ env.DART_VERSION }}
-
-      - name: Verify code formatting
-        run: dart format --output none --set-exit-if-changed .
-  lint:
+  format_lint:
     name: Check lints
     runs-on: ubuntu-latest
     steps:
@@ -37,23 +25,24 @@ jobs:
       - uses: dart-lang/setup-dart@v1
         with:
           sdk: ${{ env.DART_VERSION }}
-      - run: dart pub get
-        working-directory: packages/athena_sql
-      - run: dart pub get
-        working-directory: packages/athena_postgres
-      - run: dart pub get
-        working-directory: packages/athena_migrate
-      - run: dart pub get
-        working-directory: packages/athena_mysql
-      - run: dart pub get
-        working-directory: packages/athena_utils
+      - name: Verify code formatting
+        run: dart format --output none --set-exit-if-changed .
+
+      - name: Activate Melos
+        run: dart pub global activate melos
+        
+      - name: Install coverage tools
+        run: dart pub global activate coverage
+
+      - name: Install Dependencies
+        run: melos bs
       - name: Analyze
         run: dart analyze .
   test:
     runs-on: ubuntu-latest
     strategy:
       matrix:
-        sdk: [2.19.0, stable, beta, dev]
+        sdk: [stable, beta, dev]
       fail-fast: false
     steps:
       - uses: actions/checkout@v3
@@ -70,7 +59,7 @@ jobs:
     runs-on: ubuntu-latest
     strategy:
       matrix:
-        sdk: [2.19.0, stable, beta, dev]
+        sdk: [stable, beta, dev]
       fail-fast: false
     steps:
       - uses: actions/checkout@v3
@@ -92,7 +81,7 @@ jobs:
     runs-on: ubuntu-latest
     strategy:
       matrix:
-        sdk: [2.19.0, stable, beta, dev]
+        sdk: [stable, beta, dev]
       fail-fast: false
     steps:
       - uses: actions/checkout@v3
@@ -121,47 +110,23 @@ jobs:
         with:
           sdk: ${{ env.DART_VERSION }}
 
-      - name: Install dependencies
-        run: dart pub get
-        working-directory: packages/athena_sql
+      - name: Activate Melos
+        run: dart pub global activate melos
         
       - name: Install coverage tools
         run: dart pub global activate coverage
 
-      - name: format coverage
-        run: dart pub global run coverage:test_with_coverage --branch-coverage --function-coverage
-        working-directory: packages/athena_sql
+      - name: Install Dependencies
+        run: melos bs
 
       - name: pull latest postgres image
         run: docker pull postgres:latest
-      - name: Install dependencies
-        run: dart pub get
-        working-directory: packages/athena_postgres
-      - name: Coverage Test
-        run: dart pub global run coverage:test_with_coverage -b -f -- -j 1
-        working-directory: packages/athena_postgres
-
-      - name: pull latest postgres image
-        run: docker pull postgres:latest
-      - name: Install dependencies
-        run: dart pub get
-        working-directory: packages/athena_mysql
-      - name: Coverage Test
-        run: dart pub global run coverage:test_with_coverage -b -f -- -j 1
-        working-directory: packages/athena_mysql
-
-      - uses: codecov/codecov-action@v3
+      - name: Test Coverage
+        run:  melos run test:coverage
+      - name: "Upload Coverage"
+        uses: codecov/codecov-action@v3
         with:
-          files: packages/athena_sql/coverage/lcov.info
-          verbose: true # optional (default = false)
-      - uses: codecov/codecov-action@v3
-        with:
-          files: packages/athena_postgres/coverage/lcov.info
-          verbose: true # optional (default = false)
-      - uses: codecov/codecov-action@v3
-        with:
-          files: packages/athena_mysql/coverage/lcov.info
-          verbose: true # optional (default = false)
+          files: packages/*/coverage/lcov.info
     services:
       mysql:
         image: mysql:8

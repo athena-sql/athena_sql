@@ -22,3 +22,10 @@ scripts:
       dart format --set-exit-if-changed .
     description: |
       format dart code
+  test:coverage:
+    run: dart pub global run coverage:test_with_coverage -b -f -- -j 1
+    description: Run test with coverage.
+    exec:
+      concurrency: 1
+    packageFilters:
+      dirExists: test
