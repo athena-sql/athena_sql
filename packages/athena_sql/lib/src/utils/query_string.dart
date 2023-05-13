@@ -1,7 +1,5 @@
 import 'package:athena_utils/athena_utils.dart';
 
-import './string.dart';
-
 abstract class QueryBuilder extends QueryPrintable {
   const QueryBuilder();
   QueryPrintable build();
