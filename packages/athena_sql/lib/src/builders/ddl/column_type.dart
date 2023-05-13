@@ -6,7 +6,7 @@ extension ColumnBuilder<D extends AthenaDriver>
           {required String type,
           List<String>? parameters,
           List<String>? posParameters}) =>
-      _changeBuilder(ColumnSchema(name, type,
+      _changeBuilder(ColumnSchema(_driver.mapColumnOrTable(name), type,
           parameters: parameters, posParameters: posParameters));
 }
 

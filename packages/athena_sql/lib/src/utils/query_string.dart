@@ -126,14 +126,6 @@ class QueryString extends QueryPrintable {
   }
 
   QueryString column(String value) {
-    if (value.containsUppercase) {
-      if (value.length > 1 &&
-          value[0] == '"' &&
-          value[value.length - 1] == '"') {
-        return adding(_new(value, TokensColor.white));
-      }
-      return adding(_new('"$value"', TokensColor.white));
-    }
     return adding(_new(value, TokensColor.white));
   }
 
