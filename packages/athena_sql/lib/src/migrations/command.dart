@@ -1,3 +1,4 @@
+import 'package:athena_utils/athena_utils.dart';
 import 'package:collection/collection.dart';
 
 import '../../athena_sql.dart';
@@ -30,17 +31,16 @@ class MigrationCommands {
     }
   }
 
-  Future<bool> _checkTable() {
-    return athenaSql.transaction((athenasql) async {
-      final exists = await athenaSql.tableExists('athena_migrations');
-      print('objectExists $exists');
+  Future<bool> _checkTable() async {
+    return athenaSql.transaction((db) async {
+      final exists = await db.tableExists('athena_migrations');
       if (!exists) {
-        await athenaSql.create
+        print('creating migration table');
+        await db.create
             .table('athena_migrations')
             .column((t) => t.string('name').notNull())
             .column((t) => t.string('date').notNull())
             .run();
-        print('created');
         return true;
       }
       return false;
@@ -57,9 +57,7 @@ class MigrationCommands {
       ORDER BY date DESC
       LIMIT 1
     ''';
-    print(query);
     final response = await athenaSql.rawQuery(query);
-    print(response);
     if (response.isEmpty) {
       return null;
     }
@@ -68,12 +66,14 @@ class MigrationCommands {
   }
 
   Future<void> _runUp() async {
+    if (migrations.isEmpty) {
+      Print.yellow('No migrations to run');
+      return;
+    }
     final current = await _getCurrentMigration();
     final date = current?['date'] as String?;
 
     AthenaMigration? migration;
-    print(date);
-    print(migrations);
     if (date != null) {
       migration = migrations
           .where((element) => element.date.compareTo(date) > 0)
@@ -83,10 +83,10 @@ class MigrationCommands {
       migration = migrations.firstOrNull;
     }
     if (migration == null) {
-      print('No migrations to run');
+      Print.yellow('No migrations to run');
       return;
     }
-    print('running migration ${migration.name}');
+    Print.yellow('running migration ${migration.name}');
     await athenaSql.transaction((db) async {
       await migration!.up(db);
       return db.rawQuery('''
@@ -96,7 +96,7 @@ class MigrationCommands {
         'date': migration.date,
       });
     });
-    print('migration ${migration.name} finished');
+    Print.blue('migration ${migration.name} finished');
     return;
   }
 

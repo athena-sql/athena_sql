@@ -40,12 +40,12 @@ class AthenaConfig {
       required this.migrationsPath});
 
   factory AthenaConfig._fromYaml(YamlMap yaml) {
-    _AthenaOptionsDriver driver;
+    AthenaOptionsDriver driver;
     try {
-      driver = _AthenaOptionsDriver.values
+      driver = AthenaOptionsDriver.values
           .firstWhere((e) => e.name == yaml['driver']);
     } catch (e) {
-      final drivers = _AthenaOptionsDriver.values.map((e) => e.name).join(', ');
+      final drivers = AthenaOptionsDriver.values.map((e) => e.name).join(', ');
       Print.red('Invalid driver, posible drivers are: $drivers');
       exit(1);
     }
@@ -64,7 +64,7 @@ class AthenaConfig {
   }
 
   /// selected sql driver
-  final _AthenaOptionsDriver driver;
+  final AthenaOptionsDriver driver;
 
   /// connection information for a driver
   final Map<String, dynamic> connection;
@@ -75,17 +75,19 @@ class AthenaConfig {
 
 /// Read the athena.yaml file
 class ReadAthenaConfig {
+  /// Create a new instance of ReadAthenaConfig
+  ReadAthenaConfig({ConsoleService? console})
+      : _console = console ?? ConsoleService.instance;
+  final ConsoleService _console;
   static final _configFile = File('athena.yaml');
   File? _createConfig() {
     final create =
-        Console.confirm('Would you like to create one?', defaultValue: true);
+        _console.confirm('Would you like to create one?', defaultValue: true);
     if (!create) return null;
-
-    Print.yellow('Creating athena.yaml');
     final file = _configFile
       ..createSync()
       ..writeAsStringSync(_yamlTemplate);
-    Print.yellow('athena.yaml created');
+    Print.blue('athena.yaml created');
     return file;
   }
 

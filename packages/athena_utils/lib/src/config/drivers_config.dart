@@ -1,10 +1,17 @@
 part of 'config.dart';
 
-enum _AthenaOptionsDriver {
+/// sql driver options
+enum AthenaOptionsDriver {
+  /// mysql driver
   mysql('mysql'),
+
+  /// postgresql driver
   postgresql('postgresql');
 
-  const _AthenaOptionsDriver(this.name);
+  /// create driver with its name
+  const AthenaOptionsDriver(this.name);
+
+  /// The name of the driver
   final String name;
 
   /// Get the driver config
@@ -18,17 +25,17 @@ class AthenaDriverConfig {
     required this.initClass,
   });
 
-  factory AthenaDriverConfig._fromDriver(_AthenaOptionsDriver driver) {
+  factory AthenaDriverConfig._fromDriver(AthenaOptionsDriver driver) {
     switch (driver) {
-      case _AthenaOptionsDriver.mysql:
+      case AthenaOptionsDriver.mysql:
         return AthenaDriverConfig._(
           importPackage: 'athena_mysql',
           initClass: 'AthenaMySQL',
         );
-      case _AthenaOptionsDriver.postgresql:
+      case AthenaOptionsDriver.postgresql:
         return AthenaDriverConfig._(
           importPackage: 'athena_postgres',
-          initClass: 'AthenaPostgres',
+          initClass: 'AthenaPostgresql',
         );
     }
   }

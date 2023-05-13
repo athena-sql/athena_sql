@@ -1,5 +1,4 @@
 import 'package:athena_postgres/athena_postgres.dart';
-import 'package:athena_sql/athena_sql.dart';
 
 void main() async {
   final athena = AthenaPostgresql(PostgresDatabaseConfig('host', 1, 'db'));

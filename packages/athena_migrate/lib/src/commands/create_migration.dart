@@ -1,11 +1,9 @@
-import 'dart:io';
-
-// import 'package:clock/clock.dart';
 import 'package:args/args.dart';
 import 'package:intl/intl.dart';
 import 'package:athena_migrate/src/executable.dart';
 import 'package:path/path.dart' as path;
 import 'package:athena_utils/athena_utils.dart';
+import 'package:clock/clock.dart';
 
 abstract class ConsoleConfig {
   static const migrationDestination = 'database/migrations';
@@ -32,6 +30,7 @@ class MigrationNew {
   final String name;
   final String date;
   final AthenaDriverConfig configDriver;
+  final FileService fs;
 
   String get contents => migrationFile
       .replaceAll('{{date}}', date)
@@ -42,39 +41,40 @@ class MigrationNew {
   String get fileName => '${[date, name].join(' ').snakeCase}.dart';
   String get className => 'Migration $name $date'.pascalCase;
 
-  MigrationNew(this.name, this.date, this.configDriver);
-
-  File generate(String destinationFile) => File(destinationFile)
-    ..createSync(recursive: true)
-    ..writeAsStringSync(contents);
+  MigrationNew(this.name, this.date, this.configDriver, this.fs);
 
   void register(String destinationDir) {
     registerMainFile(destinationDir);
   }
 
   void registerMainFile(String destinationDir) {
-    File(path.join(destinationDir, fileName))
-      ..createSync(recursive: true)
-      ..writeAsStringSync(contents);
+    fs.writeOn(path.join(destinationDir, fileName), contents);
   }
 }
 
 class CreateMigrationCommand extends ExecutableComand {
+  final FileService _fs;
   final AthenaConfig config;
+  final ConsoleService _console;
+  final Clock _clock;
 
   String getDateNewMigration() {
-    var now = DateTime.now();
+    var now = _clock.now();
     var formatter = DateFormat('yyyy_MM_dd_HHmmss');
     return formatter.format(now);
   }
 
-  CreateMigrationCommand(this.config)
-      : super('create', 'Creates a migration file');
+  CreateMigrationCommand(this.config,
+      {ConsoleService? console, FileService? fs, Clock? clock})
+      : _console = console ?? ConsoleService.instance,
+        _fs = fs ?? FileService.instance,
+        _clock = clock ?? Clock(),
+        super('create', 'Creates a migration file');
 
   MigrationNew _loadTemplate(String migrationName) {
     final date = getDateNewMigration();
     final configDriver = config.driver.toDriverConfig();
-    return MigrationNew(migrationName, date, configDriver);
+    return MigrationNew(migrationName, date, configDriver, _fs);
   }
 
   @override
@@ -83,7 +83,7 @@ class CreateMigrationCommand extends ExecutableComand {
     var migrationName = args?.arguments.join(' ');
     if (migrationName == null || migrationName.isEmpty) {
       Print.yellow('Migration name is required');
-      var name = Console.ask('name:',
+      var name = _console.ask('name:',
           required: true, validator: RegExp(r'^[\w\d\-_\s]+$'));
       migrationName = name;
     }

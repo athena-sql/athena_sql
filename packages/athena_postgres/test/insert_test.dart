@@ -1,5 +1,4 @@
 import 'package:athena_postgres/athena_postgres.dart';
-import 'package:athena_sql/athena_sql.dart';
 import 'package:test/test.dart';
 
 import 'docker.dart';

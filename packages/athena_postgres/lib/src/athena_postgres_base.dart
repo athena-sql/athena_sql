@@ -82,6 +82,7 @@ class PostgreSQLDriver extends PostgreTransactionSQLDriver<PostgreSQLConnection>
   @override
   Future<void> open() async {
     if (_isOpen) return;
+
     if (connection.isClosed) {
       connection = PostgreSQLConnection(
           _config.host, _config.port, _config.databaseName,
@@ -102,10 +103,12 @@ class PostgreSQLDriver extends PostgreTransactionSQLDriver<PostgreSQLConnection>
 
   @override
   Future<T> transaction<T>(
-      Future<T> Function(AthenaDatabaseDriver driver) trx) {
-    return connection.transaction((connection) {
+      Future<T> Function(AthenaDatabaseDriver driver) trx) async {
+    final val = await connection.transaction((connection) {
       return trx(PostgreTransactionSQLDriver._(connection));
-    }) as Future<T>;
+    });
+
+    return val as T;
   }
 }
 
@@ -125,14 +128,47 @@ class AthenaPostgresql extends AthenaSQL<PostgreSQLDriver> {
   static Future<AthenaPostgresql> fromMapConnection(
       Map<String, dynamic> config) async {
     final athena = AthenaPostgresql(PostgresDatabaseConfig(
-      config['host'],
-      config['port'],
-      config['databaseName'],
-      username: config['username'],
-      password: config['password'],
-      useSSL: config['useSSL'],
+      config.getValue('host'),
+      config.getValue('port'),
+      config.getValue('database'),
+      username: config.optionalValue('username'),
+      password: config.optionalValue('password'),
+      useSSL: config.optionalValue('useSSL') ?? false,
+      allowClearTextPassword:
+          config.optionalValue('allowClearTextPassword') ?? false,
+      timeZone: config.optionalValue('timeZone') ?? 'UTC',
+      timeoutInSeconds: config.optionalValue('timeoutInSeconds') ?? 30,
+      isUnixSocket: config.optionalValue('isUnixSocket') ?? false,
+      queryTimeoutInSeconds:
+          config.optionalValue('queryTimeoutInSeconds') ?? 30,
+      replicationMode:
+          config.optionalValue('replicationMode') ?? ReplicationMode.none,
     ));
     await athena.open();
     return athena;
+  }
+}
+
+extension MapSecure on Map<String, dynamic> {
+  T? optionalValue<T>(String key) {
+    if (!containsKey(key)) {
+      return null;
+    }
+    final val = this[key];
+    if (val is! T) {
+      throw Exception('Key \'$key\' is not of type ${T.toString()}');
+    }
+    return this[key] as T;
+  }
+
+  T getValue<T>(String key) {
+    if (!containsKey(key)) {
+      throw Exception('Key \'$key\' not found');
+    }
+    final val = this[key];
+    if (val is! T) {
+      throw Exception('Key \'$key\' is not of type ${T.toString()}');
+    }
+    return this[key] as T;
   }
 }
