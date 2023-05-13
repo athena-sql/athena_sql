@@ -26,7 +26,7 @@ enum TokensColor {
 
   /// white color
   white('37');
-
+  /// create a color with its code
   const TokensColor(this.code);
 
   /// color code representation
