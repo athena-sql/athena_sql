@@ -3,6 +3,8 @@ part of 'builders.dart';
 abstract class AthenaDriver {
   const AthenaDriver();
   AthenaColumnsDriver get columns;
+
+  String mapColumnOrTable(String column);
 }
 
 abstract class AthenaDatabaseTransactionDriver extends AthenaDatabaseDriver {

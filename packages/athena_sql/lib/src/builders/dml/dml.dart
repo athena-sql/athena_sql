@@ -5,7 +5,8 @@ class SelectOptions<D extends AthenaDriver> {
   SelectOptions(this._driver);
 
   SelectTableOptions<D> call(List<String> columns) {
-    return SelectTableOptions(_driver, columns);
+    return SelectTableOptions(
+        _driver, [...columns.map((e) => _driver.mapColumnOrTable(e))]);
   }
 }
 

@@ -8,3 +8,7 @@
 ## 1.0.2
 - fix migration variables
 - print corrected
+
+
+## 1.0.3
+- add `mapColumnOrTable` on driver to map column names and table names

@@ -6,7 +6,11 @@ import 'dml_schema.dart';
 class InsertTableSchema extends DMLSchema {
   final String name;
   final List<Map<String, dynamic>> listValues;
-  InsertTableSchema({required this.name, required this.listValues});
+  final Map<String, String> mapColumn;
+  InsertTableSchema(
+      {required this.name,
+      required this.listValues,
+      this.mapColumn = const {}});
   @override
   QueryPrintable build() {
     // all values keys
@@ -19,13 +23,15 @@ class InsertTableSchema extends DMLSchema {
             .toList())
         .toList();
 
+    final columns = keys.map((key) => mapColumn[key] ?? key).toList();
+
     return QueryString()
         .keyword('INSERT ')
         .keyword('INTO ')
         .userInput(name)
         .space()
-        .parentheses((q) =>
-            q.comaSpaceSeparated(keys.map((e) => QueryString().userInput(e))))
+        .parentheses((q) => q.comaSpaceSeparated(
+            columns.map((column) => QueryString().userInput(column))))
         .keyword(' VALUES ')
         .comaSpaceSeparated(valuesToInsert
             .map((e) => QueryString().parentheses((q) =>
@@ -46,10 +52,13 @@ class InsertTableSchema extends DMLSchema {
   }
 
   InsertTableSchema copyWith(
-      {String? name, List<Map<String, dynamic>>? listValues}) {
+      {String? name,
+      List<Map<String, dynamic>>? listValues,
+      Map<String, String>? mapColumn}) {
     return InsertTableSchema(
       name: name ?? this.name,
       listValues: listValues ?? this.listValues,
+      mapColumn: mapColumn ?? this.mapColumn,
     );
   }
 

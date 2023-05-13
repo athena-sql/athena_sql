@@ -3,6 +3,11 @@ import 'package:athena_sql/src/builders/builders.dart';
 class TestDriver extends AthenaStringDriver {
   @override
   AthenaColumnsDriver get columns => throw UnimplementedError();
+
+  @override
+  String mapColumnOrTable(String column) {
+    throw UnimplementedError();
+  }
 }
 
 class TestDatabaseTransactionDriver extends AthenaDatabaseTransactionDriver {
@@ -24,6 +29,11 @@ class TestDatabaseTransactionDriver extends AthenaDatabaseTransactionDriver {
 
   @override
   AthenaColumnsDriver get columns => throw UnimplementedError();
+
+  @override
+  String mapColumnOrTable(String column) {
+    throw UnimplementedError();
+  }
 }
 
 class TestDatabaseDriver extends AthenaDatabaseConnectionDriver {
@@ -63,6 +73,11 @@ class TestDatabaseDriver extends AthenaDatabaseConnectionDriver {
 
   @override
   AthenaColumnsDriver get columns => throw UnimplementedError();
+
+  @override
+  String mapColumnOrTable(String column) {
+    throw UnimplementedError();
+  }
 }
 
 String normalizeSql(String sql) {
