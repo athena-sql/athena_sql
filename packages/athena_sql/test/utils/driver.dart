@@ -6,7 +6,7 @@ class TestDriver extends AthenaStringDriver {
 
   @override
   String mapColumnOrTable(String column) {
-    throw UnimplementedError();
+    return column;
   }
 }
 
