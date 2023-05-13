@@ -7,6 +7,7 @@ enum AthenaOptionsDriver {
 
   /// postgresql driver
   postgresql('postgresql');
+
   /// create driver with its name
   const AthenaOptionsDriver(this.name);
 
