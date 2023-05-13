@@ -88,7 +88,7 @@ enum TimeOption {
   const TimeOption(this.value);
 }
 
-extension ColumnBuilder<D extends AthenaDriver>
+extension PostgresColumnBuilder<D extends AthenaDriver>
     on AthenaQueryBuilder<D, CreateColumnSchema> {
   /// signed eight-byte integer
   ///

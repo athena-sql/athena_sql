@@ -8,6 +8,9 @@ import 'package:args/args.dart';
 import 'package:collection/collection.dart';
 
 class AthenaMigrateComands {
+  ConsoleService console;
+  AthenaMigrateComands({ConsoleService? console})
+      : console = console ?? ConsoleService.instance;
   final List<ExecutableComand> execs = [];
   Future<void> run(List<String> args) async {
     final config = ReadAthenaConfig().run();
@@ -45,7 +48,7 @@ class AthenaMigrateComands {
       }
       await executable.run(parsed.command);
     } else {
-      final selected = Console.menu(
+      final selected = console.menu(
           prompt: 'select an option',
           options: executables,
           format: (ex) => '${ex.command} - ${ex.description}');

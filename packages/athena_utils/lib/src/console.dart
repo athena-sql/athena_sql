@@ -1,4 +1,5 @@
-import 'dart:io';
+import 'dart:convert';
+import 'dart:io' as io;
 
 /// Console transform Colors
 enum TokensColor {
@@ -52,6 +53,16 @@ class Print {
   static void yellow(Object? object) {
     _print(object, TokensColor.yellow);
   }
+
+  /// Print a green message in the console
+  static void green(Object? object) {
+    _print(object, TokensColor.green);
+  }
+
+  /// Print a blue message in the console
+  static void blue(Object? object) {
+    _print(object, TokensColor.blue);
+  }
 }
 
 /// Find types
@@ -67,23 +78,26 @@ enum Find {
 }
 
 /// Console utils
-class Console {
-  Console._();
+class ConsoleService {
+  ConsoleService._();
+
+  /// shared instance
+  static ConsoleService instance = ConsoleService._();
 
   /// Confirm question on command line
-  static bool confirm(String question, {bool defaultValue = false}) {
-    stdout.write('$question (y/n): ');
-    final response = stdin.readLineSync();
+  bool confirm(String question, {bool defaultValue = false}) {
+    io.stdout.write('$question (y/n): ');
+    final response = io.stdin.readLineSync();
     if (response == null || response.isEmpty) return defaultValue;
     return response == 'y' || response == 'Y';
   }
 
   /// Ask question on command line
-  static String ask(String question,
+  String ask(String question,
       {String? defaultValue, bool? required, dynamic validator}) {
-    stdout
+    io.stdout
         .write('$question${defaultValue == null ? '' : ' ($defaultValue)'}: ');
-    final response = stdin.readLineSync();
+    final response = io.stdin.readLineSync();
     if (response == null || response.isEmpty) {
       if (defaultValue == null) {
         if (required == true) {
@@ -106,7 +120,7 @@ class Console {
   }
 
   /// show a selectable menu on command line
-  static T menu<T>(
+  T menu<T>(
       {required String prompt,
       required List<T> options,
       required String Function(T) format}) {
@@ -131,28 +145,74 @@ class Console {
   }
 
   /// Find files or directories
-  static List<String> find(String pattern,
+  List<String> find(String pattern,
       {List<Find> types = const [Find.file],
       bool recursive = true,
       String workingDirectory = '.'}) {
-    final dir = Directory(workingDirectory);
+    final dir = io.Directory(workingDirectory);
     if (!dir.existsSync()) {
       return <String>[];
     }
 
     final entities = dir.listSync().where((e) {
-      if (types.contains(Find.directory) && e is Directory) {
+      if (types.contains(Find.directory) && e is io.Directory) {
         return true;
       }
-      if (types.contains(Find.file) && e is File) {
+      if (types.contains(Find.file) && e is io.File) {
         return true;
       }
-      if (types.contains(Find.link) && e is Link) {
+      if (types.contains(Find.link) && e is io.Link) {
         return true;
       }
       return false;
-    }).where((element) => RegExp(pattern).hasMatch(element.path));
+    }).where((element) {
+      final source = pattern
+          .replaceAll('/', r'\\')
+          .replaceAll('.', r'\.')
+          .replaceAll('*', '.*')
+          .replaceAll('**', '.*');
+      try {
+        return RegExp(source).hasMatch(element.path);
+      } catch (e) {
+        return false;
+      }
+    });
+    for (final element in entities) {
+      print(element.path);
+    }
 
     return entities.map((e) => e.path).toList();
+  }
+}
+
+/// service to manage io operations
+class IOService {
+  IOService._();
+
+  /// shared instance
+  static IOService instance = IOService._();
+
+  /// exit the program
+  Never exit(int code) {
+    return io.exit(code);
+  }
+}
+
+/// service to run process
+class ProcessService {
+  ProcessService._();
+
+  /// shared instance
+  static ProcessService instance = ProcessService._();
+
+  /// run a process
+  Future<int> run(String executable,
+      {List<String> arguments = const <String>[]}) {
+    return io.Process.start(executable, arguments, runInShell: true)
+        .then((value) {
+      value.stdout.transform(utf8.decoder).listen(print);
+      value.stderr.transform(utf8.decoder).listen(print);
+      return value.exitCode;
+    });
   }
 }
