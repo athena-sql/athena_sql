@@ -52,6 +52,15 @@ class PostgreTransactionSQLDriver<T extends PostgreSQLExecutionContext>
 
   @override
   AthenaColumnsDriver get columns => PostgresColumnsDriver();
+
+  @override
+  String mapColumnOrTable(String column) {
+    final vals = column.split(".");
+    return [
+      for (final val in vals)
+        if (val.contains(RegExp(r'[A-Z]'))) '"$val"' else val
+    ].join(".");
+  }
 }
 
 class PostgresColumnsDriver extends AthenaColumnsDriver {

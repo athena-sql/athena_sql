@@ -38,15 +38,27 @@ extension AthenaDDLQueryExtension<D extends AthenaDatabaseDriver>
 
 extension AthenaInsertTableQueryExtension<D extends AthenaDatabaseDriver>
     on AthenaQueryBuilder<D, InsertTableSchema> {
-  Future<int> run() => _driver
-      .query($schema.plain(), mapValues: $mappedValues())
-      .then((value) => value.affectedRows);
+  Future<int> run() {
+    final keys = $schema.listValues
+        .map((e) => e.keys)
+        .expand((element) => element)
+        .toSet();
+
+    final mapColumns = Map<String, String>.fromIterable(keys,
+        value: (key) => _driver.mapColumnOrTable(key));
+
+    final newSchema = $schema.copyWith(mapColumn: mapColumns);
+    return _driver
+        .query(newSchema.plain(), mapValues: $mappedValues())
+        .then((value) => value.affectedRows);
+  }
 }
 
 extension AthenaInseretTableQueryExtension<D extends AthenaDatabaseDriver>
     on AthenaQueryBuilder<D, SelectTableSchema> {
-  Future<AthenaQueryResponse> run({Map<String, dynamic>? mapValues}) =>
-      _driver.query($schema.plain(), mapValues: mapValues);
+  Future<AthenaQueryResponse> run({Map<String, dynamic>? mapValues}) {
+    return _driver.query($schema.plain(), mapValues: mapValues);
+  }
 }
 
 extension AthenaStringExtension<D extends AthenaStringDriver,

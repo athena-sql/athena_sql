@@ -22,32 +22,32 @@ void main() {
       print('testing');
       final completed = await athena.create
           .table('users')
-          .column((t) => t.text('name'))
+          .column((t) => t.text('Name'))
           .column((t) => t.text('email'))
           .column((t) => t.int_('age'))
           .run();
       expect(completed, equals(0));
 
-      final inserted = await athena.insert
-          .into('users')
-          .values({'name': 'juan', 'email': 'juan@example.com'}).values({
-        'name': 'pedro',
-        'email': 'pedro@example.com'
-      }).values({'name': 'maria', 'email': 'maria@example.com'}).run();
+      final inserted = await athena.insert.into('users').values({
+        'Name': 'juan',
+        'email': 'juan@example.com'
+      }).values({'Name': 'pedro', 'email': 'pedro@example.com'}).values(
+          {'Name': 'maria', 'email': 'maria@example.com', 'age': 3}).run();
 
       expect(inserted, equals(3));
 
       final selected = await athena
-          .select(['name', 'email'])
+          .select(['Name', 'email'])
           .from('users')
-          .where((w) => w['name'].noEq(w.variable('name')))
+          .as('u')
+          .where((w) => w['u.Name'].noEq(w.variable('name')))
           .run(mapValues: {'name': 'juan'});
       // expect
       expect(
           selected,
           equals([
-            {'name': 'pedro', 'email': 'pedro@example.com'},
-            {'name': 'maria', 'email': 'maria@example.com'}
+            {'Name': 'pedro', 'email': 'pedro@example.com'},
+            {'Name': 'maria', 'email': 'maria@example.com'}
           ]));
     });
   });

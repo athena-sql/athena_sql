@@ -49,8 +49,10 @@ jobs:
       - uses: dart-lang/setup-dart@v1
         with:
           sdk: ${{ matrix.sdk }}
-      - name: Install dependencies
-        run: dart pub get
+      - name: Activate Melos
+        run: dart pub global activate melos
+      - name: Install Dependencies
+        run: melos bs
         working-directory: packages/athena_sql
       - name: Run tests
         run: dart test
@@ -71,8 +73,10 @@ jobs:
         # tests to timeout
       - name: pull latest postgres image
         run: docker pull postgres:latest
-      - name: Install dependencies
-        run: dart pub get
+      - name: Activate Melos
+        run: dart pub global activate melos
+      - name: Install Dependencies
+        run: melos bs
         working-directory: packages/athena_postgres
       - name: Run tests
         run: dart test
@@ -88,8 +92,10 @@ jobs:
       - uses: dart-lang/setup-dart@v1
         with:
           sdk: ${{ matrix.sdk }}
-      - name: Install dependencies
-        run: dart pub get
+      - name: Activate Melos
+        run: dart pub global activate melos
+      - name: Install Dependencies
+        run: melos bs
         working-directory: packages/athena_mysql
       - name: Run tests
         run: dart test

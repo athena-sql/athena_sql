@@ -10,8 +10,8 @@ extension SelectTableBuildear<D extends AthenaDriver>
     return WhereItemValue('@$value');
   }
 
-  WhereItem value(String value) {
-    return WhereItemValue(value);
+  WhereItem value(String val) {
+    return WhereItemValue(_driver.mapColumnOrTable(val));
   }
 
   WhereItem operator [](String value) => this.value(value);
@@ -26,6 +26,10 @@ extension SelectTableBuildear<D extends AthenaDriver>
 
 extension SelectTableBuilder<D extends AthenaDriver>
     on AthenaQueryBuilder<D, SelectTableSchema> {
+  AthenaQueryBuilder<D, SelectTableSchema> as(String alias) {
+    return _changeBuilder($schema.copyWith(as: alias));
+  }
+
   AthenaQueryBuilder<D, SelectTableSchema> where(
     WhereClause Function(AthenaQueryBuilder<D, WhereCreatorSchema>) builder,
   ) {

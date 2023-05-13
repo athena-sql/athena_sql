@@ -106,6 +106,11 @@ class MySqlTransactionSQLDriver extends AthenaDatabaseDriver {
 
   @override
   AthenaColumnsDriver get columns => MySqlColumnsDriver();
+
+  @override
+  String mapColumnOrTable(String column) {
+    return column;
+  }
 }
 
 class MySqlColumnsDriver extends AthenaColumnsDriver {
