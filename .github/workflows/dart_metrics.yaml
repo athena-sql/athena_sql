@@ -35,35 +35,35 @@ jobs:
       run: melos bootstrap
 
     - name: "Migrate Metrics"
-      uses: dart-code-checker/dart-code-metrics-action@v3
+      uses: dart-code-checker/dart-code-metrics-action@v4
       with:
         github_token: ${{ secrets.GITHUB_TOKEN }}
         relative_path: 'packages/athena_migrate'
         folders: ${{ env.folders }}
 
     - name: "MySQL Metrics"
-      uses: dart-code-checker/dart-code-metrics-action@v3
+      uses: dart-code-checker/dart-code-metrics-action@v4
       with:
         github_token: ${{ secrets.GITHUB_TOKEN }}
         relative_path: 'packages/athena_mysql'
         folders: ${{ env.folders }}
 
     - name: "Postgres Metrics"
-      uses: dart-code-checker/dart-code-metrics-action@v3
+      uses: dart-code-checker/dart-code-metrics-action@v4
       with:
         github_token: ${{ secrets.GITHUB_TOKEN }}
         relative_path: 'packages/athena_postgres'
         folders: ${{ env.folders }}
 
     - name: "AthenaSQL Metrics"
-      uses: dart-code-checker/dart-code-metrics-action@v3
+      uses: dart-code-checker/dart-code-metrics-action@v4
       with:
         github_token: ${{ secrets.GITHUB_TOKEN }}
         relative_path: 'packages/athena_sql'
         folders: ${{ env.folders }}
 
     - name: "Utils Metrics"
-      uses: dart-code-checker/dart-code-metrics-action@v3
+      uses: dart-code-checker/dart-code-metrics-action@v4
       with:
         github_token: ${{ secrets.GITHUB_TOKEN }}
         relative_path: 'packages/athena_utils'
