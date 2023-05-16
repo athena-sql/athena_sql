@@ -28,8 +28,8 @@ enum Condition {
   eq('='),
   neq('!='),
   like('LIKE'),
-  inList('IN'),
-  notInList('NOT IN');
+  isIn('IN'),
+  isNotIn('NOT IN');
 
   const Condition(this.value);
   final String value;

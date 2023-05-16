@@ -31,12 +31,14 @@ abstract class WhereItem extends QueryBuilder {
     return WhereCondition(this, Condition.like, value);
   }
 
-  WhereCondition inList(WhereItem value) {
-    return WhereCondition(this, Condition.inList, value);
+  WhereCondition isIn(List<WhereItemValue> items) {
+    final value = WhereItemList.fromItems(items);
+    return WhereCondition(this, Condition.isIn, value);
   }
 
-  WhereCondition notInList(WhereItem value) {
-    return WhereCondition(this, Condition.notInList, value);
+  WhereCondition isNotIn(List<WhereItemValue> items) {
+    final value = WhereItemList.fromItems(items);
+    return WhereCondition(this, Condition.isNotIn, value);
   }
 
   WhereUnary isNull() {
@@ -58,4 +60,15 @@ class WhereItemValue extends WhereItem {
 
   @override
   QueryPrintable build() => QueryString().userInput(value);
+}
+
+class WhereItemList extends WhereItem {
+  final List<String> values;
+  const WhereItemList(this.values);
+  WhereItemList.fromItems(List<WhereItemValue> items)
+      : values = items.map((e) => e.value).toList();
+
+  @override
+  QueryPrintable build() => QueryString().parentheses((q) =>
+      q.comaSpaceSeparated(values.map((e) => QueryString().userInput(e))));
 }
