@@ -12,3 +12,7 @@
 
 ## 1.0.3
 - add `mapColumnOrTable` on driver to map column names and table names
+
+
+## 1.0.4
+- select where `isIn` fix to manage array of items
