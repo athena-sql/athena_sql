@@ -11,3 +11,6 @@
 - fix for file management using `FileService`
 - fix for time management using `Clock`
 - tests impelemtend
+
+## 1.0.3
+- add added migration commands

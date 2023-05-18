@@ -16,3 +16,7 @@
 
 ## 1.0.4
 - select where `isIn` fix to manage array of items
+
+## 1.0.5
+- add added migration commands
+- fix insert values to manage one insert

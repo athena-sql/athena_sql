@@ -21,7 +21,10 @@ class AthenaMigrateComands {
       CreateMigrationCommand(config),
       LocalMigrationCommand(config, command: 'up'),
       LocalMigrationCommand(config, command: 'down'),
+      LocalMigrationCommand(config, command: 'all'),
+      LocalMigrationCommand(config, command: 'reset'),
       LocalMigrationCommand(config, command: 'redo'),
+      LocalMigrationCommand(config, command: 'refresh'),
       LocalMigrationCommand(config, command: 'status'),
       LocalMigrationCommand(config, command: 'version'),
     ];

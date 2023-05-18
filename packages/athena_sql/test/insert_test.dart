@@ -12,8 +12,26 @@ void main() {
       // Additional setup goes here.
     });
 
-    group('select', () {
-      test('from', () {
+    group('insert values', () {
+      test('insert one', () {
+        final query = athenaSql.insert.into('user').values({
+          'name': 'juan',
+          'age': 20,
+        });
+
+        const expectedBuild = '''
+            INSERT INTO user (name, age) VALUES (@name_0, @age_0)
+        ''';
+
+        expect(query.build(), equals(normalizeSql(expectedBuild)));
+        expect(
+            query.$mappedValues(),
+            equals({
+              'name_0': 'juan',
+              'age_0': 20,
+            }));
+      });
+      test('inserts many chaining', () {
         final query = athenaSql.insert.into('user').values({
           'name': 'juan',
           'age': 20,

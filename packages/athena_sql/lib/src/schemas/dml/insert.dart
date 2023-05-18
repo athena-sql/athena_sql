@@ -24,7 +24,6 @@ class InsertTableSchema extends DMLSchema {
         .toList();
 
     final columns = keys.map((key) => mapColumn[key] ?? key).toList();
-
     return QueryString()
         .keyword('INSERT ')
         .keyword('INTO ')
@@ -40,15 +39,12 @@ class InsertTableSchema extends DMLSchema {
   }
 
   Map<String, dynamic> mapValues() {
-    return listValues.reduceIndexed((index, previous, element) => {
-          ...previous.map((key, value) {
-            if (index > 1) {
-              return MapEntry(key, value);
-            }
-            return MapEntry('${key}_${index - 1}', value);
-          }),
-          ...element.map((key, value) => MapEntry('${key}_$index', value))
-        });
+    return {
+      for (var element in listValues
+          .mapIndexed((index, element) => MapEntry(index, element)))
+        ...element.value
+            .map((key, value) => MapEntry('${key}_${element.key}', value))
+    };
   }
 
   InsertTableSchema copyWith(
