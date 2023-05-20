@@ -50,9 +50,9 @@ AthenaSQL provides an intuitive and chainable API to build SQL queries for vario
 final query = await athenaSQL.select(["id", "name", "email"])
   .from("users")
   .where((c) => 
-    (c["active"] == c.value(true))) &&
-    ((c["age"] >= c.value(18)) ||
-    (c["role"] == c.value("admin")))
+    (c["active"].eq(true))) &&
+    ((c["age"] >= 18) ||
+    (c["role"] == "admin"))
   .run();
 ```
 

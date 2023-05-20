@@ -12,15 +12,48 @@ void main() {
       // Additional setup goes here.
     });
 
-    group('isIn', () {
-      test('from', () {
-        final query = athenaSql.select(['id', 'name']).from('users').where(
-            (t) =>
-                (t['age'].isIn([t.variable('value1'), t.variable('value2')])));
+    group('is in', () {
+      test('IN', () {
+        final query = athenaSql
+            .select(['id', 'name'])
+            .from('users')
+            .where((t) => (t['age'].isIn(['@value1', '@value2'])));
 
         const expectedBuild = '''
             SELECT id, name FROM users
             WHERE age IN (@value1, @value2)
+        ''';
+
+        expect(query.build(), equals(normalizeSql(expectedBuild)));
+      });
+    });
+
+    group('not', () {
+      test('NOT LIKE', () {
+        final query = athenaSql
+            .select(['id', 'name'])
+            .from('users')
+            .where((t) => (t['age'].not().like('@ages')));
+
+        const expectedBuild = '''
+            SELECT id, name FROM users
+            WHERE age NOT LIKE @ages
+        ''';
+
+        expect(query.build(), equals(normalizeSql(expectedBuild)));
+      });
+    });
+
+    group('Nullable', () {
+      test('NULL', () {
+        final query = athenaSql
+            .select(['id', 'name'])
+            .from('users')
+            .where((t) => (t['age'].isNull() | t['age'].isNotNull()));
+
+        const expectedBuild = '''
+            SELECT id, name FROM users
+            WHERE age IS NULL OR age IS NOT NULL
         ''';
 
         expect(query.build(), equals(normalizeSql(expectedBuild)));

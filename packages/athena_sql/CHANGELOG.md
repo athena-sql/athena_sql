@@ -20,3 +20,6 @@
 ## 1.0.5
 - add added migration commands
 - fix insert values to manage one insert
+
+## 1.0.6
+- Where clauses easier to use

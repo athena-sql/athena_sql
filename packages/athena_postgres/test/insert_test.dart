@@ -40,7 +40,7 @@ void main() {
           .select(['Name', 'email'])
           .from('users')
           .as('u')
-          .where((w) => w['u.Name'].noEq(w.variable('name')))
+          .where((w) => w['u.Name'].noEq('@name'))
           .run(mapValues: {'name': 'juan'});
       // expect
       expect(

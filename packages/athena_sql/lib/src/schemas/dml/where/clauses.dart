@@ -2,22 +2,6 @@ part of 'where.dart';
 
 abstract class WhereClause extends QueryBuilder {
   const WhereClause();
-
-  WhereJoins and(WhereClause value) {
-    return WhereJoins(this, Operators.and, value);
-  }
-
-  WhereJoins operator &(WhereClause value) {
-    return and(value);
-  }
-
-  WhereJoins or(WhereClause value) {
-    return WhereJoins(this, Operators.or, value);
-  }
-
-  WhereJoins operator |(WhereClause value) {
-    return or(value);
-  }
 }
 
 enum Condition {
@@ -28,8 +12,7 @@ enum Condition {
   eq('='),
   neq('!='),
   like('LIKE'),
-  isIn('IN'),
-  isNotIn('NOT IN');
+  isIn('IN');
 
   const Condition(this.value);
   final String value;
@@ -50,40 +33,40 @@ class WhereCondition extends WhereClause {
       .adding(value);
 }
 
-enum ConditionUnary {
-  not('NOT'),
+enum ConditionNullable {
   isNull('IS NULL'),
   isNotNull('IS NOT NULL');
 
-  const ConditionUnary(this.value);
+  const ConditionNullable(this.value);
   final String value;
 }
 
-class WhereUnary extends WhereClause {
-  final ConditionUnary condition;
+class WhereNullable extends WhereClause {
+  final ConditionNullable condition;
   final WhereItem item;
 
-  const WhereUnary(this.item, this.condition);
+  const WhereNullable(this.item, this.condition);
 
   @override
   QueryPrintable build() =>
-      QueryString().keyword(condition.value).space().adding(item);
+      QueryString().adding(item).space().keyword(condition.value);
 }
 
-enum Operators {
+enum WhereOperator {
   and("AND"),
   or("OR");
 
-  const Operators(this.value);
+  const WhereOperator(this.value);
   final String value;
 }
 
-class WhereJoins extends WhereClause {
-  final Operators operator;
+class WhereOperatorClause extends WhereClause {
+  final WhereOperator operator;
   final WhereClause leftCondition;
   final WhereClause rightCondition;
 
-  const WhereJoins(this.leftCondition, this.operator, this.rightCondition);
+  const WhereOperatorClause(
+      this.leftCondition, this.operator, this.rightCondition);
   @override
   QueryPrintable build() => QueryString()
       .adding(leftCondition)

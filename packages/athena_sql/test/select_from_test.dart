@@ -14,10 +14,10 @@ void main() {
 
     group('select', () {
       test('from', () {
-        final query = athenaSql.select(['id', 'name']).from('users').where(
-            (t) =>
-                (t['age'] > t.variable('age')) &
-                (t['name'].like(t.string('%juan%'))));
+        final query = athenaSql
+            .select(['id', 'name'])
+            .from('users')
+            .where((t) => (t['age'] > '@age') & (t['name'].like('%juan%')));
 
         const expectedBuild = '''
             SELECT id, name FROM users
@@ -25,7 +25,6 @@ void main() {
         ''';
 
         expect(query.build(), equals(normalizeSql(expectedBuild)));
-        // expect(built.build(), equals(normalizeSql(expectedBuild)));
       });
     });
   });

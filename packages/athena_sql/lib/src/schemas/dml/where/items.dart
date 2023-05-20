@@ -2,56 +2,24 @@ part of 'where.dart';
 
 abstract class WhereItem extends QueryBuilder {
   const WhereItem();
+}
 
-  WhereCondition operator >(WhereItem value) {
-    return WhereCondition(this, Condition.gt, value);
-  }
+enum ConditionModifier {
+  not('NOT');
 
-  WhereCondition operator >=(WhereItem value) {
-    return WhereCondition(this, Condition.gte, value);
-  }
+  final String value;
+  const ConditionModifier(this.value);
+}
 
-  WhereCondition operator <(WhereItem value) {
-    return WhereCondition(this, Condition.lt, value);
-  }
+class WhereModifier extends WhereItem {
+  final WhereItem item;
+  final ConditionModifier modifier;
 
-  WhereCondition operator <=(WhereItem value) {
-    return WhereCondition(this, Condition.lte, value);
-  }
+  WhereModifier(this.item, this.modifier) : super();
 
-  WhereCondition eq(WhereItem value) {
-    return WhereCondition(this, Condition.eq, value);
-  }
-
-  WhereCondition noEq(WhereItem value) {
-    return WhereCondition(this, Condition.neq, value);
-  }
-
-  WhereCondition like(WhereItem value) {
-    return WhereCondition(this, Condition.like, value);
-  }
-
-  WhereCondition isIn(List<WhereItemValue> items) {
-    final value = WhereItemList.fromItems(items);
-    return WhereCondition(this, Condition.isIn, value);
-  }
-
-  WhereCondition isNotIn(List<WhereItemValue> items) {
-    final value = WhereItemList.fromItems(items);
-    return WhereCondition(this, Condition.isNotIn, value);
-  }
-
-  WhereUnary isNull() {
-    return WhereUnary(this, ConditionUnary.isNull);
-  }
-
-  WhereUnary isNotNull() {
-    return WhereUnary(this, ConditionUnary.isNotNull);
-  }
-
-  WhereUnary not() {
-    return WhereUnary(this, ConditionUnary.not);
-  }
+  @override
+  QueryPrintable build() =>
+      QueryString().adding(item.build()).space().keyword(modifier.value);
 }
 
 class WhereItemValue extends WhereItem {
