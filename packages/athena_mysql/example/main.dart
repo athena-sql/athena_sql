@@ -20,7 +20,7 @@ void main(List<String> args) async {
       .select(['name', 'email'])
       .from('users')
       .as('u')
-      .where((w) => w['u.name'].noEq(w.variable('name')))
+      .where((w) => w['u.name'].noEq('@name'))
       .run(mapValues: {'name': 'juan'});
   print(selected);
 }
