@@ -34,10 +34,8 @@ extension WhereTableBuilder<D extends AthenaDriver>
   QueryWhereItemValue<D> operator [](String value) => this.$value(value);
 }
 
-
 extension WhereClauseBuilder<D extends AthenaDriver>
     on AthenaQueryBuilder<D, WhereClause> {
-
   QueryWhereClause<D> and(QueryWhereClause<D> clasue) {
     return _changeBuilder(
         WhereOperatorClause($schema, WhereOperator.and, clasue.$schema));
@@ -57,38 +55,38 @@ extension WhereClauseBuilder<D extends AthenaDriver>
   }
 }
 
-
 extension WhereItemBuilder<D extends AthenaDriver>
     on AthenaQueryBuilder<D, WhereItem> {
+  QueryWhereCondition<D> _condition(Condition condition, WhereItem value) {
+    return _changeBuilder(WhereCondition($schema, condition, value));
+  }
 
-      QueryWhereCondition<D> _condition(Condition condition, WhereItem value) {
-        return _changeBuilder(WhereCondition($schema, condition, value));
+  String _toString(Object value) {
+    if (value is String) {
+      if (value.startsWith('@')) {
+        return value;
       }
-        String _toString(Object value) {
-          if (value is String) {
-            if(value.startsWith('@')) {
-              return value;
-            }
-            return '\'$value\'';
-          }
-          return '$value';
-        }
+      return '\'$value\'';
+    }
+    return '$value';
+  }
 
   WhereItem _item(Object value) {
     if (value is QueryWhereItem<dynamic>) {
-      return  value.$schema;
+      return value.$schema;
     }
     if (value is WhereItem) {
-      return  value;
+      return value;
     }
     return WhereItemValue(_toString(value));
   }
+
   QueryWhereCondition<D> operator >(Object value) {
     return _condition(Condition.gt, _item(value));
   }
 
   QueryWhereCondition<D> operator >=(Object value) {
-    return _condition( Condition.gte, _item(value));
+    return _condition(Condition.gte, _item(value));
   }
 
   QueryWhereCondition<D> operator <(Object value) {
@@ -112,20 +110,22 @@ extension WhereItemBuilder<D extends AthenaDriver>
   }
 
   WhereItem _in(Object value) {
-    if(value is List<AthenaQueryBuilder<dynamic, WhereItemValue>>) {
-     return WhereItemList.fromItems(value.map((e) => e.$schema).toList());
+    if (value is List<AthenaQueryBuilder<dynamic, WhereItemValue>>) {
+      return WhereItemList.fromItems(value.map((e) => e.$schema).toList());
     }
-    if(value is List<WhereItemValue>) {
-     return WhereItemList.fromItems(value);
+    if (value is List<WhereItemValue>) {
+      return WhereItemList.fromItems(value);
     }
-    if(value is List<WhereItemValue>) {
-     return WhereItemList.fromItems(value);
+    if (value is List<WhereItemValue>) {
+      return WhereItemList.fromItems(value);
     }
-    if(value is List<dynamic>) {
-      return WhereItemList.fromItems(value.map((e) => WhereItemValue(_toString(e))).toList());
+    if (value is List<dynamic>) {
+      return WhereItemList.fromItems(
+          value.map((e) => WhereItemValue(_toString(e))).toList());
     }
     throw Exception('Invalid value for IN clause');
   }
+
   QueryWhereCondition<D> isIn(Object value) {
     return _condition(Condition.isIn, _in(value));
   }
@@ -150,13 +150,17 @@ extension SelectTableBuilder<D extends AthenaDriver>
   }
 
   AthenaQueryBuilder<D, SelectTableSchema> where(
-    AthenaQueryBuilder<D,WhereClause> Function(AthenaQueryBuilder<D, WhereCreatorSchema>) builder,
+    AthenaQueryBuilder<D, WhereClause> Function(
+            AthenaQueryBuilder<D, WhereCreatorSchema>)
+        builder,
   ) {
     final clause = builder(_changeBuilder(WhereCreatorSchema()));
     if ($schema.where == null) {
       return _changeBuilder($schema.copyWith(where: clause.$schema));
     } else {
-      return _changeBuilder($schema.copyWith(where: WhereOperatorClause($schema.where!, WhereOperator.and, clause.$schema)));
+      return _changeBuilder($schema.copyWith(
+          where: WhereOperatorClause(
+              $schema.where!, WhereOperator.and, clause.$schema)));
     }
   }
 }

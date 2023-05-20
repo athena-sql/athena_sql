@@ -65,7 +65,8 @@ class WhereOperatorClause extends WhereClause {
   final WhereClause leftCondition;
   final WhereClause rightCondition;
 
-  const WhereOperatorClause(this.leftCondition, this.operator, this.rightCondition);
+  const WhereOperatorClause(
+      this.leftCondition, this.operator, this.rightCondition);
   @override
   QueryPrintable build() => QueryString()
       .adding(leftCondition)

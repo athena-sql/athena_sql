@@ -2,24 +2,24 @@ part of 'where.dart';
 
 abstract class WhereItem extends QueryBuilder {
   const WhereItem();
-
-  
 }
 
 enum ConditionModifier {
   not('NOT');
+
   final String value;
   const ConditionModifier(this.value);
 }
+
 class WhereModifier extends WhereItem {
   final WhereItem item;
   final ConditionModifier modifier;
 
   WhereModifier(this.item, this.modifier) : super();
-  
-  @override
-  QueryPrintable build() => QueryString().adding(item.build()).space().keyword(modifier.value);
 
+  @override
+  QueryPrintable build() =>
+      QueryString().adding(item.build()).space().keyword(modifier.value);
 }
 
 class WhereItemValue extends WhereItem {
