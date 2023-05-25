@@ -1,0 +1,45 @@
+name: Publish
+on:
+  push:
+    branches:
+      - master
+env:
+  DART_VERSION: 2.19.0
+
+jobs:
+  publish_alpha:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+        with: 
+           fetch-depth: 0 # we need tags for melos, no better option ATM but check https://github.com/actions/checkout/issues/701
+      - uses: dart-lang/setup-dart@v1
+        with:
+          sdk: ${{ env.DART_VERSION }}
+      - name: Activate melos
+        run: |
+          echo "$HOME/.pub-cache/bin" >> $GITHUB_PATH
+          dart pub global activate melos
+      - name: Bootstrap melos
+        run: melos bs
+      - name: Configure git user
+        run: |
+          git config user.name github-actions
+          git config user.email github-actions@github.com
+      - run: melos version --yes -p
+      - name: Setup Pub Credentials
+        shell: bash
+        env:
+          CREDENTIALS_JSON: ${{ secrets.PUB_CREDENTIALS }}
+        run: |
+          mkdir -p $XDG_CONFIG_HOME/dart/
+          echo $CREDENTIALS_JSON > $XDG_CONFIG_HOME/dart/pub-credentials.json
+      - run: melos publish --yes --dry-run
+      - run: melos publish --yes --no-dry-run
+        continue-on-error: true
+      - name: Push back version bumps
+        uses: ad-m/github-push-action@master
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          branch: master
+          tags: true
