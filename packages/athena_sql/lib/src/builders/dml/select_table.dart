@@ -146,11 +146,10 @@ extension WhereItemBuilder<D extends AthenaDriver>
 }
 
 extension _FlatIterable on Iterable<dynamic> {
-
   List<T> flattenDeep<T>() => [
-      for (var element in this)
-        if (element is! Iterable) element else ...element.flattenDeep(),
-    ];
+        for (var element in this)
+          if (element is! Iterable) element else ...element.flattenDeep(),
+      ];
 }
 
 extension SelectTableBuilder<D extends AthenaDriver>

@@ -17,7 +17,10 @@ void main() {
         final query = athenaSql
             .select(['id', 'name'])
             .from('users')
-            .where((t) => (t['age'].isIn(['@value1', [t.$variable('value2'), t.$value('20')]])));
+            .where((t) => (t['age'].isIn([
+                  '@value1',
+                  [t.$variable('value2'), t.$value('20')]
+                ])));
 
         const expectedBuild = '''
             SELECT id, name FROM users
