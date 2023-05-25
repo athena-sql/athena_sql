@@ -31,12 +31,11 @@ class WhereItemValue extends WhereItem {
 }
 
 class WhereItemList extends WhereItem {
-  final List<String> values;
-  const WhereItemList(this.values);
-  WhereItemList.fromItems(List<WhereItemValue> items)
-      : values = items.map((e) => e.value).toList();
+  final List<WhereItem> items;
+  const WhereItemList(this.items);
+  WhereItemList.fromItems(this.items);
 
   @override
   QueryPrintable build() => QueryString().parentheses((q) =>
-      q.comaSpaceSeparated(values.map((e) => QueryString().userInput(e))));
+      q.comaSpaceSeparated(items.map((item) => QueryString().adding(item))));
 }
