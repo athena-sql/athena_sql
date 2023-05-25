@@ -110,18 +110,20 @@ extension WhereItemBuilder<D extends AthenaDriver>
   }
 
   WhereItem _in(Object value) {
-    if (value is List<AthenaQueryBuilder<dynamic, WhereItemValue>>) {
-      return WhereItemList.fromItems(value.map((e) => e.$schema).toList());
-    }
-    if (value is List<WhereItemValue>) {
-      return WhereItemList.fromItems(value);
-    }
-    if (value is List<WhereItemValue>) {
-      return WhereItemList.fromItems(value);
-    }
     if (value is List<dynamic>) {
-      return WhereItemList.fromItems(
-          value.map((e) => WhereItemValue(_toString(e))).toList());
+      final flattenList = value.flattenDeep();
+      if (flattenList.isEmpty) {
+        throw Exception('Invalid value for IN clause');
+      }
+      return WhereItemList.fromItems(flattenList.map((e) {
+        if (e is AthenaQueryBuilder<dynamic, WhereItem>) {
+          return e.$schema;
+        }
+        if (e is WhereItemValue) {
+          return e;
+        }
+        return WhereItemValue(_toString(e));
+      }).toList());
     }
     throw Exception('Invalid value for IN clause');
   }
@@ -141,6 +143,14 @@ extension WhereItemBuilder<D extends AthenaDriver>
   AthenaQueryBuilder<D, WhereModifier> not() {
     return _changeBuilder(WhereModifier($schema, ConditionModifier.not));
   }
+}
+
+extension _FlatIterable on Iterable<dynamic> {
+
+  List<T> flattenDeep<T>() => [
+      for (var element in this)
+        if (element is! Iterable) element else ...element.flattenDeep(),
+    ];
 }
 
 extension SelectTableBuilder<D extends AthenaDriver>
