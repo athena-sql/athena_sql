@@ -2,12 +2,36 @@
 version: 2
 
 updates:
-  - package-ecosystem: "pub"
-    directory: /
-    schedule:
-      interval: daily
-    open-pull-requests-limit: 5
   - package-ecosystem: github-actions
     directory: /
     schedule:
       interval: daily
+  - package-ecosystem: pub
+    directory: /
+    schedule:
+      interval: weekly
+  - package-ecosystem: pub
+    directory: /packages/athena_migrate
+    schedule:
+      interval: weekly
+    versioning-strategy: increase-if-necessary
+  - package-ecosystem: pub
+    directory: /packages/athena_mysql
+    schedule:
+      interval: weekly
+    versioning-strategy: increase-if-necessary
+  - package-ecosystem: pub
+    directory: /packages/athena_postgres
+    schedule:
+      interval: weekly
+    versioning-strategy: increase-if-necessary
+  - package-ecosystem: pub
+    directory: /packages/athena_sql
+    schedule:
+      interval: weekly
+    versioning-strategy: increase-if-necessary
+  - package-ecosystem: pub
+    directory: /packages/athena_utils
+    schedule:
+      interval: weekly
+    versioning-strategy: increase-if-necessary
