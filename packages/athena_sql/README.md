@@ -4,6 +4,16 @@ A powerful and elegant Dart SQL query builder inspired by the wisdom and strateg
 
 ![AthenaSQL Logo](assets/athena_sql_logo.png)
 
+
+
+[![CI](https://github.com/athena-sql/athena_sql/actions/workflows/test.yml/badge.svg)](https://github.com/athena-sql/athena_sql/actions)
+[![pub package](https://img.shields.io/pub/v/athena_sql.svg)](https://pub.dev/packages/athena_sql)
+[![licence](https://img.shields.io/github/license/athena-sql/athena_sql)](https://github.com/athena-sql/athena_sql/blob/master/LICENSE)
+[![melos](https://img.shields.io/badge/maintained%20with-melos-f700ff.svg)](https://github.com/invertase/melos)
+[![discord](https://img.shields.io/discord/1111374793149775926?label=discord)](https://discord.gg/XrAKWgdr)
+
+
+
 ## Features
 
 - Chainable and readable API for constructing SQL queries
