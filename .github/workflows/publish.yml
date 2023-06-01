@@ -35,8 +35,8 @@ jobs:
         run: melos bs
       - name: Configure git user
         run: |
-          git config --local user.email "github-actions[bot]@users.noreply.github.com"
-          git config --local user.name "github-actions[bot]"
+          git config user.name github-actions
+          git config user.email github-actions@github.com
       - run: melos version --yes
       - run: melos run cache-source
       - name: Setup Pub Credentials
