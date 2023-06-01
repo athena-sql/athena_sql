@@ -24,19 +24,27 @@ class AlterTableSchemaBuilder<D extends AthenaDriver> {
   AlterTableSchemaBuilder(this.driver, this.name);
 
   AthenaQueryBuilder<D, AlterTableSchema> addColumn(
-      AthenaQueryBuilder<D, ColumnSchema> Function(
-              AthenaQueryBuilder<D, CreateColumnSchema> t)
-          table) {
+    AthenaQueryBuilder<D, ColumnSchema> Function(
+            AthenaQueryBuilder<D, CreateColumnSchema> t)
+        table, {
+    bool? ifNotExists,
+  }) {
     final createColumn = CreateColumnSchema();
 
     final builder = table(AthenaQueryBuilder(driver, createColumn));
-    return builder._changeBuilder(AlterTableSchema(name,
-        actions: [AlterTableActionAddColumn(builder.$schema)]));
+    return builder._changeBuilder(AlterTableSchema(name, actions: [
+      AlterTableActionAddColumn(builder.$schema, ifNotExists: ifNotExists)
+    ]));
   }
 
-  AthenaQueryBuilder<D, AlterTableSchema> dropColumn(String column) {
-    final builder = AthenaQueryBuilder(driver,
-        AlterTableSchema(name, actions: [AlterTableActionDropColumn(column)]));
+  AthenaQueryBuilder<D, AlterTableSchema> dropColumn(
+    String column, {
+    bool? ifExists,
+  }) {
+    final builder = AthenaQueryBuilder(
+        driver,
+        AlterTableSchema(name,
+            actions: [AlterTableActionDropColumn(column, ifExists: ifExists)]));
 
     return builder;
   }
