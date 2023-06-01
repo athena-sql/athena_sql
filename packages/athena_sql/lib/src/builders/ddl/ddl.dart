@@ -31,7 +31,7 @@ class AlterTableSchemaBuilder<D extends AthenaDriver> {
 
     final builder = table(AthenaQueryBuilder(driver, createColumn));
     return builder._changeBuilder(AlterTableSchema(name,
-        action: AlterTableActionAddColumn(builder.$schema)));
+        actions: [AlterTableActionAddColumn(builder.$schema)]));
   }
 }
 

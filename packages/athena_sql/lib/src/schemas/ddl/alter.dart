@@ -17,12 +17,12 @@ class AlterTableActionAddColumn extends AlterTableAction {
 
 class AlterTableSchema extends DdlSchema {
   final String name;
-  final AlterTableAction action;
+  final List<AlterTableAction> actions;
   final bool? ifExists;
 
   AlterTableSchema(
     this.name, {
-    required this.action,
+    required this.actions,
     this.ifExists,
   });
 
@@ -32,5 +32,14 @@ class AlterTableSchema extends DdlSchema {
       .condition(ifExists == true, (q) => q.keyword('IF EXISTS '))
       .userInput(name)
       .space()
-      .adding(action);
+      .comaSpaceSeparated(actions);
+
+  AlterTableSchema copyWith(
+      {String? name, List<AlterTableAction>? actions, bool? ifExists}) {
+    return AlterTableSchema(
+      name ?? this.name,
+      actions: actions ?? this.actions,
+      ifExists: ifExists ?? this.ifExists,
+    );
+  }
 }

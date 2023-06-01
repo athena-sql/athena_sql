@@ -13,13 +13,25 @@ void main() {
     });
 
     group('alter.table', () {
-      test('simple drop', () {
+      test('add column', () {
         final query = athenaSql.alter
             .table('product')
             .addColumn((q) => q.$customType('name', type: 'type'));
         final built = query.build();
 
         const expectedBuild = 'ALTER TABLE product ADD COLUMN name type';
+
+        expect(built, expectedBuild);
+      });
+
+      test('multi add column', () {
+        final query = athenaSql.alter
+            .table('product')
+            .addColumn((q) => q.$customType('name', type: 'type'))
+            .addColumn((q) => q.$customType('name2', type: 'type2'));
+        final built = query.build();
+
+        const expectedBuild = 'ALTER TABLE product ADD COLUMN name type, ADD COLUMN name2 type2';
 
         expect(built, expectedBuild);
       });

@@ -12,6 +12,7 @@ part 'ddl/ddl.dart';
 part 'ddl/column_type.dart';
 part 'ddl/column_options.dart';
 part 'ddl/drop_table.dart';
+part 'ddl/alter_table.dart';
 part 'dml/dml.dart';
 part 'dml/select_table.dart';
 part 'driver.dart';
