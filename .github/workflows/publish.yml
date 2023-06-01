@@ -49,9 +49,9 @@ jobs:
           echo $CREDENTIALS_JSON > $XDG_CONFIG_HOME/dart/pub-credentials.json
       - run: melos publish --yes --no-dry-run --git-tag-version
         continue-on-error: true
-      - name: Push back version bumps
-        uses: ad-m/github-push-action@master
+      - name: Push tags
+        uses: CasperWA/push-protected@v2
         with:
-          github_token: ${{ secrets.GITHUB_TOKEN }}
-          branch: master
+          token: ${{ secrets.ATHENA_PAT }}
           tags: true
+          branch: master
