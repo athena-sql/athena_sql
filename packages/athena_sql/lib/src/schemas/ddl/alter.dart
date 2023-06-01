@@ -8,11 +8,18 @@ abstract class AlterTableAction extends QueryBuilder {}
 // define AlterTableActionAddColumn
 class AlterTableActionAddColumn extends AlterTableAction {
   final ColumnSchema column;
+  final bool? ifNotExists;
 
-  AlterTableActionAddColumn(this.column);
+  AlterTableActionAddColumn(
+    this.column, {
+    this.ifNotExists,
+  });
 
   @override
-  QueryString build() => QueryString().keyword('ADD COLUMN ').adding(column);
+  QueryString build() => QueryString()
+      .keyword('ADD COLUMN ')
+      .condition(ifNotExists == true, (q) => q.keyword('IF NOPT EXISTS '))
+      .adding(column);
 }
 
 // define AlterTableActionDropColumn
