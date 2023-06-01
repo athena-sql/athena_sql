@@ -8,7 +8,7 @@ on:
     branches:
       - master
 env:
-  DART_VERSION: 2.19.0
+  DART_VERSION: 3.0.0
 
 
 concurrency:
