@@ -46,7 +46,6 @@ jobs:
         run: |
           mkdir -p $XDG_CONFIG_HOME/dart/
           echo $CREDENTIALS_JSON > $XDG_CONFIG_HOME/dart/pub-credentials.json
-      - run: melos publish --yes --dry-run
       - run: melos publish --yes --no-dry-run --git-tag-version
         continue-on-error: true
       - name: Push back version bumps
