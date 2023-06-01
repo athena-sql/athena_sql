@@ -17,28 +17,3 @@ class DropBuilder<D extends AthenaDriver> {
   AthenaQueryBuilder<D, DropTableSchema> table(String name) =>
       AthenaQueryBuilder(driver, DropTableSchema(names: [name]));
 }
-
-class AlterTableSchemaBuilder<D extends AthenaDriver> {
-  final D driver;
-  final String name;
-  AlterTableSchemaBuilder(this.driver, this.name);
-
-  AthenaQueryBuilder<D, AlterTableSchema> addColumn(
-      AthenaQueryBuilder<D, ColumnSchema> Function(
-              AthenaQueryBuilder<D, CreateColumnSchema> t)
-          table) {
-    final createColumn = CreateColumnSchema();
-
-    final builder = table(AthenaQueryBuilder(driver, createColumn));
-    return builder._changeBuilder(AlterTableSchema(name,
-        action: AlterTableActionAddColumn(builder.$schema)));
-  }
-}
-
-class AlterBuilder<D extends AthenaDriver> {
-  final D driver;
-  const AlterBuilder(this.driver);
-
-  AlterTableSchemaBuilder<D> table(String name) =>
-      AlterTableSchemaBuilder(driver, name);
-}

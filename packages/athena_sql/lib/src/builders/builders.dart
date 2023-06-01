@@ -1,6 +1,5 @@
 import 'package:athena_sql/schemas.dart';
 
-import '../schemas/ddl/alter.dart';
 import '../schemas/ddl/table/constraint.dart';
 import '../utils/query_string.dart';
 
