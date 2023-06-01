@@ -17,4 +17,10 @@ extension AlterTableBuilder<D extends AthenaDriver>
         actions: [...$schema.actions, AlterTableActionAddColumn(builder.$schema)]
     ));
   }
+
+  AthenaQueryBuilder<D, AlterTableSchema> dropColumn(String name) {
+    return _changeBuilder($schema.copyWith(
+        actions: [...$schema.actions, AlterTableActionDropColumn(name)]
+    ));
+  }
 }

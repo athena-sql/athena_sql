@@ -35,6 +35,18 @@ void main() {
 
         expect(built, expectedBuild);
       });
+
+      test('drop column', () {
+        final query = athenaSql.alter
+            .table('product')
+            .dropColumn('name')
+            .dropColumn('name2');
+        final built = query.build();
+
+        const expectedBuild = 'ALTER TABLE product DROP COLUMN name, DROP COLUMN name2';
+
+        expect(built, expectedBuild);
+      });
     });
   });
 }

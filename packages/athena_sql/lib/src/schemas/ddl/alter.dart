@@ -14,6 +14,19 @@ class AlterTableActionAddColumn extends AlterTableAction {
   @override
   QueryString build() => QueryString().keyword('ADD COLUMN ').adding(column);
 }
+// define AlterTableActionDropColumn
+class AlterTableActionDropColumn extends AlterTableAction {
+  final String name;
+  final bool? ifExists;
+
+  AlterTableActionDropColumn(this.name, {this.ifExists});
+
+  @override
+  QueryString build() => QueryString()
+      .keyword('DROP COLUMN ')
+      .condition(ifExists == true, (q) => q.keyword('IF EXISTS '))
+      .userInput(name);
+}
 
 class AlterTableSchema extends DdlSchema {
   final String name;
