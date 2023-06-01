@@ -1,3 +1,7 @@
+## 1.0.6
+
+ - Update a dependency to the latest release.
+
 ## 1.0.5
 
  - **FIX**: bump to dart 3 (#39).

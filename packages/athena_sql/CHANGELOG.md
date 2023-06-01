@@ -1,3 +1,9 @@
+## 1.1.1
+
+ - **FIX**: add if exits to alter actions (#41).
+ - **FIX**: add drop column.
+ - **FIX**: add multi column.
+
 ## 1.1.0
 
  - **FIX**: bump to dart 3 (#39).
