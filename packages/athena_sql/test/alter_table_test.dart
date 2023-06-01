@@ -31,7 +31,8 @@ void main() {
             .addColumn((q) => q.$customType('name2', type: 'type2'));
         final built = query.build();
 
-        const expectedBuild = 'ALTER TABLE product ADD COLUMN name type, ADD COLUMN name2 type2';
+        const expectedBuild =
+            'ALTER TABLE product ADD COLUMN name type, ADD COLUMN name2 type2';
 
         expect(built, expectedBuild);
       });
@@ -43,7 +44,8 @@ void main() {
             .dropColumn('name2');
         final built = query.build();
 
-        const expectedBuild = 'ALTER TABLE product DROP COLUMN name, DROP COLUMN name2';
+        const expectedBuild =
+            'ALTER TABLE product DROP COLUMN name, DROP COLUMN name2';
 
         expect(built, expectedBuild);
       });

@@ -14,6 +14,7 @@ class AlterTableActionAddColumn extends AlterTableAction {
   @override
   QueryString build() => QueryString().keyword('ADD COLUMN ').adding(column);
 }
+
 // define AlterTableActionDropColumn
 class AlterTableActionDropColumn extends AlterTableAction {
   final String name;
