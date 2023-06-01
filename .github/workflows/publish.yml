@@ -8,7 +8,7 @@ concurrency:
   group: "publish"
   cancel-in-progress: true
 env:
-  DART_VERSION: 2.19.0
+  DART_VERSION: 3.0.0
 
 jobs:
   publish_alpha:

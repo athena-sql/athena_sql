@@ -1,7 +1,7 @@
 name: Dart Code Metrics
 
 env:
-  DART_VERSION: 2.19.0
+  DART_VERSION: 3.0.0
   folders: "lib, test"
 
 on:
