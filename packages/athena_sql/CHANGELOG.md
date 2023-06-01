@@ -1,3 +1,10 @@
+## 1.1.0
+
+ - **FIX**: bump to dart 3 (#39).
+ - **FIX**: is in flatten array (#30).
+ - **FEAT**: alter table add column (#37).
+ - **FEAT**: select from table where builders (#15).
+
 ## 1.0.7
 
 ## 1.0.0

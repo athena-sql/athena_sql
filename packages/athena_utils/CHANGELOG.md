@@ -1,3 +1,7 @@
+## 1.0.3
+
+ - **FIX**: bump to dart 3 (#39).
+
 ## 1.0.0
 
 - Initial version.

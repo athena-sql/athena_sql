@@ -3,6 +3,50 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## 2023-06-01
+
+### Changes
+
+---
+
+Packages with breaking changes:
+
+ - There are no breaking changes in this release.
+
+Packages with other changes:
+
+ - [`athena_migrate` - `v1.0.4`](#athena_migrate---v104)
+ - [`athena_mysql` - `v1.0.5`](#athena_mysql---v105)
+ - [`athena_postgres` - `v1.0.5`](#athena_postgres---v105)
+ - [`athena_sql` - `v1.1.0`](#athena_sql---v110)
+ - [`athena_utils` - `v1.0.3`](#athena_utils---v103)
+
+---
+
+#### `athena_migrate` - `v1.0.4`
+
+ - **FIX**: bump to dart 3 (#39).
+
+#### `athena_mysql` - `v1.0.5`
+
+ - **FIX**: bump to dart 3 (#39).
+
+#### `athena_postgres` - `v1.0.5`
+
+ - **FIX**: bump to dart 3 (#39).
+
+#### `athena_sql` - `v1.1.0`
+
+ - **FIX**: bump to dart 3 (#39).
+ - **FIX**: is in flatten array (#30).
+ - **FEAT**: alter table add column (#37).
+ - **FEAT**: select from table where builders (#15).
+
+#### `athena_utils` - `v1.0.3`
+
+ - **FIX**: bump to dart 3 (#39).
+
+
 ## 2023-05-25
 
 ### Changes
