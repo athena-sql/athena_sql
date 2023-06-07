@@ -52,6 +52,21 @@ extension AthenaInsertTableQueryExtension<D extends AthenaDatabaseDriver>
         .query(newSchema.plain(), mapValues: $mappedValues())
         .then((value) => value.affectedRows);
   }
+
+  Future<dynamic> returningId() {
+    final keys = $schema.listValues
+        .map((e) => e.keys)
+        .expand((element) => element)
+        .toSet();
+
+    final mapColumns = Map<String, String>.fromIterable(keys,
+        value: (key) => _driver.mapColumnOrTable(key));
+
+    final newSchema = $schema.copyWith(mapColumn: mapColumns);
+    return _driver
+        .query(newSchema.plain(), mapValues: $mappedValues())
+        .then((value) => value.first['id']);
+  }
 }
 
 extension AthenaInseretTableQueryExtension<D extends AthenaDatabaseDriver>
