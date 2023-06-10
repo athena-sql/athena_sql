@@ -9,4 +9,17 @@ extension InsertTableBuilder<D extends AthenaDriver>
   Map<String, dynamic> $mappedValues() {
     return $schema.mapValues();
   }
+
+  AthenaQueryBuilder<D, InsertTableReturningSchema> returning(
+      List<String> columns) {
+    final mapedColumns = columns.map(_driver.mapColumnOrTable).toList();
+    return _changeBuilder(InsertTableReturningSchema($schema, mapedColumns));
+  }
+}
+
+extension InsertTableReturningBuilder<D extends AthenaDriver>
+    on AthenaQueryBuilder<D, InsertTableReturningSchema> {
+  Map<String, dynamic> $mappedValues() {
+    return $schema.mapValues();
+  }
 }

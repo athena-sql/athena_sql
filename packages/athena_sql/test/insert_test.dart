@@ -60,6 +60,26 @@ void main() {
               'email_2': 'maria@example.com',
             }));
       });
+
+      test('insert returning', () {
+        final query = athenaSql.insert.into('user').values({
+          'Name': 'juan',
+          'Age': 20,
+        }).returning(['id', 'Name']);
+
+        const expectedBuild = '''
+            INSERT INTO user (Name, Age) VALUES (@Name_0, @Age_0)
+            RETURNING id, Name
+        ''';
+
+        expect(query.build(), equals(normalizeSql(expectedBuild)));
+        expect(
+            query.$mappedValues(),
+            equals({
+              'Name_0': 'juan',
+              'Age_0': 20,
+            }));
+      });
     });
   });
 }

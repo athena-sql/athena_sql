@@ -47,6 +47,15 @@ class InsertTableSchema extends DMLSchema {
     };
   }
 
+  Set<String> get _keys =>
+      listValues.map((e) => e.keys).expand((element) => element).toSet();
+
+  Map<String, String> _mapKeys(String Function(String) keyMapper) =>
+      Map<String, String>.fromIterable(_keys, value: (k) => keyMapper(k));
+
+  InsertTableSchema copyMappingColumns(String Function(String) keyMapper) =>
+      copyWith(mapColumn: _mapKeys((k) => keyMapper(k)));
+
   InsertTableSchema copyWith(
       {String? name,
       List<Map<String, dynamic>>? listValues,
@@ -63,5 +72,37 @@ class InsertTableSchema extends DMLSchema {
       ...listValues,
       values,
     ]);
+  }
+}
+
+class InsertTableReturningSchema extends DMLSchema {
+  InsertTableSchema schema;
+  List<String> returning;
+  InsertTableReturningSchema(this.schema, this.returning);
+
+  @override
+  QueryPrintable build() {
+    return QueryString()
+        .adding(schema)
+        .space()
+        .keyword('RETURNING ')
+        .comaSpaceSeparated(returning.map((e) => QueryString().userInput(e)));
+  }
+
+  InsertTableReturningSchema copyMappingColumns(
+      String Function(String) keyMapper) {
+    return copyWith(schema: schema.copyMappingColumns(keyMapper));
+  }
+
+  Map<String, dynamic> mapValues() {
+    return schema.mapValues();
+  }
+
+  InsertTableReturningSchema copyWith(
+      {InsertTableSchema? schema, List<String>? returning}) {
+    return InsertTableReturningSchema(
+      schema ?? this.schema,
+      returning ?? this.returning,
+    );
   }
 }

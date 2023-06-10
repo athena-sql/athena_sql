@@ -39,18 +39,20 @@ extension AthenaDDLQueryExtension<D extends AthenaDatabaseDriver>
 extension AthenaInsertTableQueryExtension<D extends AthenaDatabaseDriver>
     on AthenaQueryBuilder<D, InsertTableSchema> {
   Future<int> run() {
-    final keys = $schema.listValues
-        .map((e) => e.keys)
-        .expand((element) => element)
-        .toSet();
-
-    final mapColumns = Map<String, String>.fromIterable(keys,
-        value: (key) => _driver.mapColumnOrTable(key));
-
-    final newSchema = $schema.copyWith(mapColumn: mapColumns);
+    final newSchema = $schema.copyMappingColumns(_driver.mapColumnOrTable);
     return _driver
         .query(newSchema.plain(), mapValues: $mappedValues())
         .then((value) => value.affectedRows);
+  }
+}
+
+extension AthenaInsertTableReturningQueryExtension<
+        D extends AthenaDatabaseDriver>
+    on AthenaQueryBuilder<D, InsertTableReturningSchema> {
+  Future<AthenaQueryResponse> run() {
+    final newSchema = $schema.copyMappingColumns(_driver.mapColumnOrTable);
+
+    return _driver.query(newSchema.plain(), mapValues: $schema.mapValues());
   }
 }
 
