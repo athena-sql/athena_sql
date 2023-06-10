@@ -1,3 +1,7 @@
+## 1.1.2
+
+ - **FIX**: insert returning (#43).
+
 ## 1.1.1
 
  - **FIX**: add if exits to alter actions (#41).

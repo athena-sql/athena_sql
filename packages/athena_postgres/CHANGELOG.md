@@ -1,3 +1,7 @@
+## 1.0.7
+
+ - **FIX**: insert returning (#43).
+
 ## 1.0.6
 
  - Update a dependency to the latest release.
