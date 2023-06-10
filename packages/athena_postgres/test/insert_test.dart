@@ -10,24 +10,27 @@ void main() {
         'localhost', 5432, 'dart_test',
         username: 'dart', password: 'dart'));
 
-    setUp(() async {
-      print('open');
+    setUpAll(() async {
       await athena.open();
-      print('opened');
-      // Additional setup goes here.
-    });
-    tearDown(() async => await athena.close());
 
-    test('execute query', () async {
-      print('testing');
-      final completed = await athena.create
+      await athena.create
           .table('users')
+          .column((t) => t.serial('id').primaryKey())
           .column((t) => t.text('Name'))
           .column((t) => t.text('email'))
           .column((t) => t.int_('age'))
           .run();
-      expect(completed, equals(0));
+      // Additional setup goes here.
+    });
+    setUp(() {
+      return athena.rawQuery('''
+      TRUNCATE TABLE users
+      RESTART IDENTITY;
+      ''');
+    });
+    tearDownAll(() async => await athena.close());
 
+    test('execute query', () async {
       final inserted = await athena.insert.into('users').values({
         'Name': 'juan',
         'email': 'juan@example.com'
@@ -48,6 +51,25 @@ void main() {
           equals([
             {'Name': 'pedro', 'email': 'pedro@example.com'},
             {'Name': 'maria', 'email': 'maria@example.com'}
+          ]));
+    });
+
+    test('return values', () async {
+      final inserted = await athena.insert
+          .into('users')
+          .values({'Name': 'juan', 'email': 'juan@example.com'}).values(
+              {'Name': 'pedro', 'email': 'pedro@example.com'}).values({
+        'Name': 'maria',
+        'email': 'maria@example.com',
+        'age': 3
+      }).returning(['id', 'Name']).run();
+
+      expect(
+          inserted,
+          equals([
+            {'id': 1, 'Name': 'juan'},
+            {'id': 2, 'Name': 'pedro'},
+            {'id': 3, 'Name': 'maria'}
           ]));
     });
   });
