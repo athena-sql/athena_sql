@@ -11,7 +11,7 @@ class MigrationCommands {
 
   Future<void> run() async {
     if (args.isEmpty) {
-      print('Please provide a command');
+      Print.red('Please provide a command');
       return;
     }
     final command = args.first;
@@ -34,7 +34,7 @@ class MigrationCommands {
       case 'version':
         return _runVersion();
       default:
-        print('Command $command not found');
+        Print.red('Command $command not found');
     }
   }
 
@@ -42,7 +42,7 @@ class MigrationCommands {
     return athenaSql.transaction((db) async {
       final exists = await db.tableExists('athena_migrations');
       if (!exists) {
-        print('creating migration table');
+        Print.green('creating migration table');
         await db.create
             .table('athena_migrations')
             .column((t) => t.string('name').notNull())
