@@ -28,6 +28,12 @@ class InsertTableOptions<D extends AthenaDriver> {
     return AthenaQueryBuilder<D, InsertTableSchema>(
         _driver, InsertTableSchema(name: _name, listValues: [values]));
   }
+
+  AthenaQueryBuilder<D, InsertTableSchema> manyValues(
+      List<Map<String, dynamic>> listValues) {
+    return AthenaQueryBuilder<D, InsertTableSchema>(
+        _driver, InsertTableSchema(name: _name, listValues: listValues));
+  }
 }
 
 class SelectTableOptions<D extends AthenaDriver> {

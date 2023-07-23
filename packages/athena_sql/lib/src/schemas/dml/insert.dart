@@ -73,6 +73,14 @@ class InsertTableSchema extends DMLSchema {
       values,
     ]);
   }
+
+  InsertTableSchema copyWithAddManyValues(
+      List<Map<String, dynamic>> listValues) {
+    return copyWith(listValues: [
+      ...this.listValues,
+      ...listValues,
+    ]);
+  }
 }
 
 class InsertTableReturningSchema extends DMLSchema {
