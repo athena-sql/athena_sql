@@ -1,3 +1,7 @@
+## 1.1.3
+
+ - **FIX**: insert many items (#44).
+
 ## 1.1.2
 
  - **FIX**: insert returning (#43).
