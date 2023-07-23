@@ -2,8 +2,14 @@ part of '../builders.dart';
 
 extension InsertTableBuilder<D extends AthenaDriver>
     on AthenaQueryBuilder<D, InsertTableSchema> {
-  AthenaQueryBuilder<D, InsertTableSchema> values(Map<String, dynamic> values) {
+  AthenaQueryBuilder<D, InsertTableSchema> addValues(
+      Map<String, dynamic> values) {
     return _changeBuilder($schema.copyWithAddValues(values));
+  }
+
+  AthenaQueryBuilder<D, InsertTableSchema> addManyValues(
+      List<Map<String, dynamic>> listValues) {
+    return _changeBuilder($schema.copyWithAddManyValues(listValues));
   }
 
   Map<String, dynamic> $mappedValues() {

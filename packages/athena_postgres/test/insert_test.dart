@@ -34,7 +34,7 @@ void main() {
       final inserted = await athena.insert.into('users').values({
         'Name': 'juan',
         'email': 'juan@example.com'
-      }).values({'Name': 'pedro', 'email': 'pedro@example.com'}).values(
+      }).addValues({'Name': 'pedro', 'email': 'pedro@example.com'}).addValues(
           {'Name': 'maria', 'email': 'maria@example.com', 'age': 3}).run();
 
       expect(inserted, equals(3));
@@ -57,8 +57,8 @@ void main() {
     test('return values', () async {
       final inserted = await athena.insert
           .into('users')
-          .values({'Name': 'juan', 'email': 'juan@example.com'}).values(
-              {'Name': 'pedro', 'email': 'pedro@example.com'}).values({
+          .values({'Name': 'juan', 'email': 'juan@example.com'}).addValues(
+              {'Name': 'pedro', 'email': 'pedro@example.com'}).addValues({
         'Name': 'maria',
         'email': 'maria@example.com',
         'age': 3
