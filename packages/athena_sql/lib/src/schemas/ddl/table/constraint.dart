@@ -6,8 +6,8 @@ abstract class ColumnConstrains extends QueryBuilder {
   QueryString get _value;
   @override
   QueryString build() => QueryString()
-      .condition(name != null,
-          (q) => q.keyword('CONSTRAINT').space().userInput('$name').space())
+      .notNull(
+          name, (q, n) => q.keyword('CONSTRAINT').space().userInput(n).space())
       .adding(_value);
 }
 
@@ -148,7 +148,7 @@ class ReferencesContraint extends ColumnConstrains {
   QueryString get _value => QueryString()
       .keyword('REFERENCES ')
       .userInput(_table)
-      .condition(_column != null,
-          (q) => q.parentheses((q) => q.userInput(_column!)).space())
-      .condition(_action != null, (q) => q.adding(_action!._value));
+      .notNull(_column,
+          (q, column) => q.parentheses((q) => q.userInput(column)).space())
+      .notNull(_action, (q, action) => q.adding(action._value));
 }

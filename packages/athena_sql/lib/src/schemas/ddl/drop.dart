@@ -19,9 +19,9 @@ class DropTableSchema extends DdlSchema {
   @override
   QueryString build() => QueryString()
       .keyword('DROP TABLE ')
-      .condition(ifExists == true, (q) => q.keyword('IF EXISTS '))
+      .condition(ifExists, (q) => q.keyword('IF EXISTS '))
       .commaSeparated(names.map((e) => QueryString().userInput(e)))
-      .condition(type != null, (q) => q.space().keyword(type!.value));
+      .notNull(type, (q, val) => q.space().keyword(val.value));
 
   DropTableSchema copyWith(
       {List<String>? names, bool? ifExists, DropTableType? type}) {

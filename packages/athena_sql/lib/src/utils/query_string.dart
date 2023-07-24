@@ -106,10 +106,19 @@ class QueryString extends QueryPrintable {
     return adding(_new(value, TokensColor.blue));
   }
 
-  QueryString condition(bool compare, FunctionQueryBuilder fn,
+  QueryString condition(bool? compare, FunctionQueryBuilder fn,
       {FunctionQueryBuilder? elseClause}) {
-    if (compare) {
+    if (compare == true) {
       return adding(fn(QueryString()));
+    } else {
+      return elseClause == null ? this : adding(elseClause(QueryString()));
+    }
+  }
+
+  QueryString notNull<T>(T? compare, QueryPrintable Function(QueryString, T) fn,
+      {FunctionQueryBuilder? elseClause}) {
+    if (compare != null) {
+      return adding(fn(QueryString(), compare));
     } else {
       return elseClause == null ? this : adding(elseClause(QueryString()));
     }
@@ -160,13 +169,15 @@ class QueryString extends QueryPrintable {
   }
 
   QueryString commaSeparated(Iterable<QueryPrintable> values) {
-    final separator = QueryString.special(",");
-    return join(values, separator);
+    return join(values, QueryString.special(","));
+  }
+
+  QueryString spaceSeparated(Iterable<QueryPrintable> values) {
+    return join(values, QueryString.special(" "));
   }
 
   QueryString comaSpaceSeparated(Iterable<QueryPrintable> values) {
-    final separator = QueryString.special(", ");
-    return join(values, separator);
+    return join(values, QueryString.special(", "));
   }
 
   @override
