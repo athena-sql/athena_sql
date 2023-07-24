@@ -3,6 +3,36 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## 2023-07-24
+
+### Changes
+
+---
+
+Packages with breaking changes:
+
+ - There are no breaking changes in this release.
+
+Packages with other changes:
+
+ - [`athena_sql` - `v1.1.4`](#athena_sql---v114)
+ - [`athena_postgres` - `v1.0.9`](#athena_postgres---v109)
+ - [`athena_mysql` - `v1.0.9`](#athena_mysql---v109)
+
+Packages with dependency updates only:
+
+> Packages listed below depend on other packages in this workspace that have had changes. Their versions have been incremented to bump the minimum dependency versions of the packages they depend upon in this project.
+
+ - `athena_postgres` - `v1.0.9`
+ - `athena_mysql` - `v1.0.9`
+
+---
+
+#### `athena_sql` - `v1.1.4`
+
+ - **FIX**: add joins (#45).
+
+
 ## 2023-07-23
 
 ### Changes

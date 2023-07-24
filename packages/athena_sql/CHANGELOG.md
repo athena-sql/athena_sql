@@ -1,3 +1,7 @@
+## 1.1.4
+
+ - **FIX**: add joins (#45).
+
 ## 1.1.3
 
  - **FIX**: insert many items (#44).
