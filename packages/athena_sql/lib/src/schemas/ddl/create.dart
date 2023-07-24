@@ -37,9 +37,9 @@ class CreateTableSchema extends DdlSchema {
   @override
   QueryString build() => QueryString()
       .keyword('CREATE ')
-      .condition(temporary == true, (q) => q.keyword('TEMPORARY '))
+      .condition(temporary, (q) => q.keyword('TEMPORARY '))
       .keyword('TABLE ')
-      .condition(ifNotExists == true, (q) => q.keyword('IF NOT EXISTS '))
+      .condition(ifNotExists, (q) => q.keyword('IF NOT EXISTS '))
       .userInput(tableName)
       .parentheses((q) => q.comaSpaceSeparated(clauses));
 }

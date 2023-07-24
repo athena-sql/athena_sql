@@ -18,7 +18,7 @@ class AlterTableActionAddColumn extends AlterTableAction {
   @override
   QueryString build() => QueryString()
       .keyword('ADD COLUMN ')
-      .condition(ifNotExists == true, (q) => q.keyword('IF NOPT EXISTS '))
+      .condition(ifNotExists, (q) => q.keyword('IF NOPT EXISTS '))
       .adding(column);
 }
 
@@ -32,7 +32,7 @@ class AlterTableActionDropColumn extends AlterTableAction {
   @override
   QueryString build() => QueryString()
       .keyword('DROP COLUMN ')
-      .condition(ifExists == true, (q) => q.keyword('IF EXISTS '))
+      .condition(ifExists, (q) => q.keyword('IF EXISTS '))
       .userInput(name);
 }
 
@@ -50,7 +50,7 @@ class AlterTableSchema extends DdlSchema {
   @override
   QueryString build() => QueryString()
       .keyword('ALTER TABLE ')
-      .condition(ifExists == true, (q) => q.keyword('IF EXISTS '))
+      .condition(ifExists, (q) => q.keyword('IF EXISTS '))
       .userInput(name)
       .space()
       .comaSpaceSeparated(actions);

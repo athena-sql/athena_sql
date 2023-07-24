@@ -152,6 +152,10 @@ extension _FlatIterable on Iterable<dynamic> {
       ];
 }
 
+typedef WhereBuilderFunction<D extends AthenaDriver>
+    = AthenaQueryBuilder<D, WhereClause> Function(
+        AthenaQueryBuilder<D, WhereCreatorSchema>);
+
 extension SelectTableBuilder<D extends AthenaDriver>
     on AthenaQueryBuilder<D, SelectTableSchema> {
   AthenaQueryBuilder<D, SelectTableSchema> as(String alias) {
@@ -159,9 +163,7 @@ extension SelectTableBuilder<D extends AthenaDriver>
   }
 
   AthenaQueryBuilder<D, SelectTableSchema> where(
-    AthenaQueryBuilder<D, WhereClause> Function(
-            AthenaQueryBuilder<D, WhereCreatorSchema>)
-        builder,
+    WhereBuilderFunction<D> builder,
   ) {
     final clause = builder(_changeBuilder(WhereCreatorSchema()));
     if ($schema.where == null) {
@@ -171,5 +173,72 @@ extension SelectTableBuilder<D extends AthenaDriver>
           where: WhereOperatorClause(
               $schema.where!, WhereOperator.and, clause.$schema)));
     }
+  }
+
+  AthenaQueryBuilder<D, SelectTableSchema> joinBuilder(String table,
+      {JoinType? type,
+      required WhereBuilderFunction<D> on,
+      String? as,
+      bool natural = false}) {
+    final condition = on(_changeBuilder(WhereCreatorSchema()));
+    final joinToAdd = JoinClause(
+        type: type,
+        natural: natural,
+        as: as,
+        table: table,
+        on: condition.$schema);
+
+    return _changeBuilder($schema.addJoins([joinToAdd]));
+  }
+
+  AthenaQueryBuilder<D, SelectTableSchema> _joinBulder(
+    String table,
+    String leftCase,
+    String rightCase, {
+    String? as,
+    bool natural = false,
+    JoinType? type,
+  }) {
+    final condition = WhereCondition(
+        WhereItemValue(_driver.mapColumnOrTable(leftCase)),
+        Condition.eq,
+        WhereItemValue(_driver.mapColumnOrTable(rightCase)));
+    final joinToAdd = JoinClause(
+        table: table, type: type, natural: natural, as: as, on: condition);
+    return _changeBuilder($schema.addJoins([joinToAdd]));
+  }
+
+  AthenaQueryBuilder<D, SelectTableSchema> join(
+      String table, String leftCase, String rightCase,
+      {String? as, bool natural = false}) {
+    return _joinBulder(table, leftCase, rightCase, as: as, natural: natural);
+  }
+
+  AthenaQueryBuilder<D, SelectTableSchema> leftJoin(
+      String table, String leftCase, String rightCase,
+      {String? as, bool natural = false}) {
+    return _joinBulder(table, leftCase, rightCase,
+        as: as, natural: natural, type: JoinType.left);
+  }
+
+  AthenaQueryBuilder<D, SelectTableSchema> crossJoin(
+      String table, String leftCase, String rightCase,
+      {String? as, bool natural = false}) {
+    return _joinBulder(table, leftCase, rightCase,
+        as: as, natural: natural, type: JoinType.cross);
+  }
+
+  AthenaQueryBuilder<D, SelectTableSchema> fullJoin(
+      String table, String leftCase, String rightCase,
+      {String? as, bool natural = false}) {
+    return _joinBulder(table, leftCase, rightCase,
+        as: as, natural: natural, type: JoinType.full);
+  }
+
+  AthenaQueryBuilder<D, SelectTableSchema> innerJoin(
+      String table, String leftCase, String rightCase,
+      {String? as, bool natural = false}) {
+    return _joinBulder(table, leftCase, rightCase,
+        as: as, natural: natural, type: JoinType.inner);
   }
 }
