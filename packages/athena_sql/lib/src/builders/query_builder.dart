@@ -61,6 +61,10 @@ extension AthenaInseretTableQueryExtension<D extends AthenaDatabaseDriver>
   Future<AthenaQueryResponse> run({Map<String, dynamic>? mapValues}) {
     return _driver.query($schema.plain(), mapValues: mapValues);
   }
+
+  Future<List<T>> runParse<T>(T Function(AthenaRowResponse) parser,  {Map<String, dynamic>? mapValues}) async {
+    return run(mapValues: mapValues).then((value) => value.map(parser).toList());
+  }
 }
 
 extension AthenaStringExtension<D extends AthenaStringDriver,
