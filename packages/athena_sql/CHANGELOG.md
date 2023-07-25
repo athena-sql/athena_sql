@@ -1,3 +1,7 @@
+## 1.1.8
+
+ - **FIX**: reversed reset migration (#49).
+
 ## 1.1.7
 
  - Update a dependency to the latest release.
