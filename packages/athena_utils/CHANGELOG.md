@@ -1,3 +1,7 @@
+## 1.0.4
+
+ - **FIX**: command menu properlty viewed (#48).
+
 ## 1.0.3
 
  - **FIX**: bump to dart 3 (#39).

@@ -1,7 +1,7 @@
 name: athena_utils
 description: >-
   Util common package for Athena SQL and its CLI
-version: 1.0.3
+version: 1.0.4
 homepage: https://docs.athena-sql.dev/utils/
 repository: https://github.com/athena-sql/athena_sql/tree/master/packages/athena_utils
 
