@@ -1,3 +1,7 @@
+## 1.1.6
+
+ - **FIX**: migration down comparable (#47).
+
 ## 1.1.5
 
  - **FIX**: parse select (#46).

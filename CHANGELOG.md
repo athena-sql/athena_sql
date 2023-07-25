@@ -15,6 +15,36 @@ Packages with breaking changes:
 
 Packages with other changes:
 
+ - [`athena_sql` - `v1.1.6`](#athena_sql---v116)
+ - [`athena_mysql` - `v1.0.11`](#athena_mysql---v1011)
+ - [`athena_postgres` - `v1.0.11`](#athena_postgres---v1011)
+
+Packages with dependency updates only:
+
+> Packages listed below depend on other packages in this workspace that have had changes. Their versions have been incremented to bump the minimum dependency versions of the packages they depend upon in this project.
+
+ - `athena_mysql` - `v1.0.11`
+ - `athena_postgres` - `v1.0.11`
+
+---
+
+#### `athena_sql` - `v1.1.6`
+
+ - **FIX**: migration down comparable (#47).
+
+
+## 2023-07-25
+
+### Changes
+
+---
+
+Packages with breaking changes:
+
+ - There are no breaking changes in this release.
+
+Packages with other changes:
+
  - [`athena_sql` - `v1.1.5`](#athena_sql---v115)
  - [`athena_postgres` - `v1.0.10`](#athena_postgres---v1010)
  - [`athena_mysql` - `v1.0.10`](#athena_mysql---v1010)

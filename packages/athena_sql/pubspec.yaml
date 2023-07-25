@@ -1,7 +1,7 @@
 name: athena_sql
 description: >-
   Dart SQL query builder, expressive and user-friendly API to build and manage SQL queries in your Dart projects.
-version: 1.1.5
+version: 1.1.6
 homepage: https://docs.athena-sql.dev/
 repository: https://github.com/athena-sql/athena_sql/
 
