@@ -1,3 +1,7 @@
+## 1.1.5
+
+ - **FIX**: parse select (#46).
+
 ## 1.1.4
 
  - **FIX**: add joins (#45).
