@@ -129,7 +129,7 @@ class ConsoleService {
     final optionsWithIndex =
         optionsString.asMap().map((key, value) => MapEntry(key + 1, value));
     final optionsWithIndexString =
-        optionsWithIndex.map((key, value) => MapEntry('$key - $value', key));
+        optionsWithIndex.map((key, value) => MapEntry(key, '$key - $value'));
     final optionsStringWithNewLine = optionsWithIndexString.values.join('\n');
     final question = '$prompt\n$optionsStringWithNewLine\n';
     final response = ask(question);
