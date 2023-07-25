@@ -173,7 +173,7 @@ class MigrationCommands {
       return;
     }
     await athenaSql.transaction((db) async {
-      for (var migration in migrationsDone) {
+      for (var migration in migrationsDone.reversed) {
         Print.green('running migration ${migration.name}');
         await migration.down(db);
         await db.rawQuery('''
