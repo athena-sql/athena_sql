@@ -95,7 +95,7 @@ class MigrationCommands {
 
     if (date == null) return <AthenaMigration>[];
     return migrations
-        .where((element) => element.date.compareTo(date) < 0)
+        .where((element) => element.date.compareTo(date) <= 0)
         .sorted((a, b) => a.date.compareTo(b.date))
         .toList();
   }
