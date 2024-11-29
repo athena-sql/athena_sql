@@ -1,9 +1,11 @@
 import 'package:athena_postgres/athena_postgres.dart';
 
 void main(List<String> args) async {
-  final athenaSql = AthenaPostgresql(PostgresDatabaseConfig('host', 1, 'db'));
-
-  await athenaSql.open();
+  final athenaSql = await AthenaPostgresql.open(AthenaPostgresqlEndpoint(
+    host: 'localhost',
+    databaseName: 'postgres',
+    username: 'postgres',
+  ));
 
   await athenaSql.create
       .table('users')

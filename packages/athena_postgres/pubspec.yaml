@@ -10,11 +10,11 @@ topics:
   - postgres
 
 environment:
-  sdk: '>=3.0.0 <4.0.0'
+  sdk: '>=3.5.0 <4.0.0'
 
 dependencies: 
   path: ^1.8.3
-  postgres: ^2.6.1
+  postgres: ^3.4.4
   athena_sql: ^1.1.8
 
 dev_dependencies:

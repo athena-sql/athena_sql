@@ -25,17 +25,12 @@ void main() {
     });
 
     group('connection driver', () {
-      test('open connection', () async {
-        await athenaSql.open();
-        verify(mockDriver.open()).called(1);
-      });
-
       test('transaction', () async {
         //Creates the mock object
 
-        when(mockDriver.transaction(any)).thenAnswer((_) async {
-          final String ans =
-              await _.positionalArguments[0](TestDatabaseTransactionDriver());
+        when(mockDriver.transaction(any)).thenAnswer((invocation) async {
+          final String ans = await invocation
+              .positionalArguments[0](TestDatabaseTransactionDriver());
           return ans;
         });
 
@@ -67,12 +62,12 @@ void main() {
         final queryReponse = QueryResponse([
           QueryRow({'id': 1, 'name': 'test'})
         ]);
-        when(mockDriver.query(query))
+        when(mockDriver.execute(query))
             .thenAnswer((_) => Future.value(queryReponse));
         // act
         final response = await athenaSql.rawQuery(query);
         // assert
-        verify(mockDriver.query(query)).called(1);
+        verify(mockDriver.execute(query)).called(1);
         expect(response, equals(queryReponse));
       });
     });

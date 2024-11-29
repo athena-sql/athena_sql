@@ -25,11 +25,12 @@ jobs:
       - uses: dart-lang/setup-dart@v1
         with:
           sdk: ${{ env.DART_VERSION }}
-      - name: Verify code formatting
-        run: dart format --output none --set-exit-if-changed .
 
       - name: Activate Melos
         run: dart pub global activate melos
+        
+      - name: Verify code formatting
+        run: melos format --set-exit-if-changed
         
       - name: Install coverage tools
         run: dart pub global activate coverage
@@ -37,7 +38,7 @@ jobs:
       - name: Install Dependencies
         run: melos bs
       - name: Analyze
-        run: dart analyze .
+        run: melos analyze -c 5
   test:
     runs-on: ubuntu-latest
     strategy:

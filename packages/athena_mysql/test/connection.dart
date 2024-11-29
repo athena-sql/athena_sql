@@ -11,20 +11,22 @@ AthenaMySQL? _conn;
 void useConnection([String? tableName, String? createSql, String? insertSql]) {
   final db = 'testdb';
 
-  final config = MySqlDatabaseConfig('127.0.0.1', 3306,
-      userName: 'root', password: '', databaseName: db, maxConnections: 10);
+  final config = AthenaMySqlEndpoint(
+      host: '127.0.0.1',
+      port: 3306,
+      userName: 'root',
+      password: '',
+      databaseName: db);
 
   setUp(() async {
     // Ensure db exists
     final c = config.copyWithDatabase(null);
-    final a = AthenaMySQL(c);
-    await a.open();
+    final a = await AthenaMySQL.open(c);
     await a.driver.execute('DROP DATABASE IF EXISTS $db');
     await a.driver.execute('CREATE DATABASE $db CHARACTER SET utf8');
     await a.close();
 
-    _conn = AthenaMySQL(config);
-    await _conn!.open();
+    _conn = await AthenaMySQL.open(config);
   });
 
   tearDown(() async {

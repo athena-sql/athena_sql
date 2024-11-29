@@ -6,13 +6,17 @@ import 'docker.dart';
 void main() {
   usePostgresDocker();
   group('Columns', () {
-    final athena = AthenaPostgresql(PostgresDatabaseConfig(
-        'localhost', 5432, 'dart_test',
-        username: 'dart', password: 'dart'));
+    late AthenaPostgresql athena;
 
     setUp(() async {
       print('open');
-      await athena.open();
+
+      athena = await AthenaPostgresql.open(AthenaPostgresqlEndpoint(
+        host: 'localhost',
+        databaseName: 'dart_test',
+        username: 'postgres',
+        password: 'dart',
+      ));
       print('opened');
       // Additional setup goes here.
     });
