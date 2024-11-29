@@ -131,7 +131,7 @@ jobs:
       - name: Test Coverage
         run:  melos run test:coverage
       - name: "Upload Coverage"
-        uses: codecov/codecov-action@v3
+        uses: codecov/codecov-action@v5
         with:
           files: packages/*/coverage/lcov.info
     services:
