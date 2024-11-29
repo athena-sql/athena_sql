@@ -15,6 +15,47 @@ Packages with breaking changes:
 
 Packages with other changes:
 
+ - [`athena_migrate` - `v1.2.0`](#athena_migrate---v120)
+ - [`athena_mysql` - `v1.2.0`](#athena_mysql---v120)
+ - [`athena_postgres` - `v1.2.0`](#athena_postgres---v120)
+ - [`athena_sql` - `v1.3.0`](#athena_sql---v130)
+ - [`athena_utils` - `v1.2.0`](#athena_utils---v120)
+
+---
+
+#### `athena_migrate` - `v1.2.0`
+
+ - **FEAT**: update deps (#61).
+
+#### `athena_mysql` - `v1.2.0`
+
+ - **FEAT**: update deps (#61).
+
+#### `athena_postgres` - `v1.2.0`
+
+ - **FEAT**: update deps (#61).
+
+#### `athena_sql` - `v1.3.0`
+
+ - **FEAT**: update deps (#61).
+
+#### `athena_utils` - `v1.2.0`
+
+ - **FEAT**: update deps (#61).
+
+
+## 2024-11-29
+
+### Changes
+
+---
+
+Packages with breaking changes:
+
+ - There are no breaking changes in this release.
+
+Packages with other changes:
+
  - [`athena_migrate` - `v1.1.0`](#athena_migrate---v110)
  - [`athena_mysql` - `v1.1.0`](#athena_mysql---v110)
  - [`athena_postgres` - `v1.1.0`](#athena_postgres---v110)
