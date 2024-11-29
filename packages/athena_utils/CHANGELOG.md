@@ -1,3 +1,7 @@
+## 1.1.0
+
+ - **FEAT**: update deps (#61).
+
 ## 1.0.4
 
  - **FIX**: command menu properlty viewed (#48).

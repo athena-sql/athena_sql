@@ -3,6 +3,47 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## 2024-11-29
+
+### Changes
+
+---
+
+Packages with breaking changes:
+
+ - There are no breaking changes in this release.
+
+Packages with other changes:
+
+ - [`athena_migrate` - `v1.1.0`](#athena_migrate---v110)
+ - [`athena_mysql` - `v1.1.0`](#athena_mysql---v110)
+ - [`athena_postgres` - `v1.1.0`](#athena_postgres---v110)
+ - [`athena_sql` - `v1.2.0`](#athena_sql---v120)
+ - [`athena_utils` - `v1.1.0`](#athena_utils---v110)
+
+---
+
+#### `athena_migrate` - `v1.1.0`
+
+ - **FEAT**: update deps (#61).
+
+#### `athena_mysql` - `v1.1.0`
+
+ - **FEAT**: update deps (#61).
+
+#### `athena_postgres` - `v1.1.0`
+
+ - **FEAT**: update deps (#61).
+
+#### `athena_sql` - `v1.2.0`
+
+ - **FEAT**: update deps (#61).
+
+#### `athena_utils` - `v1.1.0`
+
+ - **FEAT**: update deps (#61).
+
+
 ## 2023-07-25
 
 ### Changes

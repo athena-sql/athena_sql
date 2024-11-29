@@ -1,6 +1,6 @@
 name: athena_migrate
 description: Athena SQL migration tool
-version: 1.0.5
+version: 1.1.0
 homepage: https://docs.athena-sql.dev/migration/
 repository: https://github.com/athena-sql/athena_sql/tree/master/packages/athena_migrate
 
@@ -17,7 +17,7 @@ dependencies:
   intl: ^0.20.1
   path: ^1.9.1
   yaml: ^3.1.2
-  athena_utils: ^1.0.4
+  athena_utils: ^1.1.0
   collection: ^1.19.1
   clock: ^1.1.2
 executables:
