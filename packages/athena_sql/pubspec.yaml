@@ -9,7 +9,7 @@ environment:
   sdk: '>=3.0.0 <4.0.0'
 
 dependencies:
-  collection: ^1.19.1
+  collection: any
   athena_utils: ^1.0.4
 
 dev_dependencies:

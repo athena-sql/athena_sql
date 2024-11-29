@@ -18,7 +18,7 @@ dependencies:
   path: ^1.9.1
   yaml: ^3.1.2
   athena_utils: ^1.0.4
-  collection: ^1.19.1
+  collection: any
   clock: ^1.1.2
 executables:
   athena_migrate:
