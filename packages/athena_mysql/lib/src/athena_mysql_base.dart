@@ -127,6 +127,7 @@ class MySqlDriver extends MySqlTransactionSQLDriver
       databaseName: endpoint.databaseName,
       secure: endpoint.secure,
     );
+    await connection.connect();
 
     return MySqlDriver._(connection);
   }

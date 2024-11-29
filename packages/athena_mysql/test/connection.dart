@@ -11,7 +11,7 @@ AthenaMySQL? _conn;
 void useConnection([String? tableName, String? createSql, String? insertSql]) {
   final db = 'testdb';
 
-  final config = AthenaMySqlEndpoint(
+  final endpoint = AthenaMySqlEndpoint(
       host: '127.0.0.1',
       port: 3306,
       userName: 'root',
@@ -20,13 +20,13 @@ void useConnection([String? tableName, String? createSql, String? insertSql]) {
 
   setUp(() async {
     // Ensure db exists
-    final c = config.copyWithDatabase(null);
+    final c = endpoint.copyWithDatabase(null);
     final a = await AthenaMySQL.open(c);
     await a.driver.execute('DROP DATABASE IF EXISTS $db');
     await a.driver.execute('CREATE DATABASE $db CHARACTER SET utf8');
     await a.close();
 
-    _conn = await AthenaMySQL.open(config);
+    _conn = await AthenaMySQL.open(endpoint);
   });
 
   tearDown(() async {
