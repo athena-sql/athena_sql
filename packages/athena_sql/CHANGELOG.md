@@ -1,3 +1,7 @@
+## 1.3.0
+
+ - **FEAT**: update deps (#61).
+
 ## 1.2.0
 
  - **FEAT**: update deps (#61).
