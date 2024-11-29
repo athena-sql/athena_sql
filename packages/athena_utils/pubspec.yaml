@@ -10,7 +10,7 @@ environment:
 
 dev_dependencies:
   lints: ^5.0.0
-  test: ^1.21.0
+  test: ^1.25.9
 dependencies:
   file: ^7.0.1
   meta: ^1.16.0

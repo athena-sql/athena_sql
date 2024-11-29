@@ -20,102 +20,32 @@ concurrency:
   cancel-in-progress: true
 
 jobs:
-  athena_migrate:
+  package_panas:
     runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        pkg: [athena_migrate, athena_mysql, athena_postgres, athena_sql, athena_utils]
+      fail-fast: false
     steps:
       - uses: actions/checkout@v3
+      - name: Activate Melos
+        run: dart pub global activate melos
+      - name: Install Dependencies
+        run: melos bs
       - uses: flutterings/dart-package-analyzer@v1
+        # set an id for the current step
         id: analysis
-        with:
-          flutter_version: '3.24.5'
-          relativePath: packages/athena_migrate
+
+      # You can then use this id to retrieve the outputs in the next steps.
+      # The following step shows how to exit the workflow with an error if the total score in percentage is below 50:
       - name: Check scores
         env:
           # NB: "analysis" is the id set above. Replace it with the one you used if different.
           TOTAL: ${{ steps.analysis.outputs.total }}
           TOTAL_MAX: ${{ steps.analysis.outputs.total_max }}
         run: |
-          if (( $TOTAL < 100 ))
-          then
-            echo Score too low!
-            exit 1
-          fi
-  athena_mysql:
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v3
-      - uses: flutterings/dart-package-analyzer@v1
-        id: analysis
-        with:
-          flutter_version: '3.24.5'
-          relativePath: packages/athena_mysql
-      - name: Check scores
-        env:
-          # NB: "analysis" is the id set above. Replace it with the one you used if different.
-          TOTAL: ${{ steps.analysis.outputs.total }}
-          TOTAL_MAX: ${{ steps.analysis.outputs.total_max }}
-        run: |
-          if (( $TOTAL < 100 ))
-          then
-            echo Score too low!
-            exit 1
-          fi
-  athena_postgres:
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v3
-      - uses: flutterings/dart-package-analyzer@v1
-        id: analysis
-        with:
-          flutter_version: '3.24.5'
-          relativePath: packages/athena_postgres
-      - name: Check scores
-        env:
-          # NB: "analysis" is the id set above. Replace it with the one you used if different.
-          TOTAL: ${{ steps.analysis.outputs.total }}
-          TOTAL_MAX: ${{ steps.analysis.outputs.total_max }}
-        run: |
-          if (( $TOTAL < 100 ))
-          then
-            echo Score too low!
-            exit 1
-          fi
-  athena_sql:
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v3
-      - uses: flutterings/dart-package-analyzer@v1
-        id: analysis
-        with:
-          flutter_version: '3.24.5'
-          relativePath: packages/athena_sql
-      - name: Check scores
-        env:
-          # NB: "analysis" is the id set above. Replace it with the one you used if different.
-          TOTAL: ${{ steps.analysis.outputs.total }}
-          TOTAL_MAX: ${{ steps.analysis.outputs.total_max }}
-        run: |
-          if (( $TOTAL < 100 ))
-          then
-            echo Score too low!
-            exit 1
-          fi
-  athena_utils:
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v3
-      - uses: flutterings/dart-package-analyzer@v1
-        id: analysis
-        with:
-          flutter_version: '3.24.5'
-          relativePath: packages/athena_utils
-      - name: Check scores
-        env:
-          # NB: "analysis" is the id set above. Replace it with the one you used if different.
-          TOTAL: ${{ steps.analysis.outputs.total }}
-          TOTAL_MAX: ${{ steps.analysis.outputs.total_max }}
-        run: |
-          if (( $TOTAL < 100 ))
+          PERCENTAGE=$(( $TOTAL * 100 / $TOTAL_MAX ))
+          if (( $PERCENTAGE < 50 ))
           then
             echo Score too low!
             exit 1
