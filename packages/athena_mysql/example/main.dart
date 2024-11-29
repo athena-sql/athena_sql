@@ -1,7 +1,7 @@
 import 'package:athena_mysql/athena_mysql.dart';
 
 void main(List<String> args) async {
-  final athenaSql = await AthenaMySQL.open(AthenaMySqlEndpoint(
+  final athenaSql = await AthenaMySQL.open(const AthenaMySqlEndpoint(
       host: 'localgost',
       port: 3306,
       userName: 'userName',

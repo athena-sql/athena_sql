@@ -9,7 +9,7 @@ void main() {
   late AthenaPostgresql athena;
 
   setUpAll(() async {
-    athena = await AthenaPostgresql.open(AthenaPostgresqlEndpoint(
+    athena = await AthenaPostgresql.open(const AthenaPostgresqlEndpoint(
       host: 'localhost',
       databaseName: 'dart_test',
       username: 'postgres',
@@ -32,7 +32,7 @@ void main() {
       RESTART IDENTITY;
       ''');
     });
-    tearDownAll(() async => await athena.close());
+    tearDownAll(() async => athena.close());
 
     test('execute query', () async {
       final inserted = await athena.insert.into('users').values({

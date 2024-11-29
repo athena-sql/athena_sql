@@ -5,10 +5,13 @@ import 'package:postgres/postgres.dart' as pg;
 
 import 'database_config.dart';
 
+/// Query driver for Postgres
 class PostgreTransactionSQLDriver<T extends pg.Session>
     extends AthenaDatabaseDriver {
-  T connection;
   PostgreTransactionSQLDriver._(this.connection);
+
+  /// The connection to the database
+  T connection;
 
   @override
   Future<bool> tableExists(String table, {String schema = 'public'}) async {
@@ -22,7 +25,7 @@ class PostgreTransactionSQLDriver<T extends pg.Session>
           );
       '''), parameters: {'schema': schema, 'table': table});
 
-    return result.first.first as bool;
+    return result.first.first! as bool;
   }
 
   @override
@@ -48,29 +51,32 @@ class PostgreTransactionSQLDriver<T extends pg.Session>
 
   @override
   String mapColumnOrTable(String column) {
-    final vals = column.split(".");
+    final vals = column.split('.');
     return [
       for (final val in vals)
-        if (val.contains(RegExp(r'[A-Z]'))) '"$val"' else val
-    ].join(".");
+        if (val.contains(RegExp('[A-Z]'))) '"$val"' else val
+    ].join('.');
   }
 }
 
+/// Columns driver for Postgres
 class PostgresColumnsDriver extends AthenaColumnsDriver {
   @override
-  ColumnDef boolean() => ColumnDef('BOOLEAN');
+  ColumnDef boolean() => const ColumnDef('BOOLEAN');
 
   @override
-  ColumnDef integer() => ColumnDef('INTEGER');
+  ColumnDef integer() => const ColumnDef('INTEGER');
 
   @override
-  ColumnDef string() => ColumnDef('VARCHAR');
+  ColumnDef string() => const ColumnDef('VARCHAR');
 }
 
+/// Driver for Postgres
 class PostgreSQLDriver extends PostgreTransactionSQLDriver<pg.Connection>
     implements AthenaDatabaseConnectionDriver {
-  PostgreSQLDriver._(pg.Connection connection) : super._(connection);
+  PostgreSQLDriver._(super.connection) : super._();
 
+  /// Opens a connection to the database
   static Future<PostgreSQLDriver> open(AthenaPostgresqlEndpoint config) async {
     final connection = await pg.Connection.open(
       pg.Endpoint(
@@ -101,15 +107,19 @@ class PostgreSQLDriver extends PostgreTransactionSQLDriver<pg.Connection>
   }
 }
 
+/// Athena Postgres SQL
 class AthenaPostgresql extends AthenaSQL<PostgreSQLDriver> {
   AthenaPostgresql._(pg.Connection config) : super(PostgreSQLDriver._(config));
 
+  /// Opens a connection to the database
   static Future<AthenaPostgresql> open(AthenaPostgresqlEndpoint config) async {
     final driver = await PostgreSQLDriver.open(config);
     return AthenaPostgresql._(driver.connection);
   }
 
   static final _listenings = <String>{};
+
+  /// Listens to a channel
   Stream<String> listen(String channel) {
     if (!_listenings.contains(channel)) {
       unawaited(rawQuery('listen $channel'));
@@ -121,25 +131,28 @@ class AthenaPostgresql extends AthenaSQL<PostgreSQLDriver> {
   }
 }
 
+/// map secure getters
 extension MapSecure on Map<String, dynamic> {
+  /// Gets a value from the map
   T? optionalValue<T>(String key) {
     if (!containsKey(key)) {
       return null;
     }
     final val = this[key];
     if (val is! T) {
-      throw Exception('Key \'$key\' is not of type ${T.toString()}');
+      throw Exception("Key '$key' is not of type ${T.toString()}");
     }
     return this[key] as T;
   }
 
+  /// Gets a value from the map
   T getValue<T>(String key) {
     if (!containsKey(key)) {
-      throw Exception('Key \'$key\' not found');
+      throw Exception("Key '$key' not found");
     }
     final val = this[key];
     if (val is! T) {
-      throw Exception('Key \'$key\' is not of type ${T.toString()}');
+      throw Exception("Key '$key' is not of type ${T.toString()}");
     }
     return this[key] as T;
   }

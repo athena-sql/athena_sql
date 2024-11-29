@@ -1,7 +1,7 @@
 import 'package:athena_postgres/athena_postgres.dart';
 
 void main(List<String> args) async {
-  final athenaSql = await AthenaPostgresql.open(AthenaPostgresqlEndpoint(
+  final athenaSql = await AthenaPostgresql.open(const AthenaPostgresqlEndpoint(
     host: 'localhost',
     databaseName: 'postgres',
     username: 'postgres',

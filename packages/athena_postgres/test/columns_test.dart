@@ -11,7 +11,7 @@ void main() {
     setUp(() async {
       print('open');
 
-      athena = await AthenaPostgresql.open(AthenaPostgresqlEndpoint(
+      athena = await AthenaPostgresql.open(const AthenaPostgresqlEndpoint(
         host: 'localhost',
         databaseName: 'dart_test',
         username: 'postgres',
@@ -20,7 +20,7 @@ void main() {
       print('opened');
       // Additional setup goes here.
     });
-    tearDown(() async => await athena.close());
+    tearDown(() async => athena.close());
 
     test('execute query', () async {
       print('testing');

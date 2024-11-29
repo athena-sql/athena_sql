@@ -6,7 +6,7 @@ homepage: https://docs.athena-sql.dev/
 repository: https://github.com/athena-sql/athena_sql/
 
 environment:
-  sdk: '>=3.5.0 <4.0.0'
+  sdk: '>=3.0.0 <4.0.0'
 
 dependencies:
   collection: ^1.19.1

@@ -1,4 +1,6 @@
+/// Configuration for a MySQL database.
 class AthenaMySqlEndpoint {
+  /// Configuration for a MySQL database.
   const AthenaMySqlEndpoint({
     required this.host,
     required this.port,
@@ -9,14 +11,7 @@ class AthenaMySqlEndpoint {
     this.collation = 'utf8mb4_general_ci',
   });
 
-  final dynamic host;
-  final int port;
-  final String userName;
-  final String password;
-  final bool secure;
-  final String? databaseName;
-  final String collation;
-
+  /// Creates a new MySQL endpoint from a map.
   factory AthenaMySqlEndpoint.fromMap(Map<String, dynamic> map) {
     final host = map['host'] ?? 'localhost';
     final port = map['port'] ?? 3306;
@@ -33,6 +28,28 @@ class AthenaMySqlEndpoint {
     );
   }
 
+  /// Hostname of database this connection refers to.
+  final dynamic host;
+
+  /// Port of database this connection refers to.
+  final int port;
+
+  /// Username for authenticating this connection.
+  final String userName;
+
+  /// Password for authenticating this connection.
+  final String password;
+
+  /// Whether to use a secure connection.
+  final bool secure;
+
+  /// Name of database this connection refers to.
+  final String? databaseName;
+
+  /// Collation to use for the connection.
+  final String collation;
+
+  /// Creates a new MySQL endpoint with a different database.
   AthenaMySqlEndpoint copyWithDatabase(String? database) {
     return AthenaMySqlEndpoint(
       host: host,

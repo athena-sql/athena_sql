@@ -1,5 +1,3 @@
-library mysql1.test.test_infrastructure;
-
 // import 'package:options_file/options_file.dart';
 // import 'package:mysql1/mysql1.dart';
 import 'package:athena_mysql/athena_mysql.dart';
@@ -9,9 +7,9 @@ AthenaMySQL get conn => _conn!;
 AthenaMySQL? _conn;
 
 void useConnection([String? tableName, String? createSql, String? insertSql]) {
-  final db = 'testdb';
+  const db = 'testdb';
 
-  final endpoint = AthenaMySqlEndpoint(
+  const endpoint = AthenaMySqlEndpoint(
       host: '127.0.0.1',
       port: 3306,
       userName: 'root',
