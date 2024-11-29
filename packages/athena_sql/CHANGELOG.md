@@ -1,3 +1,7 @@
+## 1.2.0
+
+ - **FEAT**: update deps (#61).
+
 ## 1.1.8
 
  - **FIX**: reversed reset migration (#49).
