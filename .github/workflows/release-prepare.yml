@@ -1,0 +1,32 @@
+name: Prepare release
+on:
+  workflow_dispatch:
+    inputs:
+      prerelease:
+        description: 'Version as prerelease'
+        required: false
+        default: false
+        type: boolean
+
+env:
+    DART_VERSION: 3.5.0
+jobs:
+  prepare-release:
+    name: Prepare release
+    permissions:
+      contents: write
+      pull-requests: write
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - uses: dart-lang/setup-dart@v1
+      - uses: bluefireteam/melos-action@v3
+        with:
+          run-versioning: ${{ inputs.prerelease == false }}
+          run-versioning-prerelease: ${{ inputs.prerelease == true }}
+          publish-dry-run: true
+          create-pr: true
+          git-email: github-actions@github.com
+          git-name: github-actions
