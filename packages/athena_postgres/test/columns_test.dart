@@ -90,7 +90,8 @@ void main() {
           .column((t) => t.varchar('t_varchar', 20))
           .column((t) => t.xml('t_xml'))
           .run();
-      expect(completed, equals(0));
+      expect(completed, equals([]));
+      expect(completed.affectedRows, equals(0));
     });
   });
 }

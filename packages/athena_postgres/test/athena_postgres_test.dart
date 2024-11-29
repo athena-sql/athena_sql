@@ -26,7 +26,8 @@ void main() {
           .column((t) => t.int_('id').primaryKey())
           .column((t) => t.text('name'))
           .run();
-      expect(completed, equals(0));
+      expect(completed, equals([]));
+      expect(completed.affectedRows, equals(0));
       final exists = await athena.tableExists(tableName);
       expect(exists, equals(true));
     });
