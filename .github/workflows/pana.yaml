@@ -24,10 +24,10 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v3
-      - uses: axel-op/dart-package-analyzer@v3
+      - uses: flutterings/dart-package-analyzer@v1
         id: analysis
         with:
-          githubToken: ${{ secrets.GITHUB_TOKEN }}
+          flutter_version: '3.24.5'
           relativePath: packages/athena_migrate
       - name: Check scores
         env:
@@ -44,10 +44,10 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v3
-      - uses: axel-op/dart-package-analyzer@v3
+      - uses: flutterings/dart-package-analyzer@v1
         id: analysis
         with:
-          githubToken: ${{ secrets.GITHUB_TOKEN }}
+          flutter_version: '3.24.5'
           relativePath: packages/athena_mysql
       - name: Check scores
         env:
@@ -67,6 +67,7 @@ jobs:
       - uses: flutterings/dart-package-analyzer@v1
         id: analysis
         with:
+          flutter_version: '3.24.5'
           relativePath: packages/athena_postgres
       - name: Check scores
         env:
@@ -86,6 +87,7 @@ jobs:
       - uses: flutterings/dart-package-analyzer@v1
         id: analysis
         with:
+          flutter_version: '3.24.5'
           relativePath: packages/athena_sql
       - name: Check scores
         env:
@@ -105,6 +107,7 @@ jobs:
       - uses: flutterings/dart-package-analyzer@v1
         id: analysis
         with:
+          flutter_version: '3.24.5'
           relativePath: packages/athena_utils
       - name: Check scores
         env:
