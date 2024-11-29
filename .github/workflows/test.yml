@@ -80,7 +80,7 @@ jobs:
         run: melos bs
         working-directory: packages/athena_postgres
       - name: Run tests
-        run: dart test
+        run: dart test -j 1
         working-directory: packages/athena_postgres
   test_mysql:
     runs-on: ubuntu-latest
@@ -99,7 +99,7 @@ jobs:
         run: melos bs
         working-directory: packages/athena_mysql
       - name: Run tests
-        run: dart test
+        run: dart test -j 1
         working-directory: packages/athena_mysql
     services:
       mysql:

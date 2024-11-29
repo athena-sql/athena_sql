@@ -15,7 +15,8 @@ void main() {
           .column((t) => t.int_('t_int'))
           .column((t) => t.smallint('t_smallint'))
           .run();
-      expect(completed, equals(0));
+      expect(completed, equals([]));
+      expect(completed.affectedRows, equals(0));
     });
   });
 }
