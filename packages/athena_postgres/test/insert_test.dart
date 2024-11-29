@@ -5,26 +5,27 @@ import 'docker.dart';
 
 void main() {
   usePostgresDocker();
+
+  late AthenaPostgresql athena;
+
+  setUpAll(() async {
+    athena = await AthenaPostgresql.open(AthenaPostgresqlEndpoint(
+      host: 'localhost',
+      databaseName: 'dart_test',
+      username: 'postgres',
+      password: 'dart',
+    ));
+
+    await athena.create
+        .table('users')
+        .column((t) => t.serial('id').primaryKey())
+        .column((t) => t.text('Name'))
+        .column((t) => t.text('email'))
+        .column((t) => t.int_('age'))
+        .run();
+    // Additional setup goes here.
+  });
   group('Columns', () {
-    late AthenaPostgresql athena;
-
-    setUpAll(() async {
-      athena = await AthenaPostgresql.open(AthenaPostgresqlEndpoint(
-        host: 'localhost',
-        databaseName: 'dart_test',
-        username: 'postgres',
-        password: 'dart',
-      ));
-
-      await athena.create
-          .table('users')
-          .column((t) => t.serial('id').primaryKey())
-          .column((t) => t.text('Name'))
-          .column((t) => t.text('email'))
-          .column((t) => t.int_('age'))
-          .run();
-      // Additional setup goes here.
-    });
     setUp(() {
       return athena.rawQuery('''
       TRUNCATE TABLE users
