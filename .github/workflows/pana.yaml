@@ -2,6 +2,7 @@ name: pana
 
 env:
   ACTIONS_ALLOW_UNSECURE_COMMANDS: 'true'
+  DART_VERSION: 3.5.0   
 
 on:
   pull_request:
@@ -28,6 +29,9 @@ jobs:
       fail-fast: false
     steps:
       - uses: actions/checkout@v3
+      - uses: dart-lang/setup-dart@v1
+        with:
+          sdk: ${{ env.DART_VERSION }}
       - name: Activate Melos
         run: dart pub global activate melos
       - name: Install Dependencies
