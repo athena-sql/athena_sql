@@ -33,9 +33,3 @@ jobs:
           tag: true
           git-email: github-actions@github.com
           git-name: github-actions
-      - name: Push tags
-        uses: CasperWA/push-protected@v2
-        with:
-          token: ${{ secrets.ATHENA_PAT }}
-          tags: true
-          branch: master
