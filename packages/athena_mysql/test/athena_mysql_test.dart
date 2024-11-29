@@ -16,7 +16,8 @@ void main() {
     test('execute query', () async {
       final completed =
           await conn.create.table('users').column((t) => t.int_('id')).run();
-      expect(completed, equals(0));
+      expect(completed.affectedRows, equals(0));
+      expect(completed, equals([]));
       final result = await conn.tableExists('users');
       await conn.rawQuery('INSERT INTO users (id) VALUES (@id)',
           mapValues: {'id': 1});

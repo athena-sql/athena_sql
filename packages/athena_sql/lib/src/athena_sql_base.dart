@@ -24,12 +24,11 @@ extension AthenaDatabaseExtension on AthenaSQL<AthenaDatabaseDriver> {
     String queryString, {
     Map<String, dynamic>? mapValues,
   }) =>
-      driver.query(queryString, mapValues: mapValues);
+      driver.execute(queryString, mapValues: mapValues);
 }
 
 extension AthenaDatabaseConnectionExtension
     on AthenaSQL<AthenaDatabaseConnectionDriver> {
-  Future<void> open() => driver.open();
   Future<void> close() => driver.close();
   Future<T> transaction<T>(
       Future<T> Function(AthenaSQL<AthenaDatabaseDriver> athenasql) trx) {

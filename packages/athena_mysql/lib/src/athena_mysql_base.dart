@@ -1,13 +1,16 @@
-import 'package:athena_mysql/src/mapper.dart';
 import 'package:athena_sql/athena_sql.dart';
 import 'package:mysql_client/mysql_client.dart';
 
 import 'database_config.dart';
+import 'mapper.dart';
 
+/// Represents a MySQL connection endpoint.
 abstract class AthenaMySQLException implements Exception {
-  final String message;
-
+  /// Creates a new AthenaMySQLException with the given message.
   const AthenaMySQLException(this.message);
+
+  /// The message for this exception.
+  final String message;
 
   String get _prefix;
 
@@ -17,31 +20,51 @@ abstract class AthenaMySQLException implements Exception {
   }
 }
 
+/// Represents a MySQL connection endpoint.
 class AthenaMySQLNoConnectionException extends AthenaMySQLException {
+  /// Creates a new AthenaMySQLNoConnectionException with the given message.
   const AthenaMySQLNoConnectionException(
-      [super.message = "No connection found"]);
+      [super.message = 'No connection found']);
 
   @override
   String get _prefix => 'AthenaMySQLConnectionException';
 }
 
+/// Represents a MySQL connection endpoint.
 class MySqlTransactionSQLDriver extends AthenaDatabaseDriver {
-  MySQLConnection? connection;
+  MySqlTransactionSQLDriver._(this.connection);
+
+  /// The connection to the database
+  MySQLConnection connection;
   bool _isOpen = false;
-  MySqlTransactionSQLDriver._connection(this.connection);
+
+  /// Opens a new connection to the database.
+  static Future<MySqlTransactionSQLDriver> open(
+      AthenaMySqlEndpoint endpoint) async {
+    final connection = await MySQLConnection.createConnection(
+      host: endpoint.host,
+      port: endpoint.port,
+      userName: endpoint.userName,
+      password: endpoint.password,
+      collation: endpoint.collation,
+      databaseName: endpoint.databaseName,
+      secure: endpoint.secure,
+    );
+
+    return MySqlTransactionSQLDriver._(connection);
+  }
 
   @override
   Future<bool> tableExists(String table, {String? schema}) async {
-    if (connection == null) throw AthenaMySQLNoConnectionException();
     var querySchema = schema;
     if (querySchema == null) {
-      final result = await connection!.execute('SELECT DATABASE();');
+      final result = await connection.execute('SELECT DATABASE();');
       final newChema = result.rows.first
           .typedColAt<String>(0); //rows.first.typedColAt<String>(0);
       if (newChema != null) querySchema = newChema;
     }
 
-    final result = await connection!.execute('''
+    final result = await connection.execute('''
           SELECT EXISTS (
             SELECT 
                 TABLE_NAME
@@ -57,51 +80,24 @@ class MySqlTransactionSQLDriver extends AthenaDatabaseDriver {
   }
 
   @override
-  Future<AthenaQueryResponse> query(
+  Future<AthenaQueryResponse> execute(
     String queryString, {
     Map<String, dynamic>? mapValues,
-    bool? iterable,
   }) async {
-    if (connection == null) throw AthenaMySQLNoConnectionException();
-
-    final mapper = QueryMapper(numered: false, prefixQuery: '?');
+    final mapper = QueryMapper(prefixQuery: '?');
 
     final queryToExecute = mapper.getValues(queryString, mapValues ?? {});
     if (queryToExecute.args.isEmpty) {
-      final result = await connection!.execute(queryToExecute.query);
+      final result = await connection.execute(queryToExecute.query);
       final mapped = result.rows.map((e) => QueryRow(e.typedAssoc())).toList();
       return QueryResponse(mapped);
     }
-    final prepared =
-        await connection!.prepare(queryToExecute.query, iterable ?? true);
+    final prepared = await connection.prepare(queryToExecute.query, true);
 
     final result = await prepared.execute(queryToExecute.args);
 
     final mapped = result.rows.map((e) => QueryRow(e.typedAssoc())).toList();
     return QueryResponse(mapped);
-  }
-
-  @override
-  Future<int> execute(
-    String queryString, {
-    Map<String, dynamic>? mapValues,
-    bool? iterable,
-  }) async {
-    if (connection == null) throw AthenaMySQLNoConnectionException();
-
-    final mapper = QueryMapper(numered: false, prefixQuery: '?');
-
-    final queryToExecute = mapper.getValues(queryString, mapValues ?? {});
-    if (queryToExecute.args.isEmpty) {
-      final result = await connection!.execute(queryToExecute.query);
-      return result.affectedRows.toInt();
-    }
-    final prepared =
-        await connection!.prepare(queryToExecute.query, iterable ?? false);
-
-    final result = await prepared.execute(queryToExecute.args);
-
-    return result.affectedRows.toInt();
   }
 
   @override
@@ -113,56 +109,70 @@ class MySqlTransactionSQLDriver extends AthenaDatabaseDriver {
   }
 }
 
+/// Column options for MySQL Driver
 class MySqlColumnsDriver extends AthenaColumnsDriver {
   @override
-  ColumnDef boolean() => ColumnDef('BOOLEAN');
+  ColumnDef boolean() => const ColumnDef('BOOLEAN');
 
   @override
-  ColumnDef integer() => ColumnDef('INTEGER');
+  ColumnDef integer() => const ColumnDef('INTEGER');
 
   @override
-  ColumnDef string() => ColumnDef('VARCHAR', parameters: ['255']);
+  ColumnDef string() => const ColumnDef('VARCHAR', parameters: ['255']);
 }
 
+/// MySQL driver for Athena
 class MySqlDriver extends MySqlTransactionSQLDriver
     implements AthenaDatabaseConnectionDriver {
-  final MySqlDatabaseConfig _config;
+  MySqlDriver._(super.connection) : super._();
 
-  MySqlDriver(this._config) : super._connection(null);
+  /// Opens a new connection to the database.
+  static Future<MySqlDriver> open(AthenaMySqlEndpoint endpoint) async {
+    final connection = await MySQLConnection.createConnection(
+      host: endpoint.host,
+      port: endpoint.port,
+      userName: endpoint.userName,
+      password: endpoint.password,
+      collation: endpoint.collation,
+      databaseName: endpoint.databaseName,
+      secure: endpoint.secure,
+    );
+    await connection.connect();
 
-  @override
-  Future<void> open() async {
-    if (_isOpen) return;
-    connection ??= await _config.getConnection();
-
-    await connection!.connect(timeoutMs: _config.timeoutMs);
-    _isOpen = true;
+    return MySqlDriver._(connection);
   }
 
   @override
   Future<void> close() async {
     if (!_isOpen) return;
-    await connection?.close();
+    await connection.close();
     _isOpen = false;
   }
 
   @override
   Future<T> transaction<T>(
       Future<T> Function(AthenaDatabaseDriver driver) trx) {
-    if (connection == null) throw AthenaMySQLNoConnectionException();
-    return connection!.transactional((conn) {
-      return trx(MySqlTransactionSQLDriver._connection(conn));
+    return connection.transactional((conn) {
+      return trx(MySqlTransactionSQLDriver._(conn));
     });
   }
 }
 
+/// MySQL Athena connection
 class AthenaMySQL extends AthenaSQL<MySqlDriver> {
-  AthenaMySQL(MySqlDatabaseConfig config) : super(MySqlDriver(config));
+  AthenaMySQL._(super.driver);
+
+  /// Athena MySQL connection
+  static Future<AthenaMySQL> open(AthenaMySqlEndpoint endpoint) async {
+    final driver = await MySqlDriver.open(endpoint);
+    return AthenaMySQL._(driver);
+  }
+
+  /// Creates a new AthenaMySQL instance from a map connection
   static Future<AthenaMySQL> fromMapConnection(
       Map<String, dynamic> connection) async {
-    final config = MySqlDatabaseConfig.fromMap(connection);
-    final athena = AthenaMySQL(config);
-    await athena.open();
+    final config = AthenaMySqlEndpoint.fromMap(connection);
+    final athena = await AthenaMySQL.open(config);
     return athena;
   }
 }

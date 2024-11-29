@@ -28,19 +28,14 @@ abstract class AthenaColumnsDriver {
 abstract class AthenaDatabaseDriver extends AthenaDriver {
   const AthenaDatabaseDriver();
 
-  Future<int> execute(
-    String queryString, {
-    Map<String, dynamic>? mapValues,
-  });
   Future<bool> tableExists(String table);
-  Future<AthenaQueryResponse> query(
+  Future<AthenaQueryResponse> execute(
     String queryString, {
     Map<String, dynamic>? mapValues,
   });
 }
 
 abstract class AthenaDatabaseConnectionDriver extends AthenaDatabaseDriver {
-  Future<void> open();
   Future<void> close();
 
   Future<T> transaction<T>(Future<T> Function(AthenaDatabaseDriver driver) trx);

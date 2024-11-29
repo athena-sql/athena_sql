@@ -1,10 +1,11 @@
 import 'package:athena_mysql/athena_mysql.dart';
 
 void main(List<String> args) async {
-  final athenaSql = AthenaMySQL(MySqlDatabaseConfig('localgost', 3306,
-      userName: 'userName', password: 'password', maxConnections: 10));
-
-  await athenaSql.open();
+  final athenaSql = await AthenaMySQL.open(const AthenaMySqlEndpoint(
+      host: 'localgost',
+      port: 3306,
+      userName: 'userName',
+      password: 'password'));
 
   await athenaSql.create
       .table('users')

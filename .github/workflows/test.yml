@@ -8,7 +8,7 @@ on:
     branches:
       - master
 env:
-  DART_VERSION: 3.0.0
+  DART_VERSION: 3.5.0
 
 
 concurrency:
@@ -25,11 +25,12 @@ jobs:
       - uses: dart-lang/setup-dart@v1
         with:
           sdk: ${{ env.DART_VERSION }}
-      - name: Verify code formatting
-        run: dart format --output none --set-exit-if-changed .
 
       - name: Activate Melos
         run: dart pub global activate melos
+        
+      - name: Verify code formatting
+        run: melos format --set-exit-if-changed
         
       - name: Install coverage tools
         run: dart pub global activate coverage
@@ -37,7 +38,7 @@ jobs:
       - name: Install Dependencies
         run: melos bs
       - name: Analyze
-        run: dart analyze .
+        run: melos analyze -c 5
   test:
     runs-on: ubuntu-latest
     strategy:
@@ -79,7 +80,7 @@ jobs:
         run: melos bs
         working-directory: packages/athena_postgres
       - name: Run tests
-        run: dart test
+        run: dart test -j 1
         working-directory: packages/athena_postgres
   test_mysql:
     runs-on: ubuntu-latest
@@ -98,7 +99,7 @@ jobs:
         run: melos bs
         working-directory: packages/athena_mysql
       - name: Run tests
-        run: dart test
+        run: dart test -j 1
         working-directory: packages/athena_mysql
     services:
       mysql:

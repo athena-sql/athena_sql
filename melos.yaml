@@ -8,20 +8,6 @@ scripts:
   lint:all:
     run: melos run analyze && melos run format
     description: Run all static analysis checks.
-  analyze:
-    # We are setting the concurrency to 1 because a higher concurrency can crash
-    # the analysis server on low performance machines (like GitHub Actions).
-    run: |
-      melos exec -c 1 -- \
-        dart analyze . --fatal-infos
-    description: |
-      Run `dart analyze` in all packages.
-       - Note: you can also rely on your IDEs Dart Analysis / Issues window.
-  format:
-    run: |
-      dart format --set-exit-if-changed .
-    description: |
-      format dart code
   test:coverage:
     run: dart pub global run coverage:test_with_coverage -b -f -- -j 1
     description: Run test with coverage.
@@ -31,3 +17,5 @@ scripts:
       dirExists: test
   cache-source:
     run: melos exec -- "mkdir -p '$PUB_CACHE/hosted/pub.dev/\$MELOS_PACKAGE_NAME-\$MELOS_PACKAGE_VERSION' && cp -rf '\$MELOS_PACKAGE_PATH'/* '$PUB_CACHE/hosted/pub.dev/\$MELOS_PACKAGE_NAME-\$MELOS_PACKAGE_VERSION'"
+  tighten:
+    exec: dart pub upgrade --tighten

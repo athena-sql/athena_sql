@@ -1,17 +1,21 @@
+import 'dart:async';
+
 import 'package:athena_sql/athena_sql.dart';
-import 'package:postgres/messages.dart';
-import 'package:postgres/postgres.dart';
+import 'package:postgres/postgres.dart' as pg;
 
 import 'database_config.dart';
 
-class PostgreTransactionSQLDriver<T extends PostgreSQLExecutionContext>
+/// Query driver for Postgres
+class PostgreTransactionSQLDriver<T extends pg.Session>
     extends AthenaDatabaseDriver {
-  T connection;
   PostgreTransactionSQLDriver._(this.connection);
+
+  /// The connection to the database
+  T connection;
 
   @override
   Future<bool> tableExists(String table, {String schema = 'public'}) async {
-    final result = await connection.query('''
+    final result = await connection.execute(pg.Sql.named('''
       SELECT EXISTS (
           SELECT FROM 
               pg_tables
@@ -19,35 +23,27 @@ class PostgreTransactionSQLDriver<T extends PostgreSQLExecutionContext>
               schemaname = @schema AND 
               tablename  = @table
           );
-      ''', substitutionValues: {'schema': schema, 'table': table});
-    return result[0][0];
+      '''), parameters: {'schema': schema, 'table': table});
+
+    return result.first.first! as bool;
   }
 
   @override
-  Future<AthenaQueryResponse> query(
+  Future<AthenaQueryResponse> execute(
     String queryString, {
     Map<String, dynamic>? mapValues,
-    bool? allowReuse,
-    int? timeoutInSeconds,
+    bool ignoreRows = false,
+    Duration? timeout,
     bool? useSimpleQueryProtocol,
   }) async {
-    final response = await connection.query(queryString,
-        substitutionValues: mapValues,
-        allowReuse: allowReuse,
-        timeoutInSeconds: timeoutInSeconds,
-        useSimpleQueryProtocol: useSimpleQueryProtocol);
+    final response = await connection.execute(
+      pg.Sql.named(queryString),
+      parameters: mapValues,
+      ignoreRows: ignoreRows,
+      timeout: timeout,
+    );
     final mapped = response.map((e) => QueryRow(e.toColumnMap()));
-    return QueryResponse(mapped, affectedRows: response.affectedRowCount);
-  }
-
-  @override
-  Future<int> execute(
-    String queryString, {
-    Map<String, dynamic>? mapValues,
-    int? timeoutInSeconds,
-  }) {
-    return connection.execute(queryString,
-        substitutionValues: mapValues, timeoutInSeconds: timeoutInSeconds);
+    return QueryResponse(mapped, affectedRows: response.affectedRows);
   }
 
   @override
@@ -55,128 +51,108 @@ class PostgreTransactionSQLDriver<T extends PostgreSQLExecutionContext>
 
   @override
   String mapColumnOrTable(String column) {
-    final vals = column.split(".");
+    final vals = column.split('.');
     return [
       for (final val in vals)
-        if (val.contains(RegExp(r'[A-Z]'))) '"$val"' else val
-    ].join(".");
+        if (val.contains(RegExp('[A-Z]'))) '"$val"' else val
+    ].join('.');
   }
 }
 
+/// Columns driver for Postgres
 class PostgresColumnsDriver extends AthenaColumnsDriver {
   @override
-  ColumnDef boolean() => ColumnDef('BOOLEAN');
+  ColumnDef boolean() => const ColumnDef('BOOLEAN');
 
   @override
-  ColumnDef integer() => ColumnDef('INTEGER');
+  ColumnDef integer() => const ColumnDef('INTEGER');
 
   @override
-  ColumnDef string() => ColumnDef('VARCHAR');
+  ColumnDef string() => const ColumnDef('VARCHAR');
 }
 
-class PostgreSQLDriver extends PostgreTransactionSQLDriver<PostgreSQLConnection>
+/// Driver for Postgres
+class PostgreSQLDriver extends PostgreTransactionSQLDriver<pg.Connection>
     implements AthenaDatabaseConnectionDriver {
-  // @override
-  // final PostgreSQLConnection connection;
-  bool _isOpen = false;
-  final PostgresDatabaseConfig _config;
+  PostgreSQLDriver._(super.connection) : super._();
 
-  PostgreSQLDriver(this._config)
-      : super._(PostgreSQLConnection(
-            _config.host, _config.port, _config.databaseName,
-            username: _config.username,
-            password: _config.password,
-            useSSL: _config.useSSL));
-
-  @override
-  Future<void> open() async {
-    if (_isOpen) return;
-
-    if (connection.isClosed) {
-      connection = PostgreSQLConnection(
-          _config.host, _config.port, _config.databaseName,
-          username: _config.username,
-          password: _config.password,
-          useSSL: _config.useSSL);
-    }
-    await connection.open();
-    _isOpen = true;
+  /// Opens a connection to the database
+  static Future<PostgreSQLDriver> open(AthenaPostgresqlEndpoint config) async {
+    final connection = await pg.Connection.open(
+      pg.Endpoint(
+        host: config.host,
+        database: config.databaseName,
+        port: config.port,
+        username: config.username,
+        password: config.password,
+      ),
+    );
+    return PostgreSQLDriver._(connection);
   }
 
   @override
   Future<void> close() async {
-    if (!_isOpen) return;
+    if (!connection.isOpen) return;
     await connection.close();
-    _isOpen = false;
   }
 
   @override
   Future<T> transaction<T>(
       Future<T> Function(AthenaDatabaseDriver driver) trx) async {
-    final val = await connection.transaction((connection) {
+    final val = await connection.runTx((connection) {
       return trx(PostgreTransactionSQLDriver._(connection));
     });
 
-    return val as T;
+    return val;
   }
 }
 
+/// Athena Postgres SQL
 class AthenaPostgresql extends AthenaSQL<PostgreSQLDriver> {
-  AthenaPostgresql(PostgresDatabaseConfig config)
-      : super(PostgreSQLDriver(config));
+  AthenaPostgresql._(pg.Connection config) : super(PostgreSQLDriver._(config));
 
-  Stream<String> listen(String channel) {
-    return driver.connection.messages.where((event) {
-      if (event is NotificationResponseMessage) {
-        return event.channel == channel;
-      }
-      return false;
-    }).map((event) => (event as NotificationResponseMessage).payload);
+  /// Opens a connection to the database
+  static Future<AthenaPostgresql> open(AthenaPostgresqlEndpoint config) async {
+    final driver = await PostgreSQLDriver.open(config);
+    return AthenaPostgresql._(driver.connection);
   }
 
-  static Future<AthenaPostgresql> fromMapConnection(
-      Map<String, dynamic> config) async {
-    final athena = AthenaPostgresql(PostgresDatabaseConfig(
-      config.getValue('host'),
-      config.getValue('port'),
-      config.getValue('database'),
-      username: config.optionalValue('username'),
-      password: config.optionalValue('password'),
-      useSSL: config.optionalValue('useSSL') ?? false,
-      allowClearTextPassword:
-          config.optionalValue('allowClearTextPassword') ?? false,
-      timeZone: config.optionalValue('timeZone') ?? 'UTC',
-      timeoutInSeconds: config.optionalValue('timeoutInSeconds') ?? 30,
-      isUnixSocket: config.optionalValue('isUnixSocket') ?? false,
-      queryTimeoutInSeconds:
-          config.optionalValue('queryTimeoutInSeconds') ?? 30,
-      replicationMode:
-          config.optionalValue('replicationMode') ?? ReplicationMode.none,
-    ));
-    await athena.open();
-    return athena;
+  static final _listenings = <String>{};
+
+  /// Listens to a channel
+  Stream<String> listen(String channel) {
+    if (!_listenings.contains(channel)) {
+      unawaited(rawQuery('listen $channel'));
+      _listenings.add(channel);
+    }
+    return driver.connection.channels.all
+        .where((event) => event.channel == channel)
+        .map((event) => event.payload);
   }
 }
 
+/// map secure getters
 extension MapSecure on Map<String, dynamic> {
+  /// Gets a value from the map
   T? optionalValue<T>(String key) {
     if (!containsKey(key)) {
       return null;
     }
     final val = this[key];
     if (val is! T) {
-      throw Exception('Key \'$key\' is not of type ${T.toString()}');
+      throw Exception("Key '$key' is not of type ${T.toString()}");
     }
     return this[key] as T;
   }
 
+  /// Gets a value from the map
   T getValue<T>(String key) {
     if (!containsKey(key)) {
-      throw Exception('Key \'$key\' not found');
+      throw Exception("Key '$key' not found");
     }
     final val = this[key];
     if (val is! T) {
-      throw Exception('Key \'$key\' is not of type ${T.toString()}');
+      throw Exception("Key '$key' is not of type ${T.toString()}");
     }
     return this[key] as T;
   }

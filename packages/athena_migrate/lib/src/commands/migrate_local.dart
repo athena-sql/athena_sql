@@ -1,7 +1,6 @@
 import 'package:args/args.dart';
 import 'package:athena_utils/athena_utils.dart';
 import 'package:path/path.dart' as path;
-import 'package:collection/collection.dart';
 
 import '../executable.dart';
 
@@ -83,7 +82,7 @@ class LocalMigrationCommand extends ExecutableComand {
             return null;
           }
         })
-        .whereNotNull()
+        .nonNulls
         .toList();
     return migrations;
   }
@@ -115,8 +114,7 @@ class LocalMigrationCommand extends ExecutableComand {
     if (args == null) io.exit(1);
     createFile();
     final path = migrationFile;
-    final List<String> comands =
-        [args.name, ...args.rest].whereNotNull().toList();
+    final List<String> comands = [args.name, ...args.rest].nonNulls.toList();
     final proccess = ps.run(
       'dart',
       arguments: [

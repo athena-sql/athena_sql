@@ -9,9 +9,9 @@ environment:
   sdk: '>=3.0.0 <4.0.0'
 
 dev_dependencies:
-  lints: ^2.0.0
-  test: ^1.21.0
+  lints: ^5.0.0
+  test: ^1.25.9
 dependencies:
-  file: ^7.0.0
-  meta: ^1.9.1
+  file: ^7.0.1
+  meta: ^1.16.0
   yaml: ^3.1.2

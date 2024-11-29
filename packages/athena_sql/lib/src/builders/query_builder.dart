@@ -33,7 +33,7 @@ typedef QueryRows = List<Map<String, Map<String, dynamic>>>;
 
 extension AthenaDDLQueryExtension<D extends AthenaDatabaseDriver>
     on AthenaQueryBuilder<D, DdlSchema> {
-  Future<int> run() => _driver.execute($schema.plain());
+  Future<AthenaQueryResponse> run() => _driver.execute($schema.plain());
 }
 
 extension AthenaInsertTableQueryExtension<D extends AthenaDatabaseDriver>
@@ -41,7 +41,7 @@ extension AthenaInsertTableQueryExtension<D extends AthenaDatabaseDriver>
   Future<int> run() {
     final newSchema = $schema.copyMappingColumns(_driver.mapColumnOrTable);
     return _driver
-        .query(newSchema.plain(), mapValues: $mappedValues())
+        .execute(newSchema.plain(), mapValues: $mappedValues())
         .then((value) => value.affectedRows);
   }
 }
@@ -52,14 +52,14 @@ extension AthenaInsertTableReturningQueryExtension<
   Future<AthenaQueryResponse> run() {
     final newSchema = $schema.copyMappingColumns(_driver.mapColumnOrTable);
 
-    return _driver.query(newSchema.plain(), mapValues: $schema.mapValues());
+    return _driver.execute(newSchema.plain(), mapValues: $schema.mapValues());
   }
 }
 
 extension AthenaInseretTableQueryExtension<D extends AthenaDatabaseDriver>
     on AthenaQueryBuilder<D, SelectTableSchema> {
   Future<AthenaQueryResponse> run({Map<String, dynamic>? mapValues}) {
-    return _driver.query($schema.plain(), mapValues: mapValues);
+    return _driver.execute($schema.plain(), mapValues: mapValues);
   }
 
   Future<List<T>> runParse<T>(T Function(AthenaRowResponse) parser,

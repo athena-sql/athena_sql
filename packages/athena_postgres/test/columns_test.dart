@@ -6,17 +6,21 @@ import 'docker.dart';
 void main() {
   usePostgresDocker();
   group('Columns', () {
-    final athena = AthenaPostgresql(PostgresDatabaseConfig(
-        'localhost', 5432, 'dart_test',
-        username: 'dart', password: 'dart'));
+    late AthenaPostgresql athena;
 
     setUp(() async {
       print('open');
-      await athena.open();
+
+      athena = await AthenaPostgresql.open(const AthenaPostgresqlEndpoint(
+        host: 'localhost',
+        databaseName: 'dart_test',
+        username: 'postgres',
+        password: 'dart',
+      ));
       print('opened');
       // Additional setup goes here.
     });
-    tearDown(() async => await athena.close());
+    tearDown(() async => athena.close());
 
     test('execute query', () async {
       print('testing');
@@ -86,7 +90,8 @@ void main() {
           .column((t) => t.varchar('t_varchar', 20))
           .column((t) => t.xml('t_xml'))
           .run();
-      expect(completed, equals(0));
+      expect(completed, equals([]));
+      expect(completed.affectedRows, equals(0));
     });
   });
 }

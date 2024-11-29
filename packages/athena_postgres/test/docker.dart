@@ -19,10 +19,8 @@ void usePostgresDocker() {
     final dp = await startPostgres(
       name: _kContainerName,
       version: 'latest',
-      pgPort: 5432,
       pgDatabase: 'postgres',
       pgUser: 'postgres',
-      pgPassword: 'postgres',
       cleanup: true,
       configurations: [
         // SSL settings
@@ -37,7 +35,7 @@ void usePostgresDocker() {
 
     // Setup the database to support all kind of tests
     // see _setupDatabaseStatements definition for details
-    for (var stmt in _setupDatabaseStatements) {
+    for (final stmt in _setupDatabaseStatements) {
       final args = [
         'psql',
         '-c',

@@ -1,9 +1,6 @@
 enum _TokeType { text, variable }
 
 class _TokenConent {
-  _TokeType type;
-  var content = StringBuffer();
-
   _TokenConent(this.type);
   _TokenConent.variable(int char) : type = _TokeType.variable {
     addChar(char);
@@ -11,6 +8,8 @@ class _TokenConent {
   _TokenConent.text(int char) : type = _TokeType.text {
     addChar(char);
   }
+  _TokeType type;
+  StringBuffer content = StringBuffer();
 
   void addChar(int char) {
     content.writeCharCode(char);
@@ -18,35 +17,39 @@ class _TokenConent {
 }
 
 class _TokenIdentifier {
+  _TokenIdentifier(this.name, this.typeCast);
   final String name;
   final String? typeCast;
-
-  _TokenIdentifier(this.name, this.typeCast);
 }
 
 class _QueryNameArguments {
+  _QueryNameArguments(this.query, this.argsMap);
   final String query;
   final List<String> argsMap;
-
-  _QueryNameArguments(this.query, this.argsMap);
 }
 
+/// Represents a query to execute
 class QueryToExecute {
-  final String query;
-  final List<dynamic> args;
+  /// Creates a query to execute
+  const QueryToExecute(this.query, this.args);
 
-  QueryToExecute(this.query, this.args);
+  /// The query to execute
+  final String query;
+
+  /// The arguments to pass to the query
+  final List<dynamic> args;
 }
 
+/// Maps a query to a query to execute
 class QueryMapper {
-  final int _prefixCode;
-  final bool _numered;
-  final String _prefixQuery;
-
+  /// Creates a query mapper
   QueryMapper({String? signCode, bool numered = false, String? prefixQuery})
       : _prefixCode = (signCode ?? '@').codeUnitAt(0),
         _numered = numered,
-        _prefixQuery = prefixQuery ?? '\$';
+        _prefixQuery = prefixQuery ?? r'$';
+  final int _prefixCode;
+  final bool _numered;
+  final String _prefixQuery;
 
   static bool _isIdentifier(int charCode) {
     return (charCode >= _lowercaseACodeUnit &&
@@ -92,8 +95,9 @@ class QueryMapper {
         if (iter.current == _prefixCode) {
           iter.movePrevious();
           if (iter.current == _prefixCode) {
-            currentPtr.addChar(iter.current);
-            currentPtr.type = _TokeType.text;
+            currentPtr
+              ..addChar(iter.current)
+              ..type = _TokeType.text;
           } else {
             currentPtr = _TokenConent.variable(iter.current);
             items.add(currentPtr);
@@ -116,7 +120,7 @@ class QueryMapper {
 
     final components = t.split('::');
     if (components.length > 1) {
-      typeCast = components.sublist(1).join('');
+      typeCast = components.sublist(1).join();
     }
 
     final variableComponents = components.first.split(':');
@@ -126,6 +130,7 @@ class QueryMapper {
       name = variableComponents.first;
     } else {
       throw FormatException(
+          // ignore: lines_longer_than_80_chars
           "Invalid format string identifier, must contain identifier name and optionally one data type in format '@identifier:dataType' (offending identifier: $t)");
     }
 
@@ -156,11 +161,12 @@ class QueryMapper {
         }
         return val;
       }
-    }).join('');
+    }).join();
 
     return _QueryNameArguments(content, args);
   }
 
+  /// Gets the values of a query
   QueryToExecute getValues(String query, Map<String, dynamic> values) {
     final tokens = _getTokenized(query);
     final built = _generateBuilder(tokens);
