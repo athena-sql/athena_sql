@@ -28,7 +28,7 @@ class ColumnSchema extends CreateTableClause {
   QueryString typeParameters() => QueryString()
       .keyword(_type)
       .condition(
-          _parameters != null && _parameters.isNotEmpty,
+          _parameters != null && _parameters!.isNotEmpty,
           (q) => q.parentheses((q) =>
               q.commaSeparated(_parameters!.map((e) => QueryString.user(e)))))
       .condition(
