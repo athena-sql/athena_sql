@@ -1,3 +1,5 @@
+include: package:lints/core.yaml
+
 analyzer:
   plugins:
     - dart_code_metrics

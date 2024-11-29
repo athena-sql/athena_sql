@@ -83,7 +83,6 @@ class MySqlTransactionSQLDriver extends AthenaDatabaseDriver {
   Future<AthenaQueryResponse> execute(
     String queryString, {
     Map<String, dynamic>? mapValues,
-    bool? iterable,
   }) async {
     final mapper = QueryMapper(prefixQuery: '?');
 
@@ -93,8 +92,7 @@ class MySqlTransactionSQLDriver extends AthenaDatabaseDriver {
       final mapped = result.rows.map((e) => QueryRow(e.typedAssoc())).toList();
       return QueryResponse(mapped);
     }
-    final prepared =
-        await connection.prepare(queryToExecute.query, iterable ?? true);
+    final prepared = await connection.prepare(queryToExecute.query, true);
 
     final result = await prepared.execute(queryToExecute.args);
 
