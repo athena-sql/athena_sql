@@ -27,28 +27,12 @@ jobs:
       - uses: dart-lang/setup-dart@v1
         with:
           sdk: ${{ env.DART_VERSION }}
-      - name: Activate melos
-        run: |
-          echo "$HOME/.pub-cache/bin" >> $GITHUB_PATH
-          dart pub global activate melos
-      - name: Bootstrap melos
-        run: melos bs
-      - name: Configure git user
-        run: |
-          git config user.name github-actions
-          git config user.email github-actions@github.com
-      - run: melos version --yes
-      - name: Cache source
-        run: melos run cache-source
-      - name: Setup Pub Credentials
-        shell: bash
-        env:
-          CREDENTIALS_JSON: ${{ secrets.PUB_CREDENTIALS }}
-        run: |
-          mkdir -p $XDG_CONFIG_HOME/dart/
-          echo $CREDENTIALS_JSON > $XDG_CONFIG_HOME/dart/pub-credentials.json
-      - run: melos publish --yes --no-dry-run --git-tag-version
-        continue-on-error: true
+      - uses: bluefireteam/melos-action@v3
+        with:
+          publish: true
+          tag: true
+          git-email: github-actions@github.com
+          git-name: github-actions
       - name: Push tags
         uses: CasperWA/push-protected@v2
         with:
