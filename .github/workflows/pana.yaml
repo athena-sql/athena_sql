@@ -28,7 +28,7 @@ jobs:
         pkg: [athena_migrate, athena_mysql, athena_postgres, athena_sql, athena_utils]
       fail-fast: false
     steps:
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v4
       - uses: dart-lang/setup-dart@v1
         with:
           sdk: ${{ env.DART_VERSION }}
