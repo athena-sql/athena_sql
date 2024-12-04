@@ -1,3 +1,7 @@
+## 1.2.2
+
+ - **FIX**: add setting to postgresql constructor.
+
 ## 1.2.1
 
  - **FIX**: add settings to postgresql open (#70).
