@@ -77,16 +77,17 @@ class PostgreSQLDriver extends PostgreTransactionSQLDriver<pg.Connection>
   PostgreSQLDriver._(super.connection) : super._();
 
   /// Opens a connection to the database
-  static Future<PostgreSQLDriver> open(AthenaPostgresqlEndpoint config) async {
+  static Future<PostgreSQLDriver> open(AthenaPostgresqlEndpoint endpoint,
+      AthenaConnectionSettings settings) async {
     final connection = await pg.Connection.open(
-      pg.Endpoint(
-        host: config.host,
-        database: config.databaseName,
-        port: config.port,
-        username: config.username,
-        password: config.password,
-      ),
-    );
+        pg.Endpoint(
+          host: endpoint.host,
+          database: endpoint.databaseName,
+          port: endpoint.port,
+          username: endpoint.username,
+          password: endpoint.password,
+        ),
+        settings: settings);
     return PostgreSQLDriver._(connection);
   }
 
