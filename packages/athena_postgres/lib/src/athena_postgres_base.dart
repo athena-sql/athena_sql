@@ -114,8 +114,10 @@ class AthenaPostgresql extends AthenaSQL<PostgreSQLDriver> {
   AthenaPostgresql._(pg.Connection config) : super(PostgreSQLDriver._(config));
 
   /// Opens a connection to the database
-  static Future<AthenaPostgresql> open(AthenaPostgresqlEndpoint config) async {
-    final driver = await PostgreSQLDriver.open(config);
+  static Future<AthenaPostgresql> open(AthenaPostgresqlEndpoint config,
+      {AthenaConnectionSettings settings =
+          const AthenaConnectionSettings()}) async {
+    final driver = await PostgreSQLDriver.open(config, settings: settings);
     return AthenaPostgresql._(driver.connection);
   }
 
