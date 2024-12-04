@@ -1,3 +1,5 @@
+import 'package:postgres/postgres.dart';
+
 /// PostgreSQL Endpoint for connecting to a PostgreSQL database.
 class AthenaPostgresqlEndpoint {
   /// PostgreSQL Endpoint for connecting to a PostgreSQL database.
@@ -23,4 +25,24 @@ class AthenaPostgresqlEndpoint {
 
   /// Password for authenticating this connection.
   final String? password;
+}
+
+/// Connection settings for connecting to a PostgreSQL database.
+class AthenaConnectionSettings extends ConnectionSettings {
+  /// Connection settings for connecting to a PostgreSQL database.
+  const AthenaConnectionSettings({
+    super.applicationName,
+    super.connectTimeout,
+    super.encoding,
+    super.ignoreSuperfluousParameters,
+    super.onOpen,
+    super.queryMode,
+    super.queryTimeout,
+    super.replicationMode,
+    super.securityContext,
+    super.sslMode,
+    super.timeZone,
+    super.transformer,
+    super.typeRegistry,
+  });
 }
