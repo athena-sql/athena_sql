@@ -3,6 +3,27 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## 2024-12-04
+
+### Changes
+
+---
+
+Packages with breaking changes:
+
+ - There are no breaking changes in this release.
+
+Packages with other changes:
+
+ - [`athena_postgres` - `v1.2.1`](#athena_postgres---v121)
+
+---
+
+#### `athena_postgres` - `v1.2.1`
+
+ - **FIX**: add settings to postgresql open (#70).
+
+
 ## 2024-11-29
 
 ### Changes
