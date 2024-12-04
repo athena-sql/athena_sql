@@ -78,7 +78,8 @@ class PostgreSQLDriver extends PostgreTransactionSQLDriver<pg.Connection>
 
   /// Opens a connection to the database
   static Future<PostgreSQLDriver> open(AthenaPostgresqlEndpoint endpoint,
-      AthenaConnectionSettings settings) async {
+      {AthenaConnectionSettings settings =
+          const AthenaConnectionSettings()}) async {
     final connection = await pg.Connection.open(
         pg.Endpoint(
           host: endpoint.host,
