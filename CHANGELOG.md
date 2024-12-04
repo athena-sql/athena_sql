@@ -15,6 +15,27 @@ Packages with breaking changes:
 
 Packages with other changes:
 
+ - [`athena_postgres` - `v1.2.3`](#athena_postgres---v123)
+
+---
+
+#### `athena_postgres` - `v1.2.3`
+
+ - **FIX**: custom settings postgresql (#73).
+
+
+## 2024-12-04
+
+### Changes
+
+---
+
+Packages with breaking changes:
+
+ - There are no breaking changes in this release.
+
+Packages with other changes:
+
  - [`athena_postgres` - `v1.2.2`](#athena_postgres---v122)
 
 ---

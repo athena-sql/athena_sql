@@ -1,3 +1,7 @@
+## 1.2.3
+
+ - **FIX**: custom settings postgresql (#73).
+
 ## 1.2.2
 
  - **FIX**: add setting to postgresql constructor.
