@@ -1,3 +1,7 @@
+## 1.2.1
+
+ - **FIX**: add settings to postgresql open (#70).
+
 ## 1.2.0
 
  - **FEAT**: update deps (#61).
