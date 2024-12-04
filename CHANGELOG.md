@@ -15,6 +15,27 @@ Packages with breaking changes:
 
 Packages with other changes:
 
+ - [`athena_postgres` - `v1.2.2`](#athena_postgres---v122)
+
+---
+
+#### `athena_postgres` - `v1.2.2`
+
+ - **FIX**: add setting to postgresql constructor.
+
+
+## 2024-12-04
+
+### Changes
+
+---
+
+Packages with breaking changes:
+
+ - There are no breaking changes in this release.
+
+Packages with other changes:
+
  - [`athena_postgres` - `v1.2.1`](#athena_postgres---v121)
 
 ---
