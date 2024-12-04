@@ -88,7 +88,25 @@ class PostgreSQLDriver extends PostgreTransactionSQLDriver<pg.Connection>
           username: endpoint.username,
           password: endpoint.password,
         ),
-        settings: settings);
+        settings: pg.ConnectionSettings(
+            applicationName: settings.applicationName,
+            connectTimeout: settings.connectTimeout,
+            encoding: settings.encoding,
+            queryTimeout: settings.queryTimeout,
+            queryMode: settings.queryMode,
+            ignoreSuperfluousParameters: settings.ignoreSuperfluousParameters,
+            securityContext: settings.securityContext,
+            sslMode: switch (settings.sslMode) {
+              AthenaSslMode.disable => pg.SslMode.disable,
+              AthenaSslMode.require => pg.SslMode.require,
+              AthenaSslMode.verifyFull => pg.SslMode.verifyFull,
+              null => null,
+            },
+            timeZone: settings.timeZone,
+            typeRegistry: settings.typeRegistry,
+            onOpen: (settings.onOpen != null)
+                ? (conn) => settings.onOpen!(AthenaPostgresql._(conn))
+                : null));
     return PostgreSQLDriver._(connection);
   }
 
